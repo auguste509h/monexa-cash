@@ -1,347 +1,719 @@
-const SUPABASE_URL =
-  "https://nakaajakjrefzmacqlhv.supabase.co";
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
 
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
+  // =========================
+  // SUPABASE
+  // =========================
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+  const SUPABASE_URL =
+    "https://nakaajakjrefzmacqlhv.supabase.co";
 
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
 
-// =========================
-// LOGIN
-// =========================
-
-const loginButton =
-  document.getElementById("loginButton");
-
-const message =
-  document.getElementById("message");
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
 
-loginButton.addEventListener("click", async function() {
+  // =========================
+  // ELEMENTS
+  // =========================
 
-  const email =
-    document.getElementById("email").value.trim();
+  const loginButton =
+    document.getElementById("loginButton");
 
-  const password =
-    document.getElementById("password").value;
+  const message =
+    document.getElementById("message");
 
-  if (!email || !password) {
-    message.textContent =
-      "Veuillez entrer votre e-mail et votre mot de passe.";
-    return;
-  }
+  const loginSection =
+    document.getElementById("loginSection");
 
-  message.textContent =
-    "Connexion en cours...";
-
-
-  const { data, error } =
-    await db.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+  const dashboard =
+    document.getElementById("dashboard");
 
 
-  if (error) {
-    message.textContent =
-      error.message;
-    return;
-  }
+  // =========================
+  // LOAD PROFILE PHOTO
+  // =========================
+
+  async function loadProfilePhoto() {
+
+    try {
+
+      const {
+        data: sessionData,
+        error: sessionError
+      } = await db.auth.getSession();
+
+      if (sessionError) {
+        console.log(sessionError);
+        return;
+      }
+
+      const user =
+        sessionData.session?.user;
+
+      if (!user) return;
 
 
-  document
-    .getElementById("loginSection")
-    .classList.add("hidden");
-
-  document
-    .getElementById("dashboard")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("userEmail")
-    .textContent =
-    data.user.email;
-
-  document
-    .getElementById("profileEmail")
-    .textContent =
-    data.user.email;
+      const {
+        data: profile,
+        error: profileError
+      } = await db
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", user.id)
+        .single();
 
 
-  // Charger la photo après connexion
-  await loadProfilePhoto();
-
-});
-
-
-// =========================
-// CHARGER PHOTO PROFIL
-// =========================
-
-async function loadProfilePhoto() {
-
-  const { data: sessionData } =
-    await db.auth.getSession();
-
-  const user =
-    sessionData.session?.user;
-
-  if (!user) return;
+      if (profileError) {
+        console.log(profileError);
+        return;
+      }
 
 
-  const { data: profile, error } =
-    await db
-      .from("profiles")
-      .select("avatar_url")
-      .eq("id", user.id)
-      .single();
-
-  if (error || !profile?.avatar_url) {
-    return;
-  }
+      if (!profile || !profile.avatar_url) {
+        return;
+      }
 
 
-  const { data: signedData, error: signedError } =
-    await db.storage
-      .from("profile-photos")
-      .createSignedUrl(
-        profile.avatar_url,
-        3600
+      const {
+        data: signedData,
+        error: signedError
+      } = await db.storage
+        .from("profile-photos")
+        .createSignedUrl(
+          profile.avatar_url,
+          3600
+        );
+
+
+      if (signedError) {
+        console.log(signedError);
+        return;
+      }
+
+
+      if (!signedData?.signedUrl) {
+        return;
+      }
+
+
+      const photo =
+        document.getElementById("profilePhoto");
+
+      const defaultIcon =
+        document.getElementById("defaultProfileIcon");
+
+
+      if (photo) {
+
+        photo.src =
+          signedData.signedUrl;
+
+        photo.style.display =
+          "block";
+      }
+
+
+      if (defaultIcon) {
+
+        defaultIcon.style.display =
+          "none";
+      }
+
+    } catch (error) {
+
+      console.log(
+        "Erreur photo:",
+        error
       );
 
+    }
 
-  if (signedError || !signedData?.signedUrl) {
-    return;
   }
 
 
-  const photo =
-    document.getElementById("profilePhoto");
+  // =========================
+  // SHOW DASHBOARD
+  // =========================
 
-  const defaultIcon =
-    document.getElementById("defaultProfileIcon");
+  async function showDashboard(user) {
 
+    loginSection.classList.add("hidden");
 
-  photo.src =
-    signedData.signedUrl;
-
-  photo.style.display =
-    "block";
-
-  defaultIcon.style.display =
-    "none";
-}
+    dashboard.classList.remove("hidden");
 
 
-// =========================
-// LOGOUT
-// =========================
-
-document
-  .getElementById("logoutButton")
-  .addEventListener("click", async function() {
-
-    await db.auth.signOut();
-
-    location.reload();
-
-  });
+    document
+      .getElementById("userEmail")
+      .textContent =
+      user.email || "";
 
 
-// =========================
-// SERVICES
-// =========================
+    document
+      .getElementById("profileEmail")
+      .textContent =
+      user.email || "";
 
-document
-  .querySelectorAll(".service")
-  .forEach(function(service) {
 
-    service.addEventListener("click", function() {
+    await loadProfilePhoto();
 
-      const serviceName =
-        service.getAttribute("data-service");
+  }
 
-      document
-        .getElementById("serviceMessage")
-        .textContent =
-        "Service sélectionné : " + serviceName;
+
+  // =========================
+  // LOGIN
+  // =========================
+
+  if (loginButton) {
+
+    loginButton.addEventListener(
+      "click",
+      async function () {
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        if (!email || !password) {
+
+          message.textContent =
+            "Veuillez entrer votre e-mail et votre mot de passe.";
+
+          return;
+        }
+
+
+        message.textContent =
+          "Connexion en cours...";
+
+
+        loginButton.disabled =
+          true;
+
+        loginButton.textContent =
+          "Connexion...";
+
+
+        try {
+
+          const {
+            data,
+            error
+          } =
+            await db.auth.signInWithPassword({
+              email: email,
+              password: password
+            });
+
+
+          if (error) {
+
+            console.log(
+              "Erreur Supabase:",
+              error
+            );
+
+            message.textContent =
+              "Erreur : " +
+              error.message;
+
+            loginButton.disabled =
+              false;
+
+            loginButton.textContent =
+              "Se connecter";
+
+            return;
+          }
+
+
+          if (!data || !data.user) {
+
+            message.textContent =
+              "Connexion impossible. Aucun utilisateur trouvé.";
+
+            loginButton.disabled =
+              false;
+
+            loginButton.textContent =
+              "Se connecter";
+
+            return;
+          }
+
+
+          message.textContent =
+            "Connexion réussie ✅";
+
+
+          await showDashboard(
+            data.user
+          );
+
+
+          loginButton.disabled =
+            false;
+
+          loginButton.textContent =
+            "Se connecter";
+
+
+        } catch (error) {
+
+          console.log(
+            "Erreur connexion:",
+            error
+          );
+
+          message.textContent =
+            "Une erreur est survenue : " +
+            error.message;
+
+
+          loginButton.disabled =
+            false;
+
+          loginButton.textContent =
+            "Se connecter";
+
+        }
+
+      }
+    );
+
+  }
+
+
+  // =========================
+  // LOGOUT
+  // =========================
+
+  const logoutButton =
+    document.getElementById("logoutButton");
+
+
+  if (logoutButton) {
+
+    logoutButton.addEventListener(
+      "click",
+      async function () {
+
+        await db.auth.signOut();
+
+        location.reload();
+
+      }
+    );
+
+  }
+
+
+  // =========================
+  // SERVICES
+  // =========================
+
+  document
+    .querySelectorAll(".service")
+    .forEach(function (service) {
+
+      service.addEventListener(
+        "click",
+        function () {
+
+          const serviceName =
+            service.getAttribute(
+              "data-service"
+            );
+
+
+          document
+            .getElementById("serviceMessage")
+            .textContent =
+            "Service sélectionné : " +
+            serviceName;
+
+        }
+      );
 
     });
 
-  });
+
+  // =========================
+  // MENU
+  // =========================
+
+  const menu =
+    document.getElementById("sideMenu");
+
+  const overlay =
+    document.getElementById("overlay");
 
 
-// =========================
-// MENU
-// =========================
+  function openMenu() {
 
-const menu =
-  document.getElementById("sideMenu");
+    menu.classList.add("open");
 
-const overlay =
-  document.getElementById("overlay");
-
-
-function openMenu() {
-
-  menu.classList.add("open");
-
-  overlay.classList.remove("hidden");
-
-}
-
-
-function closeMenu() {
-
-  menu.classList.remove("open");
-
-  overlay.classList.add("hidden");
-
-}
-
-
-document
-  .getElementById("menuButton")
-  .addEventListener("click", openMenu);
-
-
-document
-  .getElementById("closeMenu")
-  .addEventListener("click", closeMenu);
-
-
-overlay.addEventListener(
-  "click",
-  closeMenu
-);
-
-
-// =========================
-// PROFIL
-// =========================
-
-document
-  .getElementById("profileButton")
-  .addEventListener("click", function() {
-
-    document
-      .getElementById("mainDashboard")
-      .classList.add("hidden");
-
-    document
-      .getElementById("profileSection")
-      .classList.remove("hidden");
-
-  });
-
-
-document
-  .getElementById("backDashboard")
-  .addEventListener("click", function() {
-
-    document
-      .getElementById("profileSection")
-      .classList.add("hidden");
-
-    document
-      .getElementById("mainDashboard")
-      .classList.remove("hidden");
-
-  });
-
-
-// =========================
-// MODE SOMBRE
-// =========================
-
-document
-  .getElementById("darkButton")
-  .addEventListener("click", function() {
-
-    document.body.classList.toggle("dark");
-
-  });
-
-
-// =========================
-// MENU OPTIONS
-// =========================
-
-document
-  .getElementById("countryButton")
-  .addEventListener("click", function() {
-
-    alert(
-      "La sélection du pays sera disponible prochainement."
+    overlay.classList.remove(
+      "hidden"
     );
 
-  });
+  }
 
 
-document
-  .getElementById("referralButton")
-  .addEventListener("click", function() {
+  function closeMenu() {
 
-    alert(
-      "Le système de parrainage sera disponible prochainement."
+    menu.classList.remove(
+      "open"
     );
 
-  });
-
-
-document
-  .getElementById("settingsButton")
-  .addEventListener("click", function() {
-
-    alert(
-      "Les paramètres seront disponibles prochainement."
+    overlay.classList.add(
+      "hidden"
     );
 
-  });
+  }
 
 
-// =========================
-// UPLOAD PHOTO
-// =========================
-
-document
-  .getElementById("uploadPhotoButton")
-  .addEventListener("click", async function() {
-
-    const input =
-      document.getElementById("profilePhotoInput");
-
-    const photoMessage =
-      document.getElementById("photoMessage");
+  document
+    .getElementById("menuButton")
+    .addEventListener(
+      "click",
+      openMenu
+    );
 
 
-    if (!input.files || !input.files[0]) {
-
-      photoMessage.textContent =
-        "Veuillez sélectionner une photo.";
-
-      return;
-    }
-
-
-    const file =
-      input.files[0];
+  document
+    .getElementById("closeMenu")
+    .addEventListener(
+      "click",
+      closeMenu
+    );
 
 
-    if (!file.type.startsWith("image/")) {
-
-      photoMessage.textContent =
-        "Veuillez choisir une image.";
-
-      return;
-    }
+  overlay.addEventListener(
+    "click",
+    closeMenu
+  );
 
 
-    const { data: sessionData } =
+  // =========================
+  // PROFILE
+  // =========================
+
+  document
+    .getElementById("profileButton")
+    .addEventListener(
+      "click",
+      function () {
+
+        document
+          .getElementById("mainDashboard")
+          .classList.add("hidden");
+
+
+        document
+          .getElementById("profileSection")
+          .classList.remove("hidden");
+
+      }
+    );
+
+
+  document
+    .getElementById("backDashboard")
+    .addEventListener(
+      "click",
+      function () {
+
+        document
+          .getElementById("profileSection")
+          .classList.add("hidden");
+
+
+        document
+          .getElementById("mainDashboard")
+          .classList.remove("hidden");
+
+      }
+    );
+
+
+  // =========================
+  // DARK MODE
+  // =========================
+
+  document
+    .getElementById("darkButton")
+    .addEventListener(
+      "click",
+      function () {
+
+        document.body.classList.toggle(
+          "dark"
+        );
+
+      }
+    );
+
+
+  // =========================
+  // COUNTRY
+  // =========================
+
+  document
+    .getElementById("countryButton")
+    .addEventListener(
+      "click",
+      function () {
+
+        alert(
+          "La sélection du pays sera disponible prochainement."
+        );
+
+      }
+    );
+
+
+  // =========================
+  // REFERRAL
+  // =========================
+
+  document
+    .getElementById("referralButton")
+    .addEventListener(
+      "click",
+      function () {
+
+        alert(
+          "Le système de parrainage sera disponible prochainement."
+        );
+
+      }
+    );
+
+
+  // =========================
+  // SETTINGS
+  // =========================
+
+  document
+    .getElementById("settingsButton")
+    .addEventListener(
+      "click",
+      function () {
+
+        alert(
+          "Les paramètres seront disponibles prochainement."
+        );
+
+      }
+    );
+
+
+  // =========================
+  // UPLOAD PROFILE PHOTO
+  // =========================
+
+  document
+    .getElementById("uploadPhotoButton")
+    .addEventListener(
+      "click",
+      async function () {
+
+        const input =
+          document.getElementById(
+            "profilePhotoInput"
+          );
+
+        const photoMessage =
+          document.getElementById(
+            "photoMessage"
+          );
+
+
+        if (
+          !input.files ||
+          !input.files[0]
+        ) {
+
+          photoMessage.textContent =
+            "Veuillez sélectionner une photo.";
+
+          return;
+        }
+
+
+        const file =
+          input.files[0];
+
+
+        if (
+          !file.type.startsWith(
+            "image/"
+          )
+        ) {
+
+          photoMessage.textContent =
+            "Veuillez choisir une image.";
+
+          return;
+        }
+
+
+        const {
+          data: sessionData
+        } =
+          await db.auth.getSession();
+
+
+        const user =
+          sessionData.session?.user;
+
+
+        if (!user) {
+
+          photoMessage.textContent =
+            "Session expirée. Veuillez vous reconnecter.";
+
+          return;
+        }
+
+
+        photoMessage.textContent =
+          "Téléchargement de la photo...";
+
+
+        const extension =
+          file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+        const filePath =
+          user.id +
+          "/profile." +
+          extension;
+
+
+        const {
+          error: uploadError
+        } =
+          await db.storage
+            .from("profile-photos")
+            .upload(
+              filePath,
+              file,
+              {
+                upsert: true
+              }
+            );
+
+
+        if (uploadError) {
+
+          photoMessage.textContent =
+            "Erreur : " +
+            uploadError.message;
+
+          return;
+        }
+
+
+        const {
+          error: profileError
+        } =
+          await db
+            .from("profiles")
+            .update({
+              avatar_url:
+                filePath
+            })
+            .eq(
+              "id",
+              user.id
+            );
+
+
+        if (profileError) {
+
+          photoMessage.textContent =
+            "Photo envoyée, mais erreur : " +
+            profileError.message;
+
+          return;
+        }
+
+
+        const {
+          data: signedData,
+          error: signedError
+        } =
+          await db.storage
+            .from("profile-photos")
+            .createSignedUrl(
+              filePath,
+              3600
+            );
+
+
+        if (
+          signedError ||
+          !signedData?.signedUrl
+        ) {
+
+          photoMessage.textContent =
+            "Photo enregistrée, mais impossible de l'afficher.";
+
+          return;
+        }
+
+
+        document
+          .getElementById("profilePhoto")
+          .src =
+          signedData.signedUrl;
+
+
+        document
+          .getElementById("profilePhoto")
+          .style.display =
+          "block";
+
+
+        document
+          .getElementById("defaultProfileIcon")
+          .style.display =
+          "none";
+
+
+        photoMessage.textContent =
+          "Photo de profil enregistrée ✅";
+
+      }
+    );
+
+
+  // =========================
+  // CHECK EXISTING SESSION
+  // =========================
+
+  try {
+
+    const {
+      data: sessionData
+    } =
       await db.auth.getSession();
 
 
@@ -349,109 +721,22 @@ document
       sessionData.session?.user;
 
 
-    if (!user) {
+    if (user) {
 
-      photoMessage.textContent =
-        "Session expirée. Veuillez vous reconnecter.";
+      await showDashboard(
+        user
+      );
 
-      return;
     }
 
+  } catch (error) {
 
-    photoMessage.textContent =
-      "Téléchargement de la photo...";
+    console.log(
+      "Erreur session:",
+      error
+    );
 
+  }
 
-    const extension =
-      file.name
-        .split(".")
-        .pop()
-        .toLowerCase();
-
-
-    const filePath =
-      user.id + "/profile." + extension;
-
-
-    const { error: uploadError } =
-      await db.storage
-        .from("profile-photos")
-        .upload(
-          filePath,
-          file,
-          {
-            upsert: true
-          }
-        );
-
-
-    if (uploadError) {
-
-      photoMessage.textContent =
-        "Erreur : " + uploadError.message;
-
-      return;
-    }
-
-
-    // Sauvegarder le chemin dans le profil
-    const { error: profileError } =
-      await db
-        .from("profiles")
-        .update({
-          avatar_url: filePath
-        })
-        .eq("id", user.id);
-
-
-    if (profileError) {
-
-      photoMessage.textContent =
-        "Photo envoyée, mais erreur de sauvegarde : " +
-        profileError.message;
-
-      return;
-    }
-
-
-    // Afficher immédiatement la photo
-    const { data: signedData, error: signedError } =
-      await db.storage
-        .from("profile-photos")
-        .createSignedUrl(
-          filePath,
-          3600
-        );
-
-
-    if (signedError) {
-
-      photoMessage.textContent =
-        "Photo enregistrée, mais impossible de l'afficher.";
-
-      return;
-    }
-
-
-    document
-      .getElementById("profilePhoto")
-      .src =
-      signedData.signedUrl;
-
-
-    document
-      .getElementById("profilePhoto")
-      .style.display =
-      "block";
-
-
-    document
-      .getElementById("defaultProfileIcon")
-      .style.display =
-      "none";
-
-
-    photoMessage.textContent =
-      "Photo de profil enregistrée ✅";
-
-  });
+});
+  </script>
