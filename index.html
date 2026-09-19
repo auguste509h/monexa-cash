@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MONEXA CASH</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
@@ -27,136 +28,303 @@
     }
 
     header h1 {
-      font-size: 32px;
+      font-size: 30px;
       margin-bottom: 8px;
     }
 
     header p {
-      font-size: 15px;
-      opacity: 0.9;
+      opacity: .9;
     }
 
     .container {
-      padding: 25px 18px;
-      max-width: 600px;
+      max-width: 500px;
       margin: auto;
+      padding: 25px 18px;
     }
 
-    .welcome {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .welcome h2 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .welcome p {
-      color: #667085;
-    }
-
-    .services {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
-    .service {
+    .card {
       background: white;
-      border-radius: 15px;
-      padding: 22px 12px;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      padding: 22px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
     }
 
-    .service .icon {
-      font-size: 30px;
-      margin-bottom: 10px;
+    h2 {
+      margin-bottom: 15px;
     }
 
-    .service h3 {
-      font-size: 17px;
-      margin-bottom: 6px;
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border-radius: 10px;
+      font-size: 15px;
     }
 
-    .service p {
-      font-size: 12px;
-      color: #667085;
+    input {
+      border: 1px solid #d0d5dd;
     }
 
-    .button {
-      display: block;
+    button {
+      border: none;
       background: #0b1f3a;
       color: white;
-      text-decoration: none;
-      text-align: center;
-      padding: 16px;
-      border-radius: 12px;
-      margin-top: 25px;
       font-weight: bold;
     }
 
-    footer {
+    .secondary {
+      background: #e9eef5;
+      color: #172033;
+    }
+
+    .service {
+      padding: 15px;
+      border: 1px solid #e4e7ec;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #message {
+      margin-top: 15px;
       text-align: center;
-      padding: 25px 15px;
-      color: #667085;
-      font-size: 13px;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>MONEXA CASH</h1>
-    <p>Plateforme de services financiers numériques</p>
-  </header>
+<header>
+  <h1>MONEXA CASH</h1>
+  <p>Plateforme de services financiers numériques</p>
+</header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="welcome">
-      <h2>Bienvenue 👋</h2>
-      <p>Choisissez le service dont vous avez besoin.</p>
-    </div>
+  <!-- CONNEXION -->
+  <div class="card" id="loginBox">
+    <h2>Connexion</h2>
 
-    <div class="services">
+    <input id="loginEmail" type="email" placeholder="Adresse e-mail">
+    <input id="loginPassword" type="password" placeholder="Mot de passe">
 
-      <div class="service">
-        <div class="icon">💳</div>
-        <h3>Recharge</h3>
-        <p>Rechargez votre compte</p>
-      </div>
-
-      <div class="service">
-        <div class="icon">💸</div>
-        <h3>Transfert</h3>
-        <p>Envoyez de l'argent</p>
-      </div>
-
-      <div class="service">
-        <div class="icon">🏦</div>
-        <h3>Retrait</h3>
-        <p>Demandez un retrait</p>
-      </div>
-
-      <div class="service">
-        <div class="icon">🛒</div>
-        <h3>Paiement</h3>
-        <p>Effectuez un paiement</p>
-      </div>
-
-    </div>
-
-    <a class="button" href="#">
-      Demander un service
-    </a>
-
+    <button onclick="login()">Se connecter</button>
+    <button class="secondary" onclick="showRegister()">Créer un compte</button>
   </div>
 
-  <footer>
-    © 2026 MONEXA CASH — Tous droits réservés.
-  </footer>
+  <!-- INSCRIPTION -->
+  <div class="card hidden" id="registerBox">
+    <h2>Créer un compte</h2>
+
+    <input id="registerName" type="text" placeholder="Nom complet">
+    <input id="registerPhone" type="text" placeholder="Téléphone">
+    <input id="registerEmail" type="email" placeholder="Adresse e-mail">
+    <input id="registerPassword" type="password" placeholder="Mot de passe">
+
+    <button onclick="register()">Créer mon compte</button>
+    <button class="secondary" onclick="showLogin()">Retour à la connexion</button>
+  </div>
+
+  <!-- ESPACE CLIENT -->
+  <div class="card hidden" id="dashboard">
+    <h2>Bienvenue 👋</h2>
+
+    <p id="userEmail"></p>
+
+    <h3 style="margin-top:20px;">Nos services</h3>
+
+    <div class="service">💳 Recharge</div>
+    <div class="service">💸 Transfert</div>
+    <div class="service">🏦 Retrait</div>
+    <div class="service">🛒 Paiement</div>
+
+    <button class="secondary" onclick="logout()">Se déconnecter</button>
+  </div>
+
+  <div id="message"></div>
+
+</div>
+
+<script>
+
+  /* ==============================
+     CONFIGURATION SUPABASE
+     ============================== */
+
+  const SUPABASE_URL =
+    "https://nakaajakjrefzmacqlhv.supabase.co";
+
+  const SUPABASE_PUBLISHABLE_KEY =
+   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+  const { createClient } = supabase;
+
+  const db = createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  /* ==============================
+     AFFICHAGE
+     ============================== */
+
+  function showRegister() {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("registerBox").classList.remove("hidden");
+  }
+
+  function showLogin() {
+    document.getElementById("registerBox").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+  }
+
+
+  /* ==============================
+     INSCRIPTION
+     ============================== */
+
+  async function register() {
+
+    const name =
+      document.getElementById("registerName").value.trim();
+
+    const phone =
+      document.getElementById("registerPhone").value.trim();
+
+    const email =
+      document.getElementById("registerEmail").value.trim();
+
+    const password =
+      document.getElementById("registerPassword").value;
+
+    if (!name || !email || !password) {
+      showMessage("Veuillez remplir les champs obligatoires.");
+      return;
+    }
+
+    const { data, error } = await db.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          full_name: name,
+          phone: phone
+        }
+      }
+    });
+
+    if (error) {
+      showMessage(error.message);
+      return;
+    }
+
+    showMessage("Compte créé avec succès. Vous pouvez vous connecter.");
+    showLogin();
+  }
+
+
+  /* ==============================
+     CONNEXION
+     ============================== */
+
+  async function login() {
+
+    const email =
+      document.getElementById("loginEmail").value.trim();
+
+    const password =
+      document.getElementById("loginPassword").value;
+
+    if (!email || !password) {
+      showMessage("Veuillez entrer votre e-mail et votre mot de passe.");
+      return;
+    }
+
+    const { data, error } =
+      await db.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+    if (error) {
+      showMessage(error.message);
+      return;
+    }
+
+    showDashboard(data.user);
+  }
+
+
+  /* ==============================
+     TABLEAU DE BORD
+     ============================== */
+
+  function showDashboard(user) {
+
+    document.getElementById("loginBox")
+      .classList.add("hidden");
+
+    document.getElementById("registerBox")
+      .classList.add("hidden");
+
+    document.getElementById("dashboard")
+      .classList.remove("hidden");
+
+    document.getElementById("userEmail")
+      .textContent = user.email;
+
+    document.getElementById("message")
+      .textContent = "";
+  }
+
+
+  /* ==============================
+     DÉCONNEXION
+     ============================== */
+
+  async function logout() {
+
+    await db.auth.signOut();
+
+    document.getElementById("dashboard")
+      .classList.add("hidden");
+
+    document.getElementById("loginBox")
+      .classList.remove("hidden");
+  }
+
+
+  /* ==============================
+     MESSAGE
+     ============================== */
+
+  function showMessage(text) {
+    document.getElementById("message").textContent = text;
+  }
+
+
+  /* ==============================
+     VÉRIFIER SESSION EXISTANTE
+     ============================== */
+
+  async function checkSession() {
+
+    const { data } = await db.auth.getSession();
+
+    if (data.session) {
+      showDashboard(data.session.user);
+    }
+  }
+
+  checkSession();
+
+</script>
 
 </body>
 </html>
