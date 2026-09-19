@@ -594,7 +594,111 @@
           Sélectionnez un service.
         </div>
 
+<div
+  id="rechargeForm"
+  class="card hidden"
+>
 
+  <h2>💳 Recharge</h2>
+
+  <p>
+    Choisissez le service que vous souhaitez utiliser.
+  </p>
+
+  <select id="rechargeService">
+
+    <option value="">
+      Sélectionner un service
+    </option>
+
+    <option value="Meru">
+      Meru
+    </option>
+
+    <option value="Wise">
+      Wise
+    </option>
+
+    <option value="Morse">
+      Morse
+    </option>
+
+  </select>
+
+
+  <input
+    type="number"
+    id="rechargeAmount"
+    placeholder="Montant à recevoir en USD"
+    min="1"
+    step="0.01"
+  >
+
+
+  <div id="rechargeFee">
+    Frais : $0
+  </div>
+
+
+  <div id="rechargeTotal">
+    Total : 0 G
+  </div>
+
+
+  <div id="rechargePayment">
+
+    <strong>
+      Paiement Natcash
+    </strong>
+
+    <p>
+      Numéro :
+      <strong>509 40886629</strong>
+    </p>
+
+    <p>
+      Nom :
+      <strong>JUNIOR AUGUSTE</strong>
+    </p>
+
+    <p>
+      Taux :
+      <strong>145 G = 1 USD</strong>
+    </p>
+
+  </div>
+
+
+  <input
+    type="text"
+    id="rechargeAccount"
+    placeholder="Email ou nom d'utilisateur"
+  >
+
+
+  <input
+    type="file"
+    id="rechargeProof"
+    accept="image/*"
+  >
+
+
+  <button id="rechargeSubmit">
+    Envoyer la demande
+  </button>
+
+
+  <button
+    id="rechargeBack"
+    class="link"
+  >
+    ← Retour
+  </button>
+
+
+  <div id="rechargeMessage"></div>
+
+</div>
         <button id="logoutButton">
           Se déconnecter
         </button>
@@ -1085,7 +1189,55 @@
             }
           );
 
+                // OUVRIR LE FORMULAIRE RECHARGE
 
+        document
+          .querySelector(
+            '[data-service="Recharge"]'
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              document
+                .getElementById(
+                  "rechargeForm"
+                )
+                .classList
+                .remove("hidden");
+
+              mainDashboard
+                .classList
+                .add("hidden");
+
+            }
+          );
+
+
+        // RETOUR DEPUIS RECHARGE
+
+        document
+          .getElementById(
+            "rechargeBack"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              document
+                .getElementById(
+                  "rechargeForm"
+                )
+                .classList
+                .add("hidden");
+
+              mainDashboard
+                .classList
+                .remove("hidden");
+
+            }
+          );
+        
         // FERMER LE MENU
 
         document
