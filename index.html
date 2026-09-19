@@ -56,6 +56,7 @@
       color: white;
       font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .link {
@@ -71,6 +72,52 @@
       margin-top: 15px;
       padding: 12px;
       text-align: center;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .service {
+      background: #f7f9fc;
+      border: 1px solid #e2e7ef;
+      border-radius: 14px;
+      padding: 20px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .service:hover {
+      transform: translateY(-2px);
+    }
+
+    .service-icon {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .service-name {
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    #serviceMessage {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef3f9;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    @media (max-width: 400px) {
+      .services {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -121,7 +168,40 @@
 
     <p id="userEmail"></p>
 
-    <p>Connexion réussie.</p>
+    <h3>Nos services</h3>
+
+    <div class="services">
+
+      <div class="service" data-service="Recharge">
+        <div class="service-icon">💳</div>
+        <div class="service-name">Recharge</div>
+      </div>
+
+      <div class="service" data-service="Retrait">
+        <div class="service-icon">🏦</div>
+        <div class="service-name">Retrait</div>
+      </div>
+
+      <div class="service" data-service="Free Fire">
+        <div class="service-icon">🎮</div>
+        <div class="service-name">Free Fire</div>
+      </div>
+
+      <div class="service" data-service="Crypto">
+        <div class="service-icon">🪙</div>
+        <div class="service-name">Crypto</div>
+      </div>
+
+      <div class="service" data-service="Binance">
+        <div class="service-icon">🟡</div>
+        <div class="service-name">Binance</div>
+      </div>
+
+    </div>
+
+    <div id="serviceMessage">
+      Sélectionnez un service.
+    </div>
 
     <button id="logoutButton">
       Se déconnecter
@@ -214,6 +294,25 @@ document
     await db.auth.signOut();
 
     location.reload();
+
+  });
+
+
+document
+  .querySelectorAll(".service")
+  .forEach(function(service) {
+
+    service.addEventListener("click", function() {
+
+      const serviceName =
+        service.getAttribute("data-service");
+
+      document
+        .getElementById("serviceMessage")
+        .textContent =
+        "Service sélectionné : " + serviceName;
+
+    });
 
   });
 
