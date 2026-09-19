@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>MONEXA CASH</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -18,7 +27,6 @@
       font-family: Arial, sans-serif;
       background: #f4f7fb;
       color: #172033;
-      transition: .3s;
     }
 
     header {
@@ -37,14 +45,12 @@
     }
 
     .top-button {
-      width: auto;
-      margin: 0;
       padding: 10px 13px;
       background: rgba(255,255,255,.12);
       border-radius: 10px;
-      font-size: 14px;
       color: white;
       border: 0;
+      font-size: 14px;
     }
 
     .brand {
@@ -85,7 +91,6 @@
       border: 1px solid #ccc;
       border-radius: 10px;
       font-size: 15px;
-      background: white;
     }
 
     button {
@@ -98,12 +103,6 @@
       color: white;
       font-size: 16px;
       font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
     }
 
     .link {
@@ -113,15 +112,6 @@
 
     .hidden {
       display: none !important;
-    }
-
-    #message,
-    #registerMessage,
-    #photoMessage {
-      margin-top: 15px;
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
     }
 
     .services {
@@ -137,7 +127,6 @@
       border-radius: 14px;
       padding: 20px 10px;
       text-align: center;
-      cursor: pointer;
     }
 
     .service-icon {
@@ -169,18 +158,12 @@
       background: white;
       z-index: 1000;
       padding: 20px;
-      box-shadow: -5px 0 20px rgba(0,0,0,.15);
       transform: translateX(100%);
       transition: .25s;
-      overflow-y: auto;
     }
 
     .menu.open {
       transform: translateX(0);
-    }
-
-    .menu h2 {
-      margin-top: 20px;
     }
 
     .menu-item {
@@ -196,6 +179,13 @@
     .close-menu {
       background: #0b1f3a;
       color: white;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 999;
     }
 
     .profile-box {
@@ -215,16 +205,9 @@
       margin: auto;
     }
 
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.35);
-      z-index: 999;
-    }
-
     .dark {
       background: #101827;
-      color: #f4f7fb;
+      color: white;
     }
 
     .dark .card,
@@ -237,7 +220,6 @@
     .dark .menu-item,
     .dark #serviceMessage {
       background: #222e43;
-      border-color: #33415c;
       color: white;
     }
 
@@ -248,29 +230,8 @@
       border-color: #45536d;
     }
 
-    .dark .link {
-      color: white;
-    }
+    @media (max-width:400px) {
 
-    .notice {
-      background: #eef3f9;
-      padding: 14px;
-      border-radius: 10px;
-      margin-top: 15px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .payment-box {
-      background: #fff7df;
-      border: 1px solid #ead28a;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 15px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 400px) {
       .services {
         grid-template-columns: 1fr;
       }
@@ -278,1064 +239,1249 @@
       .brand h1 {
         font-size: 19px;
       }
+
     }
+
   </style>
+
 </head>
 
 <body>
 
-<header>
+  <header>
 
-  <div class="topbar">
+    <div class="topbar">
 
-    <button
-      class="top-button"
-      id="profileButton">
-      👤 Profil
-    </button>
+      <button
+        class="top-button"
+        id="profileButton"
+      >
+        👤 Profil
+      </button>
 
-    <div class="brand">
-      <h1>MONEXA CASH</h1>
-      <p>Plateforme de services financiers numériques</p>
-    </div>
+      <div class="brand">
 
-    <button
-      class="top-button"
-      id="menuButton">
-      ☰
-    </button>
+        <h1>MONEXA CASH</h1>
 
-  </div>
+        <p>
+          Plateforme de services financiers numériques
+        </p>
 
-</header>
-
-
-<div id="overlay" class="overlay hidden"></div>
-
-
-<div id="sideMenu" class="menu">
-
-  <button
-    class="close-menu"
-    id="closeMenu">
-    ✕ Fermer
-  </button>
-
-  <h2>Menu</h2>
-
-  <button class="menu-item" id="countryButton">
-    🌍 Pays
-  </button>
-
-  <button class="menu-item" id="darkButton">
-    🌙 Mode sombre
-  </button>
-
-  <button class="menu-item" id="referralButton">
-    🎟️ Code de parrainage
-  </button>
-
-  <button class="menu-item" id="settingsButton">
-    ⚙️ Paramètres
-  </button>
-
-  <button class="menu-item" id="helpButton">
-    ❓ Assistance
-  </button>
-
-  <button class="menu-item" id="menuLogoutButton">
-    🚪 Déconnexion
-  </button>
-
-</div>
-
-
-<div class="container">
-
-  <!-- ========================= -->
-  <!-- LOGIN -->
-  <!-- ========================= -->
-
-  <div id="loginSection" class="card">
-
-    <h2>Connexion</h2>
-
-    <input
-      type="email"
-      id="email"
-      placeholder="Adresse e-mail">
-
-    <input
-      type="password"
-      id="password"
-      placeholder="Mot de passe">
-
-    <button id="loginButton">
-      Se connecter
-    </button>
-
-    <button
-      class="link"
-      id="registerButton">
-      Créer un compte
-    </button>
-
-    <div id="message"></div>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- REGISTER -->
-  <!-- ========================= -->
-
-  <div id="registerSection" class="card hidden">
-
-    <h2>Créer un compte</h2>
-
-    <input
-      type="text"
-      id="registerName"
-      placeholder="Nom complet">
-
-    <input
-      type="email"
-      id="registerEmail"
-      placeholder="Adresse e-mail">
-
-    <input
-      type="tel"
-      id="registerPhone"
-      placeholder="Téléphone">
-
-    <input
-      type="password"
-      id="registerPassword"
-      placeholder="Mot de passe">
-
-    <button id="createAccountButton">
-      Créer mon compte
-    </button>
-
-    <button
-      class="link"
-      id="backLoginButton">
-      ← Retour à la connexion
-    </button>
-
-    <div id="registerMessage"></div>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- DASHBOARD -->
-  <!-- ========================= -->
-
-  <div id="dashboard" class="card hidden">
-
-    <!-- PROFILE -->
-
-    <div id="profileSection" class="profile-box hidden">
-
-      <img
-        id="profilePhoto"
-        src=""
-        alt="Photo de profil">
-
-      <div
-        id="defaultProfileIcon"
-        class="profile-icon">
-        👤
       </div>
 
-      <h2>Mon profil</h2>
+      <button
+        class="top-button"
+        id="menuButton"
+      >
+        ☰
+      </button>
 
-      <p id="profileEmail"></p>
+    </div>
+
+  </header>
+
+  <div
+    id="overlay"
+    class="overlay hidden"
+  ></div>
+
+  <div
+    id="sideMenu"
+    class="menu"
+  >
+
+    <button
+      class="close-menu"
+      id="closeMenu"
+    >
+      ✕ Fermer
+    </button>
+
+    <h2>Menu</h2>
+
+    <button
+      class="menu-item"
+      id="countryButton"
+    >
+      🌍 Pays
+    </button>
+
+    <button
+      class="menu-item"
+      id="darkButton"
+    >
+      🌙 Mode sombre
+    </button>
+
+    <button
+      class="menu-item"
+      id="referralButton"
+    >
+      🎟️ Code de parrainage
+    </button>
+
+    <button
+      class="menu-item"
+      id="settingsButton"
+    >
+      ⚙️ Paramètres
+    </button>
+
+    <button
+      class="menu-item"
+      id="helpButton"
+    >
+      ❓ Assistance
+    </button>
+
+    <button
+      class="menu-item"
+      id="menuLogoutButton"
+    >
+      🚪 Déconnexion
+    </button>
+
+  </div>
+    <div class="container">
+
+    <!-- LOGIN -->
+
+    <div
+      id="loginSection"
+      class="card"
+    >
+
+      <h2>Connexion</h2>
 
       <input
-        type="file"
-        id="profilePhotoInput"
-        accept="image/*">
+        type="email"
+        id="email"
+        placeholder="Adresse e-mail"
+      >
 
-      <button id="uploadPhotoButton">
-        📷 Ajouter une photo
+      <input
+        type="password"
+        id="password"
+        placeholder="Mot de passe"
+      >
+
+      <button id="loginButton">
+        Se connecter
       </button>
 
-      <p id="photoMessage"></p>
-
-      <button id="backDashboard">
-        ← Retour
+      <button
+        class="link"
+        id="registerButton"
+      >
+        Créer un compte
       </button>
+
+      <div id="message"></div>
 
     </div>
 
 
-    <!-- MAIN DASHBOARD -->
+    <!-- REGISTER -->
 
-    <div id="mainDashboard">
+    <div
+      id="registerSection"
+      class="card hidden"
+    >
 
-      <h2>Bienvenue 👋</h2>
+      <h2>Créer un compte</h2>
 
-      <p id="userEmail"></p>
+      <input
+        type="text"
+        id="registerName"
+        placeholder="Nom complet"
+      >
 
-      <h3>Nos services</h3>
+      <input
+        type="email"
+        id="registerEmail"
+        placeholder="Adresse e-mail"
+      >
 
-      <div class="services">
+      <input
+        type="tel"
+        id="registerPhone"
+        placeholder="Téléphone"
+      >
 
-        <div class="service" data-service="Recharge">
-          <div class="service-icon">💳</div>
-          <div class="service-name">Recharge</div>
-        </div>
+      <input
+        type="password"
+        id="registerPassword"
+        placeholder="Mot de passe"
+      >
 
-        <div class="service" data-service="Retrait">
-          <div class="service-icon">🏦</div>
-          <div class="service-name">Retrait</div>
-        </div>
-
-        <div class="service" data-service="Free Fire">
-          <div class="service-icon">🎮</div>
-          <div class="service-name">Free Fire</div>
-        </div>
-
-        <div class="service" data-service="Crypto">
-          <div class="service-icon">🪙</div>
-          <div class="service-name">Crypto</div>
-        </div>
-
-        <div class="service" data-service="Binance">
-          <div class="service-icon">🟡</div>
-          <div class="service-name">Binance</div>
-        </div>
-
-        <div class="service" data-service="Création de carte">
-          <div class="service-icon">💳</div>
-          <div class="service-name">Création de carte</div>
-        </div>
-
-      </div>
-
-      <div id="serviceMessage">
-        Sélectionnez un service.
-      </div>
-
-      <button id="logoutButton">
-        Se déconnecter
+      <button id="createAccountButton">
+        Créer mon compte
       </button>
+
+      <button
+        class="link"
+        id="backLoginButton"
+      >
+        ← Retour à la connexion
+      </button>
+
+      <div id="registerMessage"></div>
 
     </div>
 
-  </div>
 
-</div>
+    <!-- DASHBOARD -->
+
+    <div
+      id="dashboard"
+      class="card hidden"
+    >
+
+      <!-- PROFIL -->
+
+      <div
+        id="profileSection"
+        class="profile-box hidden"
+      >
+
+        <img
+          id="profilePhoto"
+          src=""
+          alt="Photo de profil"
+        >
+
+        <div
+          id="defaultProfileIcon"
+          class="profile-icon"
+        >
+          👤
+        </div>
+
+        <h2>Mon profil</h2>
+
+        <p id="profileEmail"></p>
+
+        <input
+          type="file"
+          id="profilePhotoInput"
+          accept="image/*"
+        >
+
+        <button id="uploadPhotoButton">
+          📷 Ajouter une photo
+        </button>
+
+        <p id="photoMessage"></p>
+
+        <button id="backDashboard">
+          ← Retour
+        </button>
+
+      </div>
 
 
-<script>
+      <!-- TABLEAU DE BORD -->
+
+      <div id="mainDashboard">
+
+        <h2>Bienvenue 👋</h2>
+
+        <p id="userEmail"></p>
+
+        <h3>Nos services</h3>
+
+        <div class="services">
+
+          <div
+            class="service"
+            data-service="Recharge"
+          >
+            <div class="service-icon">
+              💳
+            </div>
+
+            <div class="service-name">
+              Recharge
+            </div>
+          </div>
+
+
+          <div
+            class="service"
+            data-service="Retrait"
+          >
+            <div class="service-icon">
+              🏦
+            </div>
+
+            <div class="service-name">
+              Retrait
+            </div>
+          </div>
+
+
+          <div
+            class="service"
+            data-service="Free Fire"
+          >
+            <div class="service-icon">
+              🎮
+            </div>
+
+            <div class="service-name">
+              Free Fire
+            </div>
+          </div>
+
+
+          <div
+            class="service"
+            data-service="Crypto"
+          >
+            <div class="service-icon">
+              🪙
+            </div>
+
+            <div class="service-name">
+              Crypto
+            </div>
+          </div>
+
+
+          <div
+            class="service"
+            data-service="Binance"
+          >
+            <div class="service-icon">
+              🟡
+            </div>
+
+            <div class="service-name">
+              Binance
+            </div>
+          </div>
+
+
+          <div
+            class="service"
+            data-service="Création de carte"
+          >
+            <div class="service-icon">
+              💳
+            </div>
+
+            <div class="service-name">
+              Création de carte
+            </div>
+          </div>
+
+        </div>
+
+
+        <div id="serviceMessage">
+          Sélectionnez un service.
+        </div>
+
+
+        <button id="logoutButton">
+          Se déconnecter
+        </button>
+
+      </div>
+
+    </div>
+
+    </div><script>
 
 document.addEventListener(
   "DOMContentLoaded",
   async function () {
 
+    if (!window.supabase) {
+      document.body.innerHTML =
+        "<div style='padding:30px;text-align:center'>" +
+        "<h2>Erreur de chargement</h2>" +
+        "<p>Supabase n'a pas pu être chargé.</p>" +
+        "</div>";
 
-  // =========================
-  // SUPABASE
-  // =========================
-
-  if (!window.supabase) {
-
-    document.body.innerHTML =
-      "<div style='padding:30px;font-family:Arial;text-align:center'>" +
-      "<h2>Erreur de chargement</h2>" +
-      "<p>Supabase n'a pas pu être chargé.</p>" +
-      "</div>";
-
-    return;
-  }
+      return;
+    }
 
 
-  const SUPABASE_URL =
-    "https://nakaajakjrefzmacqlhv.supabase.co";
+    // =========================
+    // SUPABASE
+    // =========================
 
-  const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
+    const SUPABASE_URL =
+      "https://nakaajakjrefzmacqlhv.supabase.co";
 
-  const db =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
 
-
-  // =========================
-  // ELEMENTS
-  // =========================
-
-  const loginSection =
-    document.getElementById(
-      "loginSection"
-    );
-
-  const registerSection =
-    document.getElementById(
-      "registerSection"
-    );
-
-  const dashboard =
-    document.getElementById(
-      "dashboard"
-    );
-
-  const message =
-    document.getElementById(
-      "message"
-    );
+    const db =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
 
 
-  // =========================
-  // PROFILE PHOTO
-  // =========================
+    // =========================
+    // ELEMENTS
+    // =========================
 
-  async function loadProfilePhoto() {
+    const loginSection =
+      document.getElementById(
+        "loginSection"
+      );
 
-    try {
+    const registerSection =
+      document.getElementById(
+        "registerSection"
+      );
 
-      const {
-        data
-      } =
-        await db.auth.getSession();
+    const dashboard =
+      document.getElementById(
+        "dashboard"
+      );
 
-      const user =
-        data.session?.user;
-
-      if (!user) return;
-
-
-      const {
-        data: profile,
-        error
-      } =
-        await db
-          .from("profiles")
-          .select("avatar_url")
-          .eq("id", user.id)
-          .single();
+    const message =
+      document.getElementById(
+        "message"
+      );
 
 
-      if (
-        error ||
-        !profile ||
-        !profile.avatar_url
-      ) {
-        return;
-      }
+    // =========================
+    // AFFICHER LE DASHBOARD
+    // =========================
+
+    async function showDashboard(user) {
+
+      loginSection.classList.add(
+        "hidden"
+      );
+
+      registerSection.classList.add(
+        "hidden"
+      );
+
+      dashboard.classList.remove(
+        "hidden"
+      );
+
+      document
+        .getElementById(
+          "userEmail"
+        )
+        .textContent =
+        user.email || "";
+
+      document
+        .getElementById(
+          "profileEmail"
+        )
+        .textContent =
+        user.email || "";
+
+    }
 
 
-      const {
-        data: signedData
-      } =
-        await db.storage
-          .from("profile-photos")
-          .createSignedUrl(
-            profile.avatar_url,
-            3600
+    // =========================
+    // CONNEXION
+    // =========================
+
+    document
+      .getElementById(
+        "loginButton"
+      )
+      .addEventListener(
+        "click",
+        async function () {
+
+          const email =
+            document
+              .getElementById(
+                "email"
+              )
+              .value
+              .trim();
+
+          const password =
+            document
+              .getElementById(
+                "password"
+              )
+              .value;
+
+          if (
+            !email ||
+            !password
+          ) {
+
+            message.textContent =
+              "Veuillez entrer votre e-mail et votre mot de passe.";
+
+            return;
+          }
+
+          message.textContent =
+            "Connexion en cours...";
+
+
+          try {
+
+            const {
+              data,
+              error
+            } =
+              await db.auth.signInWithPassword({
+                email: email,
+                password: password
+              });
+
+
+            if (error) {
+
+              message.textContent =
+                "Erreur : " +
+                error.message;
+
+              return;
+            }
+
+
+            if (
+              !data ||
+              !data.user
+            ) {
+
+              message.textContent =
+                "Connexion impossible.";
+
+              return;
+            }
+
+
+            message.textContent =
+              "Connexion réussie ✅";
+
+
+            await showDashboard(
+              data.user
+            );
+
+
+          } catch (error) {
+
+            message.textContent =
+              "Erreur : " +
+              error.message;
+
+          }
+
+        }
+      );
+
+
+    // =========================
+    // AFFICHER INSCRIPTION
+    // =========================
+
+    document
+      .getElementById(
+        "registerButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          loginSection.classList.add(
+            "hidden"
           );
 
+          registerSection.classList.remove(
+            "hidden
+        // CREATION DU COMPTE
 
-      if (
-        !signedData ||
-        !signedData.signedUrl
-      ) {
-        return;
+    document
+      .getElementById(
+        "createAccountButton"
+      )
+      .addEventListener(
+        "click",
+        async function () {
+
+          const name =
+            document
+              .getElementById(
+                "registerName"
+              )
+              .value
+              .trim();
+
+          const email =
+            document
+              .getElementById(
+                "registerEmail"
+              )
+              .value
+              .trim();
+
+          const phone =
+            document
+              .getElementById(
+                "registerPhone"
+              )
+              .value
+              .trim();
+
+          const password =
+            document
+              .getElementById(
+                "registerPassword"
+              )
+              .value;
+
+          const registerMessage =
+            document
+              .getElementById(
+                "registerMessage"
+              );
+
+          registerMessage.textContent =
+            "Création du compte...";
+
+          if (
+            !name ||
+            !email ||
+            !phone ||
+            !password
+          ) {
+
+            registerMessage.textContent =
+              "Veuillez remplir tous les champs.";
+
+            return;
+          }
+
+          if (
+            password.length < 6
+          ) {
+
+            registerMessage.textContent =
+              "Le mot de passe doit contenir au moins 6 caractères.";
+
+            return;
+          }
+
+          const {
+            data,
+            error
+          } =
+            await db.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: {
+                  full_name: name,
+                  phone: phone
+                }
+              }
+            });
+
+          if (error) {
+
+            registerMessage.textContent =
+              error.message;
+
+            return;
+          }
+
+          if (data.user) {
+
+            await db
+              .from("profiles")
+              .upsert({
+                id: data.user.id,
+                full_name: name,
+                phone: phone,
+                email: email
+              });
+
+          }
+
+          registerMessage.textContent =
+            "Compte créé avec succès.";
+
+          setTimeout(
+            function () {
+
+              registerSection
+                .classList
+                .add("hidden");
+
+              loginSection
+                .classList
+                .remove("hidden");
+
+              document
+                .getElementById(
+                  "email"
+                )
+                .value = email;
+
+            },
+            1500
+          );
+
+        }
+      );
+
+
+    // DÉCONNEXION
+
+    async function logoutUser() {
+
+      await db.auth.signOut();
+
+      dashboard
+        .classList
+        .add("hidden");
+
+      profileSection
+        .classList
+        .add("hidden");
+
+      mainDashboard
+        .classList
+        .remove("hidden");
+
+      loginSection
+        .classList
+        .remove("hidden");
+
+      sideMenu
+        .classList
+        .remove("open");
+
+      overlay
+        .classList
+        .add("hidden");
+
+      document
+        .getElementById(
+          "email"
+        )
+        .value = "";
+
+      document
+        .getElementById(
+          "password"
+        )
+        .value = "";
+
+    }
+
+
+    document
+      .getElementById(
+        "logoutButton"
+      )
+      .addEventListener(
+        "click",
+        logoutUser
+      );
+
+
+    document
+      .getElementById(
+        "menuLogoutButton"
+      )
+      .addEventListener(
+        "click",
+        logoutUser
+      );
+
+
+    // SERVICES
+
+    document
+      .querySelectorAll(
+        ".service"
+      )
+      .forEach(
+        function (service) {
+
+          service.addEventListener(
+            "click",
+            function () {
+
+              const serviceName =
+                this.dataset.service;
+
+              document
+                .getElementById(
+                  "serviceMessage"
+                )
+                .textContent =
+                "Service sélectionné : "
+                + serviceName;
+
+            }
+          );
+
+        }
+      );
+
+
+    // OUVRIR LE MENU
+
+    document
+      .getElementById(
+        "menuButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          sideMenu
+            .classList
+            .add("open");
+
+          overlay
+            .classList
+            .remove("hidden");
+
+        }
+      );
+
+
+    // FERMER LE MENU
+
+    document
+      .getElementById(
+        "closeMenu"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          sideMenu
+            .classList
+            .remove("open");
+
+          overlay
+            .classList
+            .add("hidden");
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "overlay"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          sideMenu
+            .classList
+            .remove("open");
+
+          overlay
+            .classList
+            .add("hidden");
+
+        }
+      );    // PROFIL
+
+    document
+      .getElementById(
+        "profileButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          mainDashboard
+            .classList
+            .add("hidden");
+
+          profileSection
+            .classList
+            .remove("hidden");
+
+        }
+      );
+
+
+    // RETOUR AU TABLEAU DE BORD
+
+    document
+      .getElementById(
+        "backDashboard"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          profileSection
+            .classList
+            .add("hidden");
+
+          mainDashboard
+            .classList
+            .remove("hidden");
+
+        }
+      );
+
+
+    // MODE SOMBRE
+
+    document
+      .getElementById(
+        "darkButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          document
+            .body
+            .classList
+            .toggle("dark");
+
+        }
+      );
+
+
+    // MENU PAYS
+
+    document
+      .getElementById(
+        "countryButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          alert(
+            "Pays disponible : République dominicaine"
+          );
+
+        }
+      );
+
+
+    // CODE DE PARRAINAGE
+
+    document
+      .getElementById(
+        "referralButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          alert(
+            "Votre code de parrainage sera disponible prochainement."
+          );
+
+        }
+      );
+
+
+    // PARAMÈTRES
+
+    document
+      .getElementById(
+        "settingsButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          alert(
+            "Les paramètres du compte seront disponibles prochainement."
+          );
+
+        }
+      );
+
+
+    // ASSISTANCE
+
+    document
+      .getElementById(
+        "helpButton"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          alert(
+            "Pour obtenir de l'aide, contactez le support MONEXA CASH."
+          );
+
+        }
+      );
+
+
+    // PHOTO DE PROFIL
+
+    document
+      .getElementById(
+        "uploadPhotoButton"
+      )
+      .addEventListener(
+        "click",
+        async function () {
+
+          const input =
+            document
+              .getElementById(
+                "profilePhotoInput"
+              );
+
+          const photoMessage =
+            document
+              .getElementById(
+                "photoMessage"
+              );
+
+          if (
+            !input.files ||
+            !input.files[0]
+          ) {
+
+            photoMessage.textContent =
+              "Veuillez sélectionner une photo.";
+
+            return;
+          }
+
+          const file =
+            input.files[0];
+
+          const {
+            data: {
+              user
+            }
+          } =
+            await db.auth.getUser();
+
+          if (!user) {
+
+            photoMessage.textContent =
+              "Utilisateur non connecté.";
+
+            return;
+          }
+
+          photoMessage.textContent =
+            "Téléchargement de la photo...";
+
+          const fileName =
+            user.id
+            + "-"
+            + Date.now()
+            + "-"
+            + file.name;
+
+          const {
+            error
+          } =
+            await db.storage
+              .from(
+                "profile-photos"
+              )
+              .upload(
+                fileName,
+                file,
+                {
+                  upsert: true
+                }
+              );
+
+          if (error) {
+
+            photoMessage.textContent =
+              error.message;
+
+            return;
+          }
+
+          const {
+            data: signedData,
+            error: signedError
+          } =
+            await db.storage
+              .from(
+                "profile-photos"
+              )
+              .createSignedUrl(
+                fileName,
+                60 * 60 * 24 * 365
+              );
+
+          if (signedError) {
+
+            photoMessage.textContent =
+              signedError.message;
+
+            return;
+          }
+
+          const photoUrl =
+            signedData.signedUrl;
+
+          await db
+            .from("profiles")
+            .update({
+              avatar_url: photoUrl
+            })
+            .eq(
+              "id",
+              user.id
+            );
+
+          profilePhoto.src =
+            photoUrl;
+
+          profilePhoto.style.display =
+            "block";
+
+          defaultProfileIcon.style.display =
+            "none";
+
+          photoMessage.textContent =
+            "Photo ajoutée avec succès.";
+
+        }
+      );    // VÉRIFIER LA SESSION AU CHARGEMENT
+
+    const {
+      data: {
+        session
       }
+    } =
+      await db.auth.getSession();
 
 
-      document
-        .getElementById(
-          "profilePhoto"
-        )
-        .src =
-        signedData.signedUrl;
+    if (
+      session &&
+      session.user
+    ) {
 
-
-      document
-        .getElementById(
-          "profilePhoto"
-        )
-        .style.display =
-        "block";
-
-
-      document
-        .getElementById(
-          "defaultProfileIcon"
-        )
-        .style.display =
-        "none";
-
-
-    } catch (error) {
-
-      console.log(
-        "Photo error:",
-        error
+      showDashboard(
+        session.user
       );
 
     }
 
-  }
 
+    // SURVEILLER LA CONNEXION
 
-  // =========================
-  // SHOW DASHBOARD
-  // =========================
-
-  async function showDashboard(user) {
-
-    loginSection.classList.add(
-      "hidden"
-    );
-
-    registerSection.classList.add(
-      "hidden"
-    );
-
-    dashboard.classList.remove(
-      "hidden"
-    );
-
-
-    document
-      .getElementById(
-        "userEmail"
-      )
-      .textContent =
-      user.email || "";
-
-
-    document
-      .getElementById(
-        "profileEmail"
-      )
-      .textContent =
-      user.email || "";
-
-
-    await loadProfilePhoto();
-
-  }
-
-
-  // =========================
-  // LOGIN
-  // =========================
-
-  document
-    .getElementById(
-      "loginButton"
-    )
-    .addEventListener(
-      "click",
-      async function () {
-
-
-      const email =
-        document
-          .getElementById(
-            "email"
-          )
-          .value
-          .trim();
-
-
-      const password =
-        document
-          .getElementById(
-            "password"
-          )
-          .value;
-
-
-      if (
-        !email ||
-        !password
+    db.auth.onAuthStateChange(
+      function (
+        event,
+        session
       ) {
 
-        message.textContent =
-          "Veuillez entrer votre e-mail et votre mot de passe.";
+        if (
+          session &&
+          session.user
+        ) {
 
+          showDashboard(
+            session.user
+          );
+
+        }
+
+      }
+    );
+
+
+    // CHARGER LE PROFIL
+
+    async function loadProfile() {
+
+      const {
+        data: {
+          user
+        }
+      } =
+        await db.auth.getUser();
+
+      if (!user) {
         return;
       }
 
+      document
+        .getElementById(
+          "profileEmail"
+        )
+        .textContent =
+        user.email || "";
 
-      message.textContent =
-        "Connexion en cours...";
-
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await db.auth.signInWithPassword({
-            email: email,
-            password: password
-          });
-
-
-        if (error) {
-
-          message.textContent =
-            "Erreur : " +
-            error.message;
-
-          return;
-        }
-
-
-        if (
-          !data ||
-          !data.user
-        ) {
-
-          message.textContent =
-            "Connexion impossible.";
-
-          return;
-        }
-
-
-        message.textContent =
-          "Connexion réussie ✅";
-
-
-        await showDashboard(
-          data.user
-        );
-
-
-      } catch (error) {
-
-        console.log(error);
-
-        message.textContent =
-          "Erreur : " +
-          error.message;
-
-      }
-
-    });
-
-
-  // =========================
-  // REGISTER SCREEN
-  // =========================
-
-  document
-    .getElementById(
-      "registerButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-
-        loginSection.classList.add(
-          "hidden"
-        );
-
-        registerSection.classList.remove(
-          "hidden"
-        );
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "backLoginButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-
-        registerSection.classList.add(
-          "hidden"
-        );
-
-        loginSection.classList.remove(
-          "hidden"
-        );
-
-      }
-    );
-
-
-  // =========================
-  // CREATE ACCOUNT
-  // =========================
-
-  document
-    .getElementById(
-      "createAccountButton"
-    )
-    .addEventListener(
-      "click",
-      async function () {
-
-
-      const name =
-        document
-          .getElementById(
-            "registerName"
+      const {
+        data: profile
+      } =
+        await db
+          .from("profiles")
+          .select(
+            "full_name, phone, avatar_url"
           )
-          .value
-          .trim();
-
-
-      const email =
-        document
-          .getElementById(
-            "registerEmail"
+          .eq(
+            "id",
+            user.id
           )
-          .value
-          .trim();
-
-
-      const phone =
-        document
-          .getElementById(
-            "registerPhone"
-          )
-          .value
-          .trim();
-
-
-      const password =
-        document
-          .getElementById(
-            "registerPassword"
-          )
-          .value;
-
-
-      const registerMessage =
-        document.getElementById(
-          "registerMessage"
-        );
-
+          .single();
 
       if (
-        !name ||
-        !email ||
-        !password
+        profile &&
+        profile.avatar_url
       ) {
 
-        registerMessage.textContent =
-          "Veuillez remplir les champs obligatoires.";
+        profilePhoto.src =
+          profile.avatar_url;
 
-        return;
-      }
+        profilePhoto.style.display =
+          "block";
 
-
-      if (password.length < 6) {
-
-        registerMessage.textContent =
-          "Le mot de passe doit contenir au moins 6 caractères.";
-
-        return;
-      }
-
-
-      registerMessage.textContent =
-        "Création du compte...";
-
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await db.auth.signUp({
-
-            email: email,
-
-            password: password,
-
-            options: {
-
-              data: {
-
-                full_name:
-                  name,
-
-                phone:
-                  phone
-
-              }
-
-            }
-
-          });
-
-
-        if (error) {
-
-          registerMessage.textContent =
-            "Erreur : " +
-            error.message;
-
-          return;
-        }
-
-
-        registerMessage.textContent =
-          "Compte créé avec succès ✅";
-
-
-        if (
-          data.session &&
-          data.user
-        ) {
-
-          await showDashboard(
-            data.user
-          );
-
-        } else {
-
-          registerMessage.textContent =
-            "Compte créé ✅ Vérifiez votre e-mail si une confirmation est demandée.";
-
-        }
-
-
-      } catch (error) {
-
-        registerMessage.textContent =
-          "Erreur : " +
-          error.message;
+        defaultProfileIcon.style.display =
+          "none";
 
       }
 
-    });
+    }
 
 
-  // =========================
-  // LOGOUT
-  // =========================
+    // MODIFIER SHOW DASHBOARD
 
-  async function logout() {
+    const originalShowDashboard =
+      showDashboard;
 
-    await db.auth.signOut();
+    showDashboard =
+      async function (
+        user
+      ) {
 
-    location.reload();
-
-  }
-
-
-  document
-    .getElementById(
-      "logoutButton"
-    )
-    .addEventListener(
-      "click",
-      logout
-    );
-
-
-  document
-    .getElementById(
-      "menuLogoutButton"
-    )
-    .addEventListener(
-      "click",
-      logout
-    );
-
-
-  // =========================
-  // SERVICES
-  // =========================
-
-  document
-    .querySelectorAll(
-      ".service"
-    )
-    .forEach(
-      function (service) {
-
-        service.addEventListener(
-          "click",
-          function () {
-
-            const name =
-              service.getAttribute(
-                "data-service"
-              );
-
-
-            document
-              .getElementById(
-                "serviceMessage"
-              )
-              .textContent =
-              "Service sélectionné : " +
-              name;
-
-          }
+        originalShowDashboard(
+          user
         );
 
-      }
-    );
+        await loadProfile();
+
+      };
 
 
-  // =========================
-  // MENU
-  // =========================
-
-  const menu =
-    document.getElementById(
-      "sideMenu"
-    );
-
-  const overlay =
-    document.getElementById(
-      "overlay"
-    );
-
-
-  function openMenu() {
-
-    menu.classList.add(
-      "open"
-    );
-
-    overlay.classList.remove(
-      "hidden"
-    );
-
-  }
-
-
-  function closeMenu() {
-
-    menu.classList.remove(
-      "open"
-    );
-
-    overlay.classList.add(
-      "hidden"
-    );
-
-  }
-
-
-  document
-    .getElementById(
-      "menuButton"
-    )
-    .addEventListener(
-      "click",
-      openMenu
-    );
-
-
-  document
-    .getElementById(
-      "closeMenu"
-    )
-    .addEventListener(
-      "click",
-      closeMenu
-    );
-
-
-  overlay.addEventListener(
-    "click",
-    closeMenu
-  );
-
-
-  // =========================
-  // PROFILE
-  // =========================
-
-  document
-    .getElementById(
-      "profileButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-
-        dashboard.classList.remove(
-          "hidden"
-        );
-
-        document
-          .getElementById(
-            "mainDashboard"
-          )
-          .classList.add(
-            "hidden"
-          );
-
-        document
-          .getElementById(
-            "profileSection"
-          )
-          .classList.remove(
-            "hidden"
-          );
-
-        closeMenu();
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "backDashboard"
-    )
-    .addEventListener(
-      "click",
-      function () {
-
-        document
-          .getElementById(
-            "profileSection"
-          )
-          .classList.add(
-            "hidden"
-          );
-
-        document
-          .getElementById(
-            "mainDashboard"
-          )
-          .classList.remove(
-            "hidden"
-          );
-
-      }
-    );
-
-
-  // =========================
-  // DARK MODE
-  // =========================
-
-  document
-    .getElementById(
-      "darkButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-
-        document.body.classList.toggle(
-          "dark"
-        );
-
-      }
-    );
-
-
-  // =========================
-  // MENU OPTIONS
-  // =========================
-
-  document
-    .getElementById(
-      "countryButton"
-    )
-  
-    .addEventListener(
-      "click",
-      function () {
-        alert("Pays : République dominicaine / Haïti");
-      }
-    );
-
-  document
-    .getElementById(
-      "darkButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-        document.body.classList.toggle("dark");
-        localStorage.setItem(
-          "monexa_dark",
-          document.body.classList.contains("dark") ? "1" : "0"
-        );
-      }
-    );
-
-  document
-    .getElementById(
-      "referralButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-        alert("Votre code de parrainage sera disponible prochainement.");
-      }
-    );
-
-  document
-    .getElementById(
-      "settingsButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-        alert("Les paramètres seront disponibles prochainement.");
-      }
-    );
-
-  document
-    .getElementById(
-      "helpButton"
-    )
-    .addEventListener(
-      "click",
-      function () {
-        alert("Assistance MONEXA CASH : contactez le service client.");
-      }
-    );
-
-  document
-    .getElementById(
-      "logoutButton"
-    )
-    .addEventListener(
-      "click",
-      async function () {
-        await supabase.auth.signOut();
-        location.reload();
-      }
-    );
-
-  if (
-    localStorage.getItem("monexa_dark") === "1"
-  ) {
-    document.body.classList.add("dark");
-  }
-
-  supabase.auth
-    .getSession()
-    .then(function ({ data }) {
-      if (data.session) {
-        currentUser = data.session.user;
-        showDashboard();
-      }
-    });
-
+  });
 </script>
 
 </body>
+
 </html>
