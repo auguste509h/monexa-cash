@@ -1346,7 +1346,7 @@
   )
   .addEventListener(
     "click",
-    function () {
+    async function () {
 
       const service =
         document
@@ -1412,7 +1412,115 @@
       }
 
       message.textContent =
-        "Toutes les informations sont complètes.";
+        "Envoi de la demande en cours...";
+
+      try {
+
+        const userResult =
+          await db.auth.getUser();
+
+        const user =
+          userResult.data.user;
+
+        if (!user) {
+          message.textContent =
+            "Votre session a expiré. Veuillez vous reconnecter.";
+          return;
+        }
+
+        const file =
+          proof.files[0];
+
+        const fileName =
+          user.id +
+          "/" +
+          Date.now() +
+          "-" +
+          file.name;
+
+        const uploadResult =
+          await db
+            .storage
+            .from("payment-proofs")
+            .upload(
+              fileName,
+              file
+            );
+
+        if (uploadResult.error) {
+          message.textContent =
+            "Erreur lors de l'envoi de la preuve : " +
+            uploadResult.error.message;
+          return;
+        }
+
+        const insertResult =
+          await db
+            .from("service_requests")
+            .insert({
+              user_id: user.id,
+              service: service,
+              amount: amount,
+              status: "En attente",
+              account: account,
+              proof_url: fileName
+            });
+
+        if (insertResult.error) {
+          message.textContent =
+            "La preuve a été envoyée, mais la demande n'a pas pu être enregistrée : " +
+            insertResult.error.message;
+          return;
+        }
+
+        message.textContent =
+          "Demande envoyée avec succès !";
+
+        document
+          .getElementById(
+            "rechargeService"
+          )
+          .value = "";
+
+        document
+          .getElementById(
+            "rechargeAmount"
+          )
+          .value = "";
+
+        document
+          .getElementById(
+            "rechargeAccount"
+          )
+          .value = "";
+
+        document
+          .getElementById(
+            "rechargeProof"
+          )
+          .value = "";
+
+        document
+          .getElementById(
+            "rechargeFee"
+          )
+          .textContent =
+          "Frais : $0";
+
+        document
+          .getElementById(
+            "rechargeTotal"
+          )
+          .textContent =
+          "Total : 0 G";
+
+      } catch (error) {
+
+        message.textContent =
+          "Une erreur est survenue : " +
+          error.message;
+
+      }
 
     }
   );
