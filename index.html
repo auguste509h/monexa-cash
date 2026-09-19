@@ -1,443 +1,3 @@
-Vu<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MONEXA CASH</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #172033;
-      transition: 0.3s;
-    }
-
-    header {
-      background: #0b1f3a;
-      color: white;
-      padding: 18px 15px;
-    }
-
-    .topbar {
-      max-width: 600px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .top-button {
-      width: auto;
-      margin: 0;
-      padding: 10px 13px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
-    .brand {
-      text-align: center;
-      flex: 1;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 23px;
-    }
-
-    .brand p {
-      margin: 5px 0 0;
-      font-size: 12px;
-      opacity: .85;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      margin-top: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,.06);
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 15px;
-      background: white;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 15px;
-      border: 0;
-      border-radius: 10px;
-      background: #0b1f3a;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .link {
-      background: transparent;
-      color: #0b1f3a;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    #message {
-      margin-top: 15px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    .services {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 20px;
-    }
-
-    .service {
-      background: #f7f9fc;
-      border: 1px solid #e2e7ef;
-      border-radius: 14px;
-      padding: 20px 10px;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .service-icon {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
-
-    .service-name {
-      font-weight: bold;
-      font-size: 15px;
-    }
-
-    #serviceMessage {
-      margin-top: 20px;
-      padding: 15px;
-      background: #eef3f9;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 290px;
-      max-width: 85%;
-      height: 100%;
-      background: white;
-      z-index: 1000;
-      padding: 20px;
-      box-shadow: -5px 0 20px rgba(0,0,0,.15);
-      transform: translateX(100%);
-      transition: .25s;
-    }
-
-    .menu.open {
-      transform: translateX(0);
-    }
-
-    .menu h2 {
-      margin-top: 5px;
-    }
-
-    .menu-item {
-      width: 100%;
-      margin-top: 10px;
-      padding: 14px;
-      border-radius: 10px;
-      background: #f4f7fb;
-      color: #172033;
-      text-align: left;
-    }
-
-    .close-menu {
-      background: #0b1f3a;
-      color: white;
-    }
-
-    .profile-box {
-      text-align: center;
-    }
-
-    .profile-icon {
-      font-size: 55px;
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.35);
-      z-index: 999;
-    }
-
-    .dark {
-      background: #101827;
-      color: #f4f7fb;
-    }
-
-    .dark .card,
-    .dark .menu {
-      background: #182235;
-      color: white;
-    }
-
-    .dark .service,
-    .dark .menu-item,
-    .dark #serviceMessage {
-      background: #222e43;
-      border-color: #33415c;
-      color: white;
-    }
-
-    .dark input,
-    .dark select {
-      background: #222e43;
-      color: white;
-      border-color: #45536d;
-    }
-
-    .dark .link {
-      color: white;
-    }
-
-    @media (max-width: 400px) {
-      .services {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-<header>
-
-  <div class="topbar">
-
-    <button
-      class="top-button"
-      id="profileButton">
-      👤 Profil
-    </button>
-
-    <div class="brand">
-      <h1>MONEXA CASH</h1>
-      <p>Plateforme de services financiers numériques</p>
-    </div>
-
-    <button
-      class="top-button"
-      id="menuButton">
-      ☰
-    </button>
-
-  </div>
-
-</header>
-
-
-<div id="overlay" class="overlay hidden"></div>
-
-
-<div id="sideMenu" class="menu">
-
-  <button
-    class="close-menu"
-    id="closeMenu">
-    ✕ Fermer
-  </button>
-
-  <h2>Menu</h2>
-
-  <button class="menu-item" id="countryButton">
-    🌍 Pays
-  </button>
-
-  <button class="menu-item" id="darkButton">
-    🌙 Mode sombre
-  </button>
-
-  <button class="menu-item" id="referralButton">
-    🎟️ Code de parrainage
-  </button>
-
-  <button class="menu-item" id="settingsButton">
-    ⚙️ Paramètres
-  </button>
-
-  <button class="menu-item" id="helpButton">
-    ❓ Assistance
-  </button>
-
-</div>
-
-
-<div class="container">
-
-  <div id="loginSection" class="card">
-
-    <h2>Connexion</h2>
-
-    <input
-      type="email"
-      id="email"
-      placeholder="Adresse e-mail">
-
-    <input
-      type="password"
-      id="password"
-      placeholder="Mot de passe">
-
-    <button id="loginButton">
-      Se connecter
-    </button>
-
-    <button
-      class="link"
-      id="registerButton">
-      Créer un compte
-    </button>
-
-    <div id="message"></div>
-
-  </div>
-
-
-  <div id="dashboard" class="card hidden">
-
-    <div id="profileSection" class="profile-box hidden">
-
-      <img
-        id="profilePhoto"
-        src=""
-        alt="Photo de profil"
-        style="
-          width:100px;
-          height:100px;
-          border-radius:50%;
-          object-fit:cover;
-          display:none;
-          margin:auto;
-        "
-      >
-
-      <div id="defaultProfileIcon" class="profile-icon">
-        👤
-      </div>
-
-      <input
-        type="file"
-        id="profilePhotoInput"
-        accept="image/*"
-        style="margin-top:15px;"
-      >
-
-      <button id="uploadPhotoButton">
-        📷 Ajouter une photo
-      </button>
-
-      <p id="photoMessage"></p>
-
-      <h2>Mon profil</h2>
-
-      <p id="profileEmail"></p>
-
-      <button id="backDashboard">
-        ← Retour
-      </button>
-
-    </div>
-
-
-    <div id="mainDashboard">
-
-      <h2>Bienvenue 👋</h2>
-
-      <p id="userEmail"></p>
-
-      <h3>Nos services</h3>
-
-      <div class="services">
-
-        <div class="service" data-service="Recharge">
-          <div class="service-icon">💳</div>
-          <div class="service-name">Recharge</div>
-        </div>
-
-        <div class="service" data-service="Retrait">
-          <div class="service-icon">🏦</div>
-          <div class="service-name">Retrait</div>
-        </div>
-
-        <div class="service" data-service="Free Fire">
-          <div class="service-icon">🎮</div>
-          <div class="service-name">Free Fire</div>
-        </div>
-
-        <div class="service" data-service="Crypto">
-          <div class="service-icon">🪙</div>
-          <div class="service-name">Crypto</div>
-        </div>
-
-        <div class="service" data-service="Binance">
-          <div class="service-icon">🟡</div>
-          <div class="service-name">Binance</div>
-        </div>
-
-        <div class="service" data-service="Création de carte">
-          <div class="service-icon">💳</div>
-          <div class="service-name">Création de carte</div>
-        </div>
-
-      </div>
-
-      <div id="serviceMessage">
-        Sélectionnez un service.
-      </div>
-
-      <button id="logoutButton">
-        Se déconnecter
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<script>
-
 const SUPABASE_URL =
   "https://nakaajakjrefzmacqlhv.supabase.co";
 
@@ -449,6 +9,10 @@ const db = window.supabase.createClient(
   SUPABASE_PUBLISHABLE_KEY
 );
 
+
+// =========================
+// LOGIN
+// =========================
 
 const loginButton =
   document.getElementById("loginButton");
@@ -466,10 +30,8 @@ loginButton.addEventListener("click", async function() {
     document.getElementById("password").value;
 
   if (!email || !password) {
-
     message.textContent =
       "Veuillez entrer votre e-mail et votre mot de passe.";
-
     return;
   }
 
@@ -485,10 +47,8 @@ loginButton.addEventListener("click", async function() {
 
 
   if (error) {
-
     message.textContent =
       error.message;
-
     return;
   }
 
@@ -511,7 +71,16 @@ loginButton.addEventListener("click", async function() {
     .textContent =
     data.user.email;
 
+
+  // Charger la photo après connexion
+  await loadProfilePhoto();
+
 });
+
+
+// =========================
+// CHARGER PHOTO PROFIL
+// =========================
 
 async function loadProfilePhoto() {
 
@@ -523,16 +92,20 @@ async function loadProfilePhoto() {
 
   if (!user) return;
 
-  const { data: profile } =
+
+  const { data: profile, error } =
     await db
       .from("profiles")
       .select("avatar_url")
       .eq("id", user.id)
       .single();
 
-  if (!profile?.avatar_url) return;
+  if (error || !profile?.avatar_url) {
+    return;
+  }
 
-  const { data: signedData } =
+
+  const { data: signedData, error: signedError } =
     await db.storage
       .from("profile-photos")
       .createSignedUrl(
@@ -540,25 +113,34 @@ async function loadProfilePhoto() {
         3600
       );
 
-  if (!signedData?.signedUrl) return;
 
-  document
-    .getElementById("profilePhoto")
-    .src =
+  if (signedError || !signedData?.signedUrl) {
+    return;
+  }
+
+
+  const photo =
+    document.getElementById("profilePhoto");
+
+  const defaultIcon =
+    document.getElementById("defaultProfileIcon");
+
+
+  photo.src =
     signedData.signedUrl;
 
-  document
-    .getElementById("profilePhoto")
-    .style.display =
+  photo.style.display =
     "block";
 
-  document
-    .getElementById("defaultProfileIcon")
-    .style.display =
+  defaultIcon.style.display =
     "none";
 }
 
-await loadProfilePhoto();
+
+// =========================
+// LOGOUT
+// =========================
+
 document
   .getElementById("logoutButton")
   .addEventListener("click", async function() {
@@ -569,6 +151,10 @@ document
 
   });
 
+
+// =========================
+// SERVICES
+// =========================
 
 document
   .querySelectorAll(".service")
@@ -589,6 +175,10 @@ document
   });
 
 
+// =========================
+// MENU
+// =========================
+
 const menu =
   document.getElementById("sideMenu");
 
@@ -599,6 +189,7 @@ const overlay =
 function openMenu() {
 
   menu.classList.add("open");
+
   overlay.classList.remove("hidden");
 
 }
@@ -607,6 +198,7 @@ function openMenu() {
 function closeMenu() {
 
   menu.classList.remove("open");
+
   overlay.classList.add("hidden");
 
 }
@@ -622,8 +214,15 @@ document
   .addEventListener("click", closeMenu);
 
 
-overlay.addEventListener("click", closeMenu);
+overlay.addEventListener(
+  "click",
+  closeMenu
+);
 
+
+// =========================
+// PROFIL
+// =========================
 
 document
   .getElementById("profileButton")
@@ -655,6 +254,10 @@ document
   });
 
 
+// =========================
+// MODE SOMBRE
+// =========================
+
 document
   .getElementById("darkButton")
   .addEventListener("click", function() {
@@ -664,11 +267,17 @@ document
   });
 
 
+// =========================
+// MENU OPTIONS
+// =========================
+
 document
   .getElementById("countryButton")
   .addEventListener("click", function() {
 
-    alert("La sélection du pays sera disponible prochainement.");
+    alert(
+      "La sélection du pays sera disponible prochainement."
+    );
 
   });
 
@@ -677,7 +286,9 @@ document
   .getElementById("referralButton")
   .addEventListener("click", function() {
 
-    alert("Le système de parrainage sera disponible prochainement.");
+    alert(
+      "Le système de parrainage sera disponible prochainement."
+    );
 
   });
 
@@ -686,66 +297,104 @@ document
   .getElementById("settingsButton")
   .addEventListener("click", function() {
 
-    alert("Les paramètres seront disponibles prochainement.");
+    alert(
+      "Les paramètres seront disponibles prochainement."
+    );
 
   });
 
+
+// =========================
+// UPLOAD PHOTO
+// =========================
+
 document
   .getElementById("uploadPhotoButton")
-  .addEventListener("click", async function () {
+  .addEventListener("click", async function() {
 
-    const input = document.getElementById("profilePhotoInput");
-    const photoMessage = document.getElementById("photoMessage");
+    const input =
+      document.getElementById("profilePhotoInput");
+
+    const photoMessage =
+      document.getElementById("photoMessage");
+
 
     if (!input.files || !input.files[0]) {
+
       photoMessage.textContent =
         "Veuillez sélectionner une photo.";
+
       return;
     }
 
-    const file = input.files[0];
+
+    const file =
+      input.files[0];
+
 
     if (!file.type.startsWith("image/")) {
+
       photoMessage.textContent =
         "Veuillez choisir une image.";
+
       return;
     }
 
-    const {
-      data: sessionData
-    } = await db.auth.getSession();
 
-    const user = sessionData.session?.user;
+    const { data: sessionData } =
+      await db.auth.getSession();
+
+
+    const user =
+      sessionData.session?.user;
+
 
     if (!user) {
+
       photoMessage.textContent =
         "Session expirée. Veuillez vous reconnecter.";
+
       return;
     }
+
 
     photoMessage.textContent =
       "Téléchargement de la photo...";
 
+
     const extension =
-      file.name.split(".").pop().toLowerCase();
+      file.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
 
     const filePath =
       user.id + "/profile." + extension;
 
+
     const { error: uploadError } =
       await db.storage
         .from("profile-photos")
-        .upload(filePath, file, {
-          upsert: true
-        });
+        .upload(
+          filePath,
+          file,
+          {
+            upsert: true
+          }
+        );
+
 
     if (uploadError) {
+
       photoMessage.textContent =
         "Erreur : " + uploadError.message;
+
       return;
     }
 
-    // Enregistrer le chemin de la photo dans le profil
+
+    // Sauvegarder le chemin dans le profil
     const { error: profileError } =
       await db
         .from("profiles")
@@ -754,41 +403,55 @@ document
         })
         .eq("id", user.id);
 
+
     if (profileError) {
+
       photoMessage.textContent =
         "Photo envoyée, mais erreur de sauvegarde : " +
         profileError.message;
+
       return;
     }
 
-    // Créer une URL temporaire pour afficher la photo
-    const {
-      data: signedData,
-      error: signedError
-    } = await db.storage
-      .from("profile-photos")
-      .createSignedUrl(filePath, 3600);
+
+    // Afficher immédiatement la photo
+    const { data: signedData, error: signedError } =
+      await db.storage
+        .from("profile-photos")
+        .createSignedUrl(
+          filePath,
+          3600
+        );
+
 
     if (signedError) {
+
       photoMessage.textContent =
         "Photo enregistrée, mais impossible de l'afficher.";
+
       return;
     }
 
-    document.getElementById("profilePhoto").src =
+
+    document
+      .getElementById("profilePhoto")
+      .src =
       signedData.signedUrl;
 
-    document.getElementById("profilePhoto").style.display =
+
+    document
+      .getElementById("profilePhoto")
+      .style.display =
       "block";
 
-    document.getElementById("defaultProfileIcon").style.display =
+
+    document
+      .getElementById("defaultProfileIcon")
+      .style.display =
       "none";
+
 
     photoMessage.textContent =
       "Photo de profil enregistrée ✅";
+
   });
-
-</script>
-
-</body>
-  </html>
