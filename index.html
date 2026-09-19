@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>MONEXA CASH</title>
 
+  <!-- Connexion à Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -28,71 +30,113 @@
     }
 
     header h1 {
-      font-size: 30px;
+      font-size: 32px;
       margin-bottom: 8px;
     }
 
     header p {
-      opacity: .9;
+      font-size: 15px;
+      opacity: 0.9;
     }
 
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       padding: 25px 18px;
     }
 
     .card {
       background: white;
-      padding: 22px;
       border-radius: 16px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 15px rgba(0,0,0,.06);
+      padding: 22px;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
     }
 
     h2 {
-      margin-bottom: 15px;
+      text-align: center;
+      margin-bottom: 18px;
     }
 
-    input, button {
+    input {
       width: 100%;
       padding: 14px;
       margin-top: 10px;
+      border: 1px solid #d0d5dd;
       border-radius: 10px;
       font-size: 15px;
     }
 
-    input {
-      border: 1px solid #d0d5dd;
-    }
-
     button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 15px;
       border: none;
+      border-radius: 10px;
       background: #0b1f3a;
       color: white;
+      font-size: 16px;
       font-weight: bold;
     }
 
     .secondary {
-      background: #e9eef5;
-      color: #172033;
+      background: #667085;
     }
 
-    .service {
-      padding: 15px;
-      border: 1px solid #e4e7ec;
-      border-radius: 12px;
-      margin-top: 10px;
+    .link {
+      background: transparent;
+      color: #0b1f3a;
+      font-size: 14px;
     }
 
     .hidden {
       display: none;
     }
 
-    #message {
+    .message {
       margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #f2f4f7;
+      font-size: 14px;
       text-align: center;
-      font-weight: bold;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .service {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 20px 10px;
+      text-align: center;
+      border: 1px solid #eaecf0;
+    }
+
+    .icon {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .service h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .service p {
+      font-size: 12px;
+      color: #667085;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 15px;
+      color: #667085;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -107,224 +151,440 @@
 <div class="container">
 
   <!-- CONNEXION -->
-  <div class="card" id="loginBox">
+  <div id="loginSection" class="card">
+
     <h2>Connexion</h2>
 
-    <input id="loginEmail" type="email" placeholder="Adresse e-mail">
-    <input id="loginPassword" type="password" placeholder="Mot de passe">
+    <input
+      type="email"
+      id="loginEmail"
+      placeholder="Adresse e-mail"
+    >
 
-    <button onclick="login()">Se connecter</button>
-    <button class="secondary" onclick="showRegister()">Créer un compte</button>
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Mot de passe"
+    >
+
+    <button onclick="login()">
+      Se connecter
+    </button>
+
+    <button
+      class="link"
+      onclick="showRegister()"
+    >
+      Créer un compte
+    </button>
+
+    <div
+      id="loginMessage"
+      class="message hidden">
+    </div>
+
   </div>
+
 
   <!-- INSCRIPTION -->
-  <div class="card hidden" id="registerBox">
+  <div id="registerSection" class="card hidden">
+
     <h2>Créer un compte</h2>
 
-    <input id="registerName" type="text" placeholder="Nom complet">
-    <input id="registerPhone" type="text" placeholder="Téléphone">
-    <input id="registerEmail" type="email" placeholder="Adresse e-mail">
-    <input id="registerPassword" type="password" placeholder="Mot de passe">
+    <input
+      type="text"
+      id="registerName"
+      placeholder="Nom complet"
+    >
 
-    <button onclick="register()">Créer mon compte</button>
-    <button class="secondary" onclick="showLogin()">Retour à la connexion</button>
+    <input
+      type="tel"
+      id="registerPhone"
+      placeholder="Numéro de téléphone"
+    >
+
+    <input
+      type="email"
+      id="registerEmail"
+      placeholder="Adresse e-mail"
+    >
+
+    <input
+      type="password"
+      id="registerPassword"
+      placeholder="Mot de passe"
+    >
+
+    <button onclick="register()">
+      Créer mon compte
+    </button>
+
+    <button
+      class="link"
+      onclick="showLogin()"
+    >
+      J'ai déjà un compte
+    </button>
+
+    <div
+      id="registerMessage"
+      class="message hidden">
+    </div>
+
   </div>
+
 
   <!-- ESPACE CLIENT -->
-  <div class="card hidden" id="dashboard">
+  <div id="dashboardSection" class="card hidden">
+
     <h2>Bienvenue 👋</h2>
 
-    <p id="userEmail"></p>
+    <p
+      id="userEmail"
+      style="text-align:center;color:#667085;">
+    </p>
 
-    <h3 style="margin-top:20px;">Nos services</h3>
+    <div class="services">
 
-    <div class="service">💳 Recharge</div>
-    <div class="service">💸 Transfert</div>
-    <div class="service">🏦 Retrait</div>
-    <div class="service">🛒 Paiement</div>
+      <div class="service">
+        <div class="icon">💳</div>
+        <h3>Recharge</h3>
+        <p>Rechargez votre compte</p>
+      </div>
 
-    <button class="secondary" onclick="logout()">Se déconnecter</button>
+      <div class="service">
+        <div class="icon">💸</div>
+        <h3>Transfert</h3>
+        <p>Envoyez de l'argent</p>
+      </div>
+
+      <div class="service">
+        <div class="icon">🏦</div>
+        <h3>Retrait</h3>
+        <p>Demandez un retrait</p>
+      </div>
+
+      <div class="service">
+        <div class="icon">🛒</div>
+        <h3>Paiement</h3>
+        <p>Effectuez un paiement</p>
+      </div>
+
+    </div>
+
+    <button
+      class="secondary"
+      onclick="logout()">
+      Se déconnecter
+    </button>
+
+    <div
+      id="dashboardMessage"
+      class="message hidden">
+    </div>
+
   </div>
-
-  <div id="message"></div>
 
 </div>
 
+<footer>
+  © 2026 MONEXA CASH — Tous droits réservés.
+</footer>
+
+
 <script>
 
-  /* ==============================
+  /* =================================
      CONFIGURATION SUPABASE
-     ============================== */
+  ================================= */
 
   const SUPABASE_URL =
     "https://nakaajakjrefzmacqlhv.supabase.co";
 
   const SUPABASE_PUBLISHABLE_KEY =
-   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+    "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
 
-  const { createClient } = supabase;
 
-  const db = createClient(
+  /* =================================
+     INITIALISATION SUPABASE
+  ================================= */
+
+  const db = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
   );
 
 
-  /* ==============================
-     AFFICHAGE
-     ============================== */
+  /* =================================
+     MESSAGES
+  ================================= */
 
-  function showRegister() {
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("registerBox").classList.remove("hidden");
+  function showMessage(id, message) {
+
+    const element = document.getElementById(id);
+
+    element.textContent = message;
+
+    element.classList.remove("hidden");
   }
+
+
+  /* =================================
+     PAGE CONNEXION
+  ================================= */
 
   function showLogin() {
-    document.getElementById("registerBox").classList.add("hidden");
-    document.getElementById("loginBox").classList.remove("hidden");
+
+    document
+      .getElementById("loginSection")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("registerSection")
+      .classList.add("hidden");
+
+    document
+      .getElementById("dashboardSection")
+      .classList.add("hidden");
+
   }
 
 
-  /* ==============================
-     INSCRIPTION
-     ============================== */
+  /* =================================
+     PAGE INSCRIPTION
+  ================================= */
+
+  function showRegister() {
+
+    document
+      .getElementById("loginSection")
+      .classList.add("hidden");
+
+    document
+      .getElementById("registerSection")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("dashboardSection")
+      .classList.add("hidden");
+
+  }
+
+
+  /* =================================
+     CRÉER UN COMPTE
+  ================================= */
 
   async function register() {
 
     const name =
-      document.getElementById("registerName").value.trim();
+      document.getElementById("registerName")
+      .value
+      .trim();
 
     const phone =
-      document.getElementById("registerPhone").value.trim();
+      document.getElementById("registerPhone")
+      .value
+      .trim();
 
     const email =
-      document.getElementById("registerEmail").value.trim();
+      document.getElementById("registerEmail")
+      .value
+      .trim();
 
     const password =
-      document.getElementById("registerPassword").value;
+      document.getElementById("registerPassword")
+      .value;
 
-    if (!name || !email || !password) {
-      showMessage("Veuillez remplir les champs obligatoires.");
+
+    if (!name || !phone || !email || !password) {
+
+      showMessage(
+        "registerMessage",
+        "Veuillez remplir tous les champs."
+      );
+
       return;
     }
 
-    const { data, error } = await db.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          full_name: name,
-          phone: phone
+
+    if (password.length < 6) {
+
+      showMessage(
+        "registerMessage",
+        "Le mot de passe doit contenir au moins 6 caractères."
+      );
+
+      return;
+    }
+
+
+    const { error } =
+      await db.auth.signUp({
+
+        email: email,
+
+        password: password,
+
+        options: {
+
+          data: {
+
+            full_name: name,
+
+            phone: phone
+
+          }
+
         }
-      }
-    });
+
+      });
+
 
     if (error) {
-      showMessage(error.message);
+
+      showMessage(
+        "registerMessage",
+        error.message
+      );
+
       return;
     }
 
-    showMessage("Compte créé avec succès. Vous pouvez vous connecter.");
-    showLogin();
+
+    showMessage(
+      "registerMessage",
+      "Compte créé avec succès. Vous pouvez maintenant vous connecter."
+    );
+
   }
 
 
-  /* ==============================
+  /* =================================
      CONNEXION
-     ============================== */
+  ================================= */
 
   async function login() {
 
     const email =
-      document.getElementById("loginEmail").value.trim();
+      document.getElementById("loginEmail")
+      .value
+      .trim();
 
     const password =
-      document.getElementById("loginPassword").value;
+      document.getElementById("loginPassword")
+      .value;
+
 
     if (!email || !password) {
-      showMessage("Veuillez entrer votre e-mail et votre mot de passe.");
+
+      showMessage(
+        "loginMessage",
+        "Veuillez entrer votre e-mail et votre mot de passe."
+      );
+
       return;
     }
+
 
     const { data, error } =
       await db.auth.signInWithPassword({
+
         email: email,
+
         password: password
+
       });
 
+
     if (error) {
-      showMessage(error.message);
+
+      showMessage(
+        "loginMessage",
+        error.message
+      );
+
       return;
     }
 
+
     showDashboard(data.user);
+
   }
 
 
-  /* ==============================
+  /* =================================
      TABLEAU DE BORD
-     ============================== */
+  ================================= */
 
   function showDashboard(user) {
 
-    document.getElementById("loginBox")
+    document
+      .getElementById("loginSection")
       .classList.add("hidden");
 
-    document.getElementById("registerBox")
+    document
+      .getElementById("registerSection")
       .classList.add("hidden");
 
-    document.getElementById("dashboard")
+    document
+      .getElementById("dashboardSection")
       .classList.remove("hidden");
 
-    document.getElementById("userEmail")
-      .textContent = user.email;
 
-    document.getElementById("message")
-      .textContent = "";
+    document
+      .getElementById("userEmail")
+      .textContent =
+      user.email;
+
   }
 
 
-  /* ==============================
+  /* =================================
      DÉCONNEXION
-     ============================== */
+  ================================= */
 
   async function logout() {
 
     await db.auth.signOut();
 
-    document.getElementById("dashboard")
-      .classList.add("hidden");
+    showLogin();
 
-    document.getElementById("loginBox")
-      .classList.remove("hidden");
   }
 
 
-  /* ==============================
-     MESSAGE
-     ============================== */
-
-  function showMessage(text) {
-    document.getElementById("message").textContent = text;
-  }
-
-
-  /* ==============================
-     VÉRIFIER SESSION EXISTANTE
-     ============================== */
+  /* =================================
+     VÉRIFIER SESSION
+  ================================= */
 
   async function checkSession() {
 
-    const { data } = await db.auth.getSession();
+    const { data } =
+      await db.auth.getSession();
+
 
     if (data.session) {
-      showDashboard(data.session.user);
+
+      showDashboard(
+        data.session.user
+      );
+
+    } else {
+
+      showLogin();
+
     }
+
   }
+
+
+  /* =================================
+     DÉMARRAGE
+  ================================= */
 
   checkSession();
 
 </script>
 
 </body>
-</html>
+  </html>
