@@ -1192,51 +1192,230 @@
                 // OUVRIR LE FORMULAIRE RECHARGE
 
         document
-          .querySelector(
-            '[data-service="Recharge"]'
-          )
-          .addEventListener(
-            "click",
-            function () {
+  .querySelector(
+    '[data-service="Recharge"]'
+  )
+  .addEventListener(
+    "click",
+    function () {
 
-              document
-                .getElementById(
-                  "rechargeForm"
-                )
-                .classList
-                .remove("hidden");
+      mainDashboard
+        .classList
+        .add("hidden");
 
-              mainDashboard
-                .classList
-                .add("hidden");
+      document
+        .getElementById(
+          "rechargeForm"
+        )
+        .classList
+        .remove("hidden");
 
-            }
-          );
+    }
+  );
 
 
         // RETOUR DEPUIS RECHARGE
 
         document
+  .getElementById(
+    "rechargeBack"
+  )
+  .addEventListener(
+    "click",
+    function () {
+
+      document
+        .getElementById(
+          "rechargeForm"
+        )
+        .classList
+        .add("hidden");
+
+      mainDashboard
+        .classList
+        .remove("hidden");
+
+      document
+        .getElementById(
+          "rechargeMessage"
+        )
+        .textContent = "";
+
+    }
+  );
+
+        document
+  .getElementById(
+    "rechargeAmount"
+  )
+  .addEventListener(
+    "input",
+    function () {
+
+      const amount =
+        parseFloat(
+          this.value
+        ) || 0;
+
+      let fee = 0;
+
+      if (
+        amount > 0 &&
+        amount <= 10
+      ) {
+        fee = 1;
+      }
+
+      if (
+        amount > 10
+      ) {
+        fee = 2;
+      }
+
+      const total =
+        (amount + fee) * 145;
+
+      document
+        .getElementById(
+          "rechargeFee"
+        )
+        .textContent =
+        "Frais : $" +
+        fee.toFixed(2);
+
+      document
+        .getElementById(
+          "rechargeTotal"
+        )
+        .textContent =
+        "Total : " +
+        total.toFixed(0) +
+        " G";
+
+    }
+  );
+
+        document
+  .getElementById(
+    "rechargeService"
+  )
+  .addEventListener(
+    "change",
+    function () {
+
+      const accountInput =
+        document
           .getElementById(
-            "rechargeBack"
-          )
-          .addEventListener(
-            "click",
-            function () {
-
-              document
-                .getElementById(
-                  "rechargeForm"
-                )
-                .classList
-                .add("hidden");
-
-              mainDashboard
-                .classList
-                .remove("hidden");
-
-            }
+            "rechargeAccount"
           );
+
+      if (
+        this.value === "Meru"
+      ) {
+
+        accountInput.placeholder =
+          "Entrez votre email Meru";
+
+      } else if (
+        this.value === "Wise"
+      ) {
+
+        accountInput.placeholder =
+          "Entrez votre email Wise";
+
+      } else if (
+        this.value === "Morse"
+      ) {
+
+        accountInput.placeholder =
+          "Entrez votre nom d'utilisateur Morse";
+
+      } else {
+
+        accountInput.placeholder =
+          "Email ou nom d'utilisateur";
+
+      }
+
+    }
+  );
+
+        document
+  .getElementById(
+    "rechargeSubmit"
+  )
+  .addEventListener(
+    "click",
+    function () {
+
+      const service =
+        document
+          .getElementById(
+            "rechargeService"
+          )
+          .value;
+
+      const amount =
+        parseFloat(
+          document
+            .getElementById(
+              "rechargeAmount"
+            )
+            .value
+        ) || 0;
+
+      const account =
+        document
+          .getElementById(
+            "rechargeAccount"
+          )
+          .value
+          .trim();
+
+      const proof =
+        document
+          .getElementById(
+            "rechargeProof"
+          );
+
+      const message =
+        document
+          .getElementById(
+            "rechargeMessage"
+          );
+
+      if (!service) {
+        message.textContent =
+          "Veuillez sélectionner un service.";
+        return;
+      }
+
+      if (amount <= 0) {
+        message.textContent =
+          "Veuillez entrer un montant valide.";
+        return;
+      }
+
+      if (!account) {
+        message.textContent =
+          "Veuillez entrer votre email ou nom d'utilisateur.";
+        return;
+      }
+
+      if (
+        !proof.files ||
+        !proof.files[0]
+      ) {
+        message.textContent =
+          "Veuillez ajouter la preuve de paiement.";
+        return;
+      }
+
+      message.textContent =
+        "Toutes les informations sont complètes.";
+
+    }
+  );
         
         // FERMER LE MENU
 
