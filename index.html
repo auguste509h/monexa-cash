@@ -1174,43 +1174,27 @@
 
                 // OUVRIR LE FORMULAIRE RECHARGE
 
-        const rechargeService =
-  document.querySelector(
+        document
+  .querySelector(
     '[data-service="Recharge"]'
-  );
-
-const rechargeForm =
-  document.getElementById(
-    "rechargeForm"
-  );
-
-const mainDashboard =
-  document.getElementById(
-    "mainDashboard"
-  );
-
-if (
-  rechargeService &&
-  rechargeForm &&
-  mainDashboard
-) {
-
-  rechargeService.addEventListener(
+  )
+  .addEventListener(
     "click",
     function () {
 
-      mainDashboard.classList.add(
-        "hidden"
-      );
+      mainDashboard
+        .classList
+        .add("hidden");
 
-      rechargeForm.classList.remove(
-        "hidden"
-      );
+      document
+        .getElementById(
+          "rechargeForm"
+        )
+        .classList
+        .remove("hidden");
 
     }
   );
-
-}
 
 
         // RETOUR DEPUIS RECHARGE
