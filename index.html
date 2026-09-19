@@ -3,249 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>MONEXA CASH</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background: #f4f7fb;
       color: #172033;
     }
 
     header {
-      background: linear-gradient(135deg, #071b35, #0b2f5b);
+      background: #0b1f3a;
       color: white;
-      padding: 30px 18px;
       text-align: center;
-    }
-
-    header h1 {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
-
-    header p {
-      font-size: 14px;
-      opacity: .9;
+      padding: 30px 15px;
     }
 
     .container {
-      max-width: 650px;
+      max-width: 600px;
       margin: auto;
-      padding: 18px;
+      padding: 20px;
     }
 
     .card {
       background: white;
-      border-radius: 18px;
-      padding: 20px;
-      margin-top: 18px;
-      box-shadow: 0 5px 20px rgba(0,0,0,.06);
+      padding: 22px;
+      border-radius: 16px;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.06);
     }
 
-    h2 {
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    h3 {
-      margin-bottom: 7px;
-    }
-
-    input,
-    select {
+    input {
       width: 100%;
       padding: 14px;
       margin-top: 10px;
-      border: 1px solid #d0d5dd;
-      border-radius: 11px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 10px;
       font-size: 15px;
-      background: white;
     }
 
     button {
       width: 100%;
       padding: 14px;
-      margin-top: 14px;
-      border: none;
-      border-radius: 11px;
-      background: #0b2f5b;
+      margin-top: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: #0b1f3a;
       color: white;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:active {
-      transform: scale(.99);
-    }
-
-    .secondary {
-      background: #667085;
     }
 
     .link {
       background: transparent;
-      color: #0b2f5b;
+      color: #0b1f3a;
     }
 
     .hidden {
-      display: none !important;
+      display: none;
     }
 
-    .message {
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #f2f4f7;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .welcome {
-      text-align: center;
-      color: #667085;
-      margin-bottom: 8px;
-    }
-
-    .services {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .service {
-      background: #f8fafc;
-      border: 1px solid #e4e7ec;
-      border-radius: 16px;
-      padding: 18px 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .service:hover {
-      border-color: #0b2f5b;
-      transform: translateY(-2px);
-    }
-
-    .icon {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
-
-    .service h3 {
-      font-size: 15px;
-    }
-
-    .service p {
-      font-size: 12px;
-      color: #667085;
-    }
-
-    .full {
-      grid-column: 1 / -1;
-    }
-
-    .section-title {
-      margin-top: 25px;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-
-    .tariffs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .tariff {
-      background: #f8fafc;
-      border: 1px solid #eaecf0;
-      border-radius: 13px;
-      padding: 13px;
-      text-align: center;
-    }
-
-    .tariff strong {
-      display: block;
-      font-size: 15px;
-    }
-
-    .tariff span {
-      color: #0b2f5b;
-      font-weight: bold;
-      margin-top: 5px;
-      display: block;
-    }
-
-    .payment-box {
-      background: #eef6ff;
-      border: 1px solid #cfe5ff;
-      border-radius: 14px;
-      padding: 15px;
+    #message {
       margin-top: 15px;
+      padding: 12px;
       text-align: center;
-    }
-
-    .payment-box strong {
-      display: block;
-      margin-top: 5px;
-      font-size: 18px;
-    }
-
-    .form-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 15px;
-      font-size: 19px;
-    }
-
-    .back {
-      background: #eef2f6;
-      color: #172033;
-    }
-
-    .price-result {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 12px;
-      border: 1px solid #eaecf0;
-    }
-
-    .price-result div {
-      display: flex;
-      justify-content: space-between;
-      padding: 5px 0;
-    }
-
-    footer {
-      text-align: center;
-      padding: 25px 15px;
-      color: #667085;
-      font-size: 13px;
-    }
-
-    @media (max-width: 420px) {
-      .services {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .tariffs {
-        grid-template-columns: 1fr 1fr;
-      }
     }
   </style>
 </head>
@@ -259,581 +84,47 @@
 
 <div class="container">
 
-  <!-- CONNEXION -->
   <div id="loginSection" class="card">
 
     <h2>Connexion</h2>
 
     <input
       type="email"
-      id="loginEmail"
+      id="email"
       placeholder="Adresse e-mail"
     >
 
     <input
       type="password"
-      id="loginPassword"
+      id="password"
       placeholder="Mot de passe"
     >
 
-    <button onclick="login()">
+    <button id="loginButton">
       Se connecter
     </button>
 
     <button
       class="link"
-      onclick="showRegister()">
+      id="registerButton">
       Créer un compte
     </button>
 
-    <div
-      id="loginMessage"
-      class="message hidden">
-    </div>
+    <div id="message"></div>
 
   </div>
 
 
-  <!-- INSCRIPTION -->
-  <div id="registerSection" class="card hidden">
+  <div id="dashboard" class="card hidden">
 
-    <h2>Créer un compte</h2>
+    <h2>Bienvenue 👋</h2>
 
-    <input
-      type="text"
-      id="registerName"
-      placeholder="Nom complet"
-    >
+    <p id="userEmail"></p>
 
-    <input
-      type="tel"
-      id="registerPhone"
-      placeholder="Numéro de téléphone"
-    >
+    <p>Connexion réussie.</p>
 
-    <input
-      type="email"
-      id="registerEmail"
-      placeholder="Adresse e-mail"
-    >
-
-    <input
-      type="password"
-      id="registerPassword"
-      placeholder="Mot de passe"
-    >
-
-    <button onclick="register()">
-      Créer mon compte
-    </button>
-
-    <button
-      class="link"
-      onclick="showLogin()">
-      J'ai déjà un compte
-    </button>
-
-    <div
-      id="registerMessage"
-      class="message hidden">
-    </div>
-
-  </div>
-
-
-  <!-- TABLEAU DE BORD -->
-  <div id="dashboardSection" class="card hidden">
-
-    <h2>MONEXA CASH</h2>
-
-    <p class="welcome">
-      Bienvenue 👋
-    </p>
-
-    <p
-      id="userEmail"
-      style="text-align:center;color:#667085;">
-    </p>
-
-
-    <!-- SERVICES -->
-    <div class="services">
-
-      <div
-        class="service"
-        onclick="openForm('recharge')">
-
-        <div class="icon">💳</div>
-
-        <h3>Recharge</h3>
-
-        <p>Meru • Wise • Morse</p>
-
-      </div>
-
-
-      <div
-        class="service"
-        onclick="openForm('retrait')">
-
-        <div class="icon">🏦</div>
-
-        <h3>Retrait</h3>
-
-        <p>Recevez votre argent</p>
-
-      </div>
-
-
-      <div
-        class="service"
-        onclick="openForm('freefire')">
-
-        <div class="icon">🎮</div>
-
-        <h3>Free Fire</h3>
-
-        <p>Achetez vos diamants</p>
-
-      </div>
-
-
-      <div
-        class="service"
-        onclick="openForm('crypto')">
-
-        <div class="icon">🪙</div>
-
-        <h3>Crypto</h3>
-
-        <p>USDT • USDC</p>
-
-      </div>
-
-
-      <div
-        class="service full"
-        onclick="openForm('binance')">
-
-        <div class="icon">🟡</div>
-
-        <h3>Binance</h3>
-
-        <p>Achat • Retrait</p>
-
-      </div>
-
-    </div>
-
-
-    <!-- TARIFS FREE FIRE -->
-    <h3 class="section-title">
-      🎮 Tarifs Free Fire
-    </h3>
-
-    <div
-      id="freeFireTariffs"
-      class="tariffs">
-
-      <div class="tariff">
-        <strong>110 💎</strong>
-        <span>145 G</span>
-      </div>
-
-      <div class="tariff">
-        <strong>341 💎</strong>
-        <span>450 G</span>
-      </div>
-
-      <div class="tariff">
-        <strong>572 💎</strong>
-        <span>750 G</span>
-      </div>
-
-      <div class="tariff">
-        <strong>1166 💎</strong>
-        <span>1 550 G</span>
-      </div>
-
-      <div class="tariff">
-        <strong>2398 💎</strong>
-        <span>2 700 G</span>
-      </div>
-
-      <div class="tariff">
-        <strong>6160 💎</strong>
-        <span>7 050 G</span>
-      </div>
-
-    </div>
-
-
-    <!-- INFORMATIONS PAIEMENT -->
-    <div class="payment-box">
-
-      <div>💰 Paiement par Natcash</div>
-
-      <strong>509 40886629</strong>
-
-      <div>
-        JUNIOR AUGUSTE
-      </div>
-
-    </div>
-
-
-    <button
-      class="secondary"
-      onclick="logout()">
+    <button id="logoutButton">
       Se déconnecter
-    </button>
-
-  </div>
-
-
-  <!-- FORMULAIRE RECHARGE -->
-  <div
-    id="rechargeForm"
-    class="card hidden">
-
-    <div class="form-title">
-      💳 Recharge
-    </div>
-
-    <p>
-      Choisissez le service que vous souhaitez recharger.
-    </p>
-
-    <select id="rechargeService">
-      <option value="Meru">Meru</option>
-      <option value="Wise">Wise</option>
-      <option value="Morse">Morse</option>
-    </select>
-
-    <input
-      type="number"
-      id="rechargeAmount"
-      placeholder="Montant souhaité en USD"
-      min="1"
-      step="0.01"
-      oninput="calculateRecharge()"
-    >
-
-    <input
-      type="text"
-      id="rechargeAccount"
-      placeholder="E-mail ou nom d'utilisateur"
-    >
-
-    <div
-      id="rechargeCalculation"
-      class="price-result">
-
-      <div>
-        <span>Montant</span>
-        <strong>$0.00</strong>
-      </div>
-
-      <div>
-        <span>Frais</span>
-        <strong>$0.00</strong>
-      </div>
-
-      <div>
-        <span>Total à payer</span>
-        <strong>0 G</strong>
-      </div>
-
-    </div>
-
-    <div class="payment-box">
-      Natcash : <strong>509 40886629</strong>
-      JUNIOR AUGUSTE
-    </div>
-
-    <button>
-      Continuer
-    </button>
-
-    <button
-      class="back"
-      onclick="backDashboard()">
-      ← Retour
-    </button>
-
-  </div>
-
-
-  <!-- FORMULAIRE RETRAIT -->
-  <div
-    id="retraitForm"
-    class="card hidden">
-
-    <div class="form-title">
-      🏦 Retrait
-    </div>
-
-    <p>
-      Demandez un retrait vers votre compte Natcash.
-    </p>
-
-    <select id="retraitService">
-      <option value="Meru">Meru</option>
-      <option value="Wise">Wise</option>
-      <option value="Morse">Morse</option>
-      <option value="USDT">USDT</option>
-      <option value="USDC">USDC</option>
-      <option value="Binance">Binance</option>
-    </select>
-
-    <input
-      type="number"
-      id="retraitAmount"
-      placeholder="Montant à retirer"
-      min="1"
-      step="0.01"
-    >
-
-    <input
-      type="tel"
-      id="retraitNatcash"
-      placeholder="Numéro Natcash"
-    >
-
-    <input
-      type="text"
-      id="retraitName"
-      placeholder="Nom du bénéficiaire"
-    >
-
-    <button>
-      Continuer
-    </button>
-
-    <button
-      class="back"
-      onclick="backDashboard()">
-      ← Retour
-    </button>
-
-  </div>
-
-
-  <!-- FORMULAIRE FREE FIRE -->
-  <div
-    id="freefireForm"
-    class="card hidden">
-
-    <div class="form-title">
-      🎮 Free Fire
-    </div>
-
-    <input
-      type="text"
-      id="freeFireId"
-      placeholder="ID Free Fire"
-    >
-
-    <select
-      id="freeFireDiamonds"
-      onchange="calculateFreeFire()">
-
-      <option value="145">110 Diamonds — 145 G</option>
-      <option value="450">341 Diamonds — 450 G</option>
-      <option value="750">572 Diamonds — 750 G</option>
-      <option value="1550">1166 Diamonds — 1 550 G</option>
-      <option value="2700">2398 Diamonds — 2 700 G</option>
-      <option value="7050">6160 Diamonds — 7 050 G</option>
-
-    </select>
-
-    <div class="price-result">
-
-      <div>
-        <span>Total</span>
-
-        <strong id="freeFireTotal">
-          145 G
-        </strong>
-      </div>
-
-    </div>
-
-    <div class="payment-box">
-      Paiement Natcash :
-      <strong>509 40886629</strong>
-      JUNIOR AUGUSTE
-    </div>
-
-    <button>
-      Continuer
-    </button>
-
-    <button
-      class="back"
-      onclick="backDashboard()">
-      ← Retour
-    </button>
-
-  </div>
-
-
-  <!-- FORMULAIRE CRYPTO -->
-  <div
-    id="cryptoForm"
-    class="card hidden">
-
-    <div class="form-title">
-      🪙 Crypto
-    </div>
-
-    <select id="cryptoAsset">
-      <option value="USDT">USDT</option>
-      <option value="USDC">USDC</option>
-    </select>
-
-    <select id="cryptoOperation">
-      <option value="Achat">Achat</option>
-      <option value="Retrait">Retrait</option>
-    </select>
-
-    <select id="cryptoNetwork">
-
-      <option value="TRON / TRC20">
-        TRON / TRC20
-      </option>
-
-      <option value="Ethereum / ERC20">
-        Ethereum / ERC20
-      </option>
-
-      <option value="BNB Smart Chain / BEP20">
-        BNB Smart Chain / BEP20
-      </option>
-
-      <option value="Polygon">
-        Polygon
-      </option>
-
-      <option value="Solana">
-        Solana
-      </option>
-
-    </select>
-
-    <input
-      type="number"
-      id="cryptoAmount"
-      placeholder="Montant en USD"
-      min="1"
-      step="0.01"
-      oninput="calculateCrypto()"
-    >
-
-    <input
-      type="text"
-      id="cryptoWallet"
-      placeholder="Adresse du portefeuille"
-    >
-
-    <div class="price-result">
-
-      <div>
-        <span>Taux</span>
-        <strong>143 G / 1 USD</strong>
-      </div>
-
-      <div>
-        <span>Frais</span>
-        <strong>0 USD</strong>
-      </div>
-
-      <div>
-        <span>Total</span>
-        <strong id="cryptoTotal">
-          0 G
-        </strong>
-      </div>
-
-    </div>
-
-    <button>
-      Continuer
-    </button>
-
-    <button
-      class="back"
-      onclick="backDashboard()">
-      ← Retour
-    </button>
-
-  </div>
-
-
-  <!-- FORMULAIRE BINANCE -->
-  <div
-    id="binanceForm"
-    class="card hidden">
-
-    <div class="form-title">
-      🟡 Binance
-    </div>
-
-    <select id="binanceOperation">
-      <option value="Achat">Achat</option>
-      <option value="Retrait">Retrait</option>
-    </select>
-
-    <input
-      type="text"
-      id="binanceId"
-      placeholder="Binance ID ou e-mail"
-    >
-
-    <input
-      type="number"
-      id="binanceAmount"
-      placeholder="Montant en USD"
-      min="1"
-      step="0.01"
-      oninput="calculateBinance()"
-    >
-
-    <div class="price-result">
-
-      <div>
-        <span>Taux</span>
-        <strong>143 G / 1 USD</strong>
-      </div>
-
-      <div>
-        <span>Frais</span>
-        <strong>0 USD</strong>
-      </div>
-
-      <div>
-        <span>Total</span>
-        <strong id="binanceTotal">
-          0 G
-        </strong>
-      </div>
-
-    </div>
-
-    <div class="payment-box">
-      Paiement Natcash :
-      <strong>509 40886629</strong>
-      JUNIOR AUGUSTE
-    </div>
-
-    <button>
-      Continuer
-    </button>
-
-    <button
-      class="back"
-      onclick="backDashboard()">
-      ← Retour
     </button>
 
   </div>
@@ -841,373 +132,93 @@
 </div>
 
 
-<footer>
-  © 2026 MONEXA CASH — Tous droits réservés.
-</footer>
-
-
 <script>
 
-  /* ===============================
-     SUPABASE
-  =============================== */
+const SUPABASE_URL =
+  "https://nakaajakjrefzmacqlhv.supabase.co";
 
-  const SUPABASE_URL =
-    "https://nakaajakjrefzmacqlhv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
 
-  const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
-
-  const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 
-  /* ===============================
-     MESSAGES
-  =============================== */
+const loginButton =
+  document.getElementById("loginButton");
 
-  function showMessage(id, message) {
+const message =
+  document.getElementById("message");
 
-    const element =
-      document.getElementById(id);
 
-    element.textContent = message;
+loginButton.addEventListener("click", async function() {
 
-    element.classList.remove("hidden");
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+
+  if (!email || !password) {
+
+    message.textContent =
+      "Veuillez entrer votre e-mail et votre mot de passe.";
+
+    return;
   }
 
 
-  /* ===============================
-     LOGIN / REGISTER
-  =============================== */
+  message.textContent =
+    "Connexion en cours...";
 
-  function showLogin() {
 
-    document
-      .getElementById("loginSection")
-      .classList.remove("hidden");
+  const { data, error } =
+    await db.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
 
-    document
-      .getElementById("registerSection")
-      .classList.add("hidden");
 
-    document
-      .getElementById("dashboardSection")
-      .classList.add("hidden");
+  if (error) {
 
+    message.textContent =
+      error.message;
+
+    return;
   }
 
 
-  function showRegister() {
+  document
+    .getElementById("loginSection")
+    .classList.add("hidden");
 
-    document
-      .getElementById("loginSection")
-      .classList.add("hidden");
+  document
+    .getElementById("dashboard")
+    .classList.remove("hidden");
 
-    document
-      .getElementById("registerSection")
-      .classList.remove("hidden");
+  document
+    .getElementById("userEmail")
+    .textContent =
+    data.user.email;
 
-    document
-      .getElementById("dashboardSection")
-      .classList.add("hidden");
-
-  }
-
-
-  async function register() {
-
-    const name =
-      document
-        .getElementById("registerName")
-        .value
-        .trim();
-
-    const phone =
-      document
-        .getElementById("registerPhone")
-        .value
-        .trim();
-
-    const email =
-      document
-        .getElementById("registerEmail")
-        .value
-        .trim();
-
-    const password =
-      document
-        .getElementById("registerPassword")
-        .value;
+});
 
 
-    if (!name || !phone || !email || !password) {
-
-      showMessage(
-        "registerMessage",
-        "Veuillez remplir tous les champs."
-      );
-
-      return;
-    }
-
-
-    if (password.length < 6) {
-
-      showMessage(
-        "registerMessage",
-        "Le mot de passe doit contenir au moins 6 caractères."
-      );
-
-      return;
-    }
-
-
-    const { error } =
-      await db.auth.signUp({
-
-        email: email,
-
-        password: password,
-
-        options: {
-
-          data: {
-            full_name: name,
-            phone: phone
-          }
-
-        }
-
-      });
-
-
-    if (error) {
-
-      showMessage(
-        "registerMessage",
-        error.message
-      );
-
-      return;
-    }
-
-
-    showMessage(
-      "registerMessage",
-      "Compte créé avec succès. Vous pouvez maintenant vous connecter."
-    );
-
-  }
-
-
-  async function login() {
-
-    const email =
-      document
-        .getElementById("loginEmail")
-        .value
-        .trim();
-
-    const password =
-      document
-        .getElementById("loginPassword")
-        .value;
-
-
-    if (!email || !password) {
-
-      showMessage(
-        "loginMessage",
-        "Veuillez entrer votre e-mail et votre mot de passe."
-      );
-
-      return;
-    }
-
-
-    const { data, error } =
-      await db.auth.signInWithPassword({
-
-        email: email,
-        password: password
-
-      });
-
-
-    if (error) {
-
-      showMessage(
-        "loginMessage",
-        error.message
-      );
-
-      return;
-    }
-
-
-    showDashboard(data.user);
-
-  }
-
-
-  function showDashboard(user) {
-
-    document
-      .getElementById("loginSection")
-      .classList.add("hidden");
-
-    document
-      .getElementById("registerSection")
-      .classList.add("hidden");
-
-    document
-      .getElementById("dashboardSection")
-      .classList.remove("hidden");
-
-
-    document
-      .getElementById("userEmail")
-      .textContent =
-      user.email;
-
-  }
-
-
-  async function logout() {
+document
+  .getElementById("logoutButton")
+  .addEventListener("click", async function() {
 
     await db.auth.signOut();
 
-    showLogin();
+    location.reload();
 
-  }
-
-
-  /* ===============================
-     NAVIGATION SERVICES
-  =============================== */
-
-  function hideAllForms() {
-
-    const forms = [
-      "dashboardSection",
-      "rechargeForm",
-      "retraitForm",
-      "freefireForm",
-      "cryptoForm",
-      "binanceForm"
-    ];
-
-    forms.forEach(id => {
-
-      document
-        .getElementById(id)
-        .classList.add("hidden");
-
-    });
-
-  }
+  });
 
 
-  function openForm(service) {
+</script>
 
-    hideAllForms();
-
-    document
-      .getElementById(service + "Form")
-      .classList.remove("hidden");
-
-  }
-
-
-  function backDashboard() {
-
-    hideAllForms();
-
-    document
-      .getElementById("dashboardSection")
-      .classList.remove("hidden");
-
-  }
-
-
-  /* ===============================
-     CALCUL RECHARGE
-  =============================== */
-
-  function calculateRecharge() {
-
-    const amount =
-      parseFloat(
-        document
-          .getElementById("rechargeAmount")
-          .value
-      ) || 0;
-
-
-    let fee = 0;
-
-    if (amount > 0 && amount <= 10) {
-
-      fee = 1;
-
-    } else if (amount > 10) {
-
-      fee = 2;
-
-    }
-
-
-    const totalUSD =
-      amount + fee;
-
-    const totalHTG =
-      totalUSD * 145;
-
-
-    document
-      .getElementById("rechargeCalculation")
-      .innerHTML = `
-
-        <div>
-          <span>Montant</span>
-          <strong>$${amount.toFixed(2)}</strong>
-        </div>
-
-        <div>
-          <span>Frais</span>
-          <strong>$${fee.toFixed(2)}</strong>
-        </div>
-
-        <div>
-          <span>Total à payer</span>
-          <strong>${totalHTG.toLocaleString()} G</strong>
-        </div>
-
-      `;
-
-  }
-
-
-  /* ===============================
-     CALCUL FREE FIRE
-  =============================== */
-
-  function calculateFreeFire() {
-
-    const price =
-      document
-        .getElementById("freeFireDiamonds")
-        .value;
-
-    document
-      .getElementById("freeFireTotal")
-      .textContent =
-      Number(price).toLocaleString() + " G";
-
-  }
-
-
-  /* =============
+</body>
+</html>
