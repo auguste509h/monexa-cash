@@ -337,7 +337,36 @@
 
     <div id="profileSection" class="profile-box hidden">
 
-      <div class="profile-icon">👤</div>
+      <img
+        id="profilePhoto"
+        src=""
+        alt="Photo de profil"
+        style="
+          width:100px;
+          height:100px;
+          border-radius:50%;
+          object-fit:cover;
+          display:none;
+          margin:auto;
+        "
+      >
+
+      <div id="defaultProfileIcon" class="profile-icon">
+        👤
+      </div>
+
+      <input
+        type="file"
+        id="profilePhotoInput"
+        accept="image/*"
+        style="margin-top:15px;"
+      >
+
+      <button id="uploadPhotoButton">
+        📷 Ajouter une photo
+      </button>
+
+      <p id="photoMessage"></p>
 
       <h2>Mon profil</h2>
 
