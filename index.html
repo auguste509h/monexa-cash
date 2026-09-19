@@ -8,18 +8,55 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f7fb;
       color: #172033;
+      transition: 0.3s;
     }
 
     header {
       background: #0b1f3a;
       color: white;
+      padding: 18px 15px;
+    }
+
+    .topbar {
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .top-button {
+      width: auto;
+      margin: 0;
+      padding: 10px 13px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .brand {
       text-align: center;
-      padding: 30px 15px;
+      flex: 1;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 23px;
+    }
+
+    .brand p {
+      margin: 5px 0 0;
+      font-size: 12px;
+      opacity: .85;
     }
 
     .container {
@@ -36,14 +73,15 @@
       box-shadow: 0 4px 15px rgba(0,0,0,.06);
     }
 
-    input {
+    input,
+    select {
       width: 100%;
       padding: 14px;
       margin-top: 10px;
-      box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 10px;
       font-size: 15px;
+      background: white;
     }
 
     button {
@@ -65,7 +103,7 @@
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
 
     #message {
@@ -88,11 +126,6 @@
       padding: 20px 10px;
       text-align: center;
       cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .service:hover {
-      transform: translateY(-2px);
     }
 
     .service-icon {
@@ -114,6 +147,89 @@
       font-weight: bold;
     }
 
+    .menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 290px;
+      max-width: 85%;
+      height: 100%;
+      background: white;
+      z-index: 1000;
+      padding: 20px;
+      box-shadow: -5px 0 20px rgba(0,0,0,.15);
+      transform: translateX(100%);
+      transition: .25s;
+    }
+
+    .menu.open {
+      transform: translateX(0);
+    }
+
+    .menu h2 {
+      margin-top: 5px;
+    }
+
+    .menu-item {
+      width: 100%;
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #f4f7fb;
+      color: #172033;
+      text-align: left;
+    }
+
+    .close-menu {
+      background: #0b1f3a;
+      color: white;
+    }
+
+    .profile-box {
+      text-align: center;
+    }
+
+    .profile-icon {
+      font-size: 55px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 999;
+    }
+
+    .dark {
+      background: #101827;
+      color: #f4f7fb;
+    }
+
+    .dark .card,
+    .dark .menu {
+      background: #182235;
+      color: white;
+    }
+
+    .dark .service,
+    .dark .menu-item,
+    .dark #serviceMessage {
+      background: #222e43;
+      border-color: #33415c;
+      color: white;
+    }
+
+    .dark input,
+    .dark select {
+      background: #222e43;
+      color: white;
+      border-color: #45536d;
+    }
+
+    .dark .link {
+      color: white;
+    }
+
     @media (max-width: 400px) {
       .services {
         grid-template-columns: 1fr;
@@ -125,9 +241,66 @@
 <body>
 
 <header>
-  <h1>MONEXA CASH</h1>
-  <p>Plateforme de services financiers numériques</p>
+
+  <div class="topbar">
+
+    <button
+      class="top-button"
+      id="profileButton">
+      👤 Profil
+    </button>
+
+    <div class="brand">
+      <h1>MONEXA CASH</h1>
+      <p>Plateforme de services financiers numériques</p>
+    </div>
+
+    <button
+      class="top-button"
+      id="menuButton">
+      ☰
+    </button>
+
+  </div>
+
 </header>
+
+
+<div id="overlay" class="overlay hidden"></div>
+
+
+<div id="sideMenu" class="menu">
+
+  <button
+    class="close-menu"
+    id="closeMenu">
+    ✕ Fermer
+  </button>
+
+  <h2>Menu</h2>
+
+  <button class="menu-item" id="countryButton">
+    🌍 Pays
+  </button>
+
+  <button class="menu-item" id="darkButton">
+    🌙 Mode sombre
+  </button>
+
+  <button class="menu-item" id="referralButton">
+    🎟️ Code de parrainage
+  </button>
+
+  <button class="menu-item" id="settingsButton">
+    ⚙️ Paramètres
+  </button>
+
+  <button class="menu-item" id="helpButton">
+    ❓ Assistance
+  </button>
+
+</div>
+
 
 <div class="container">
 
@@ -138,14 +311,12 @@
     <input
       type="email"
       id="email"
-      placeholder="Adresse e-mail"
-    >
+      placeholder="Adresse e-mail">
 
     <input
       type="password"
       id="password"
-      placeholder="Mot de passe"
-    >
+      placeholder="Mot de passe">
 
     <button id="loginButton">
       Se connecter
@@ -164,48 +335,72 @@
 
   <div id="dashboard" class="card hidden">
 
-    <h2>Bienvenue 👋</h2>
+    <div id="profileSection" class="profile-box hidden">
 
-    <p id="userEmail"></p>
+      <div class="profile-icon">👤</div>
 
-    <h3>Nos services</h3>
+      <h2>Mon profil</h2>
 
-    <div class="services">
+      <p id="profileEmail"></p>
 
-      <div class="service" data-service="Recharge">
-        <div class="service-icon">💳</div>
-        <div class="service-name">Recharge</div>
-      </div>
-
-      <div class="service" data-service="Retrait">
-        <div class="service-icon">🏦</div>
-        <div class="service-name">Retrait</div>
-      </div>
-
-      <div class="service" data-service="Free Fire">
-        <div class="service-icon">🎮</div>
-        <div class="service-name">Free Fire</div>
-      </div>
-
-      <div class="service" data-service="Crypto">
-        <div class="service-icon">🪙</div>
-        <div class="service-name">Crypto</div>
-      </div>
-
-      <div class="service" data-service="Binance">
-        <div class="service-icon">🟡</div>
-        <div class="service-name">Binance</div>
-      </div>
+      <button id="backDashboard">
+        ← Retour
+      </button>
 
     </div>
 
-    <div id="serviceMessage">
-      Sélectionnez un service.
-    </div>
 
-    <button id="logoutButton">
-      Se déconnecter
-    </button>
+    <div id="mainDashboard">
+
+      <h2>Bienvenue 👋</h2>
+
+      <p id="userEmail"></p>
+
+      <h3>Nos services</h3>
+
+      <div class="services">
+
+        <div class="service" data-service="Recharge">
+          <div class="service-icon">💳</div>
+          <div class="service-name">Recharge</div>
+        </div>
+
+        <div class="service" data-service="Retrait">
+          <div class="service-icon">🏦</div>
+          <div class="service-name">Retrait</div>
+        </div>
+
+        <div class="service" data-service="Free Fire">
+          <div class="service-icon">🎮</div>
+          <div class="service-name">Free Fire</div>
+        </div>
+
+        <div class="service" data-service="Crypto">
+          <div class="service-icon">🪙</div>
+          <div class="service-name">Crypto</div>
+        </div>
+
+        <div class="service" data-service="Binance">
+          <div class="service-icon">🟡</div>
+          <div class="service-name">Binance</div>
+        </div>
+
+        <div class="service" data-service="Création de carte">
+          <div class="service-icon">💳</div>
+          <div class="service-name">Création de carte</div>
+        </div>
+
+      </div>
+
+      <div id="serviceMessage">
+        Sélectionnez un service.
+      </div>
+
+      <button id="logoutButton">
+        Se déconnecter
+      </button>
+
+    </div>
 
   </div>
 
@@ -241,7 +436,6 @@ loginButton.addEventListener("click", async function() {
   const password =
     document.getElementById("password").value;
 
-
   if (!email || !password) {
 
     message.textContent =
@@ -249,7 +443,6 @@ loginButton.addEventListener("click", async function() {
 
     return;
   }
-
 
   message.textContent =
     "Connexion en cours...";
@@ -281,6 +474,11 @@ loginButton.addEventListener("click", async function() {
 
   document
     .getElementById("userEmail")
+    .textContent =
+    data.user.email;
+
+  document
+    .getElementById("profileEmail")
     .textContent =
     data.user.email;
 
@@ -317,7 +515,117 @@ document
   });
 
 
+const menu =
+  document.getElementById("sideMenu");
+
+const overlay =
+  document.getElementById("overlay");
+
+
+function openMenu() {
+
+  menu.classList.add("open");
+  overlay.classList.remove("hidden");
+
+}
+
+
+function closeMenu() {
+
+  menu.classList.remove("open");
+  overlay.classList.add("hidden");
+
+}
+
+
+document
+  .getElementById("menuButton")
+  .addEventListener("click", openMenu);
+
+
+document
+  .getElementById("closeMenu")
+  .addEventListener("click", closeMenu);
+
+
+overlay.addEventListener("click", closeMenu);
+
+
+document
+  .getElementById("profileButton")
+  .addEventListener("click", function() {
+
+    document
+      .getElementById("mainDashboard")
+      .classList.add("hidden");
+
+    document
+      .getElementById("profileSection")
+      .classList.remove("hidden");
+
+  });
+
+
+document
+  .getElementById("backDashboard")
+  .addEventListener("click", function() {
+
+    document
+      .getElementById("profileSection")
+      .classList.add("hidden");
+
+    document
+      .getElementById("mainDashboard")
+      .classList.remove("hidden");
+
+  });
+
+
+document
+  .getElementById("darkButton")
+  .addEventListener("click", function() {
+
+    document.body.classList.toggle("dark");
+
+  });
+
+
+document
+  .getElementById("countryButton")
+  .addEventListener("click", function() {
+
+    alert("La sélection du pays sera disponible prochainement.");
+
+  });
+
+
+document
+  .getElementById("referralButton")
+  .addEventListener("click", function() {
+
+    alert("Le système de parrainage sera disponible prochainement.");
+
+  });
+
+
+document
+  .getElementById("settingsButton")
+  .addEventListener("click", function() {
+
+    alert("Les paramètres seront disponibles prochainement.");
+
+  });
+
+
+document
+  .getElementById("helpButton")
+  .addEventListener("click", function() {
+
+    alert("L'assistance MONEXA CASH sera disponible prochainement.");
+
+  });
+
 </script>
 
 </body>
-</html>
+  </html>
