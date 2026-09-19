@@ -1,17 +1,162 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MONEXA CASH</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: #0b1f3a;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    .container {
+      padding: 25px 18px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .welcome {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .welcome h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      color: #667085;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .service {
+      background: white;
+      border-radius: 15px;
+      padding: 22px 12px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .service .icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .service h3 {
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+
+    .service p {
+      font-size: 12px;
+      color: #667085;
+    }
+
+    .button {
+      display: block;
+      background: #0b1f3a;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 25px;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 15px;
+      color: #667085;
+      font-size: 13px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>MONEXA CASH</h1>
-  <p>Plateforme de services financiers numériques</p>
 
-  <h2>Nos services</h2>
-  <p>Recharge • Transfert • Retrait • Paiement</p>
+  <header>
+    <h1>MONEXA CASH</h1>
+    <p>Plateforme de services financiers numériques</p>
+  </header>
 
-  <button>Demander un service</button>
+  <div class="container">
+
+    <div class="welcome">
+      <h2>Bienvenue 👋</h2>
+      <p>Choisissez le service dont vous avez besoin.</p>
+    </div>
+
+    <div class="services">
+
+      <div class="service">
+        <div class="icon">💳</div>
+        <h3>Recharge</h3>
+        <p>Rechargez votre compte</p>
+      </div>
+
+      <div class="service">
+        <div class="icon">💸</div>
+        <h3>Transfert</h3>
+        <p>Envoyez de l'argent</p>
+      </div>
+
+      <div class="service">
+        <div class="icon">🏦</div>
+        <h3>Retrait</h3>
+        <p>Demandez un retrait</p>
+      </div>
+
+      <div class="service">
+        <div class="icon">🛒</div>
+        <h3>Paiement</h3>
+        <p>Effectuez un paiement</p>
+      </div>
+
+    </div>
+
+    <a class="button" href="#">
+      Demander un service
+    </a>
+
+  </div>
+
+  <footer>
+    © 2026 MONEXA CASH — Tous droits réservés.
+  </footer>
+
 </body>
 </html>
