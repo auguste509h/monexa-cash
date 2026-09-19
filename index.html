@@ -513,7 +513,52 @@ loginButton.addEventListener("click", async function() {
 
 });
 
+async function loadProfilePhoto() {
 
+  const { data: sessionData } =
+    await db.auth.getSession();
+
+  const user =
+    sessionData.session?.user;
+
+  if (!user) return;
+
+  const { data: profile } =
+    await db
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .single();
+
+  if (!profile?.avatar_url) return;
+
+  const { data: signedData } =
+    await db.storage
+      .from("profile-photos")
+      .createSignedUrl(
+        profile.avatar_url,
+        3600
+      );
+
+  if (!signedData?.signedUrl) return;
+
+  document
+    .getElementById("profilePhoto")
+    .src =
+    signedData.signedUrl;
+
+  document
+    .getElementById("profilePhoto")
+    .style.display =
+    "block";
+
+  document
+    .getElementById("defaultProfileIcon")
+    .style.display =
+    "none";
+}
+
+await loadProfilePhoto();
 document
   .getElementById("logoutButton")
   .addEventListener("click", async function() {
