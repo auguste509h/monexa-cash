@@ -644,15 +644,94 @@ document
     alert("Les paramètres seront disponibles prochainement.");
 
   });
-
-
 document
-  .getElementById("helpButton")
-  .addEventListener("click", function() {
+  .getElementById("uploadPhotoButton")
+  .addEventListener("click", async function() {
 
-    alert("L'assistance MONEXA CASH sera disponible prochainement.");
+    const input =
+      document.getElementById("profilePhotoInput");
+
+    const photoMessage =
+      document.getElementById("photoMessage");
+
+    if (!input.files || !input.files[0]) {
+      photoMessage.textContent =
+        "Veuillez sélectionner une photo.";
+      return;
+    }
+
+    const file = input.files[0];
+
+    if (!file.type.startsWith("image/")) {
+      photoMessage.textContent =
+        "Veuillez choisir une image.";
+      return;
+    }
+
+    const {
+      data: sessionData
+    } = await db.auth.getSession();
+
+    const user =
+      sessionData.session?.user;
+
+    if (!user) {
+      photoMessage.textContent =
+        "Session expirée. Veuillez vous reconnecter.";
+      return;
+    }
+
+    photoMessage.textContent =
+      "Téléchargement de la photo...";
+
+    const extension =
+      file.name.split(".").pop().toLowerCase();
+
+    const filePath =
+      user.id + "/profile." + extension;
+
+    const { error: uploadError } =
+      await db.storage
+        .from("profile-photos")
+        .upload(filePath, file, {
+          upsert: true
+        });
+
+    if (uploadError) {
+      photoMessage.textContent =
+        "Erreur : " + uploadError.message;
+      return;
+    }
+
+    const { data: signedData, error: signedError } =
+      await db.storage
+        .from("profile-photos")
+        .createSignedUrl(filePath, 3600);
+
+    if (signedError) {
+      photoMessage.textContent =
+        "Photo enregistrée, mais impossible de l'afficher.";
+      return;
+    }
+
+    document
+      .getElementById("profilePhoto")
+      .src = signedData.signedUrl;
+
+    document
+      .getElementById("profilePhoto")
+      .style.display = "block";
+
+    document
+      .getElementById("defaultProfileIcon")
+      .style.display = "none";
+
+    photoMessage.textContent =
+      "Photo de profil enregistrée ✅";
 
   });
+
+
 
 </script>
 
