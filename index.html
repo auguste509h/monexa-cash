@@ -1582,58 +1582,54 @@
 
         async function loadProfile() {
 
-          const userResult =
-            await db.auth.getUser();
+  const userResult =
+    await db.auth.getUser();
 
-          const user =
-            userResult.data.user;
+  const user =
+    userResult.data.user;
 
+  if (!user) {
+    return;
+  }
 
-          if (!user) {
-            return;
-          }
+  document
+    .getElementById(
+      "profileEmail"
+    )
+    .textContent =
+    user.email || "";
 
+  const profileResult =
+    await db
+      .from("profiles")
+      .select(
+        "full_name, phone, avatar_url"
+      )
+      .eq(
+        "id",
+        user.id
+      )
+      .maybeSingle();
 
-          document
-            .getElementById(
-              "profileEmail"
-            )
-            .textContent =
-            user.email || "";
+  if (
+    profileResult.data &&
+    profileResult.data.avatar_url
+  ) {
 
+    const avatarUrl =
+      profileResult.data.avatar_url;
 
-          const profileResult =
-            await db
-              .from("profiles")
-              .select(
-                "full_name, phone, avatar_url"
-              )
-              .eq(
-                "id",
-                user.id
-              )
-              .maybeSingle();
+    profilePhoto.src =
+      avatarUrl;
 
+    profilePhoto.style.display =
+      "block";
 
-          if (
-            profileResult.data &&
-            profileResult.data.avatar_url
-          ) {
+    defaultProfileIcon.style.display =
+      "none";
+  }
 
-            profilePhoto.src =
-              profileResult
-                .data
-                .avatar_url;
-
-            profilePhoto.style.display =
-              "block";
-
-            defaultProfileIcon.style.display =
-              "none";
-
-          }
-
-        }
+  }
 
 
         // VÉRIFIER LA SESSION EXISTANTE
