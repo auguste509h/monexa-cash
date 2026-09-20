@@ -1594,11 +1594,14 @@
   
         // MODE SOMBRE
 
-document
-  .getElementById(
+const darkButton =
+  document.getElementById(
     "darkButton"
-  )
-  .addEventListener(
+  );
+
+if (darkButton) {
+
+  darkButton.addEventListener(
     "click",
     function () {
 
@@ -1609,6 +1612,8 @@ document
 
     }
   );
+
+}
 
         // RETOUR DEPUIS RECHARGE
 
