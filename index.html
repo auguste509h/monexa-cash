@@ -852,8 +852,7 @@
 
   </section>
 
-
-   <section
+ <section
   id="freeFireForm"
   class="card hidden"
 >
@@ -863,8 +862,65 @@
   </h2>
 
   <p style="margin:10px 0;">
-    Entrez les informations de votre compte Free Fire.
+    Choisissez votre pack de Diamonds.
   </p>
+
+
+  <select
+    id="freeFirePack"
+  >
+
+    <option value="">
+      Sélectionner un pack
+    </option>
+
+    <option
+      value="100 + 10"
+      data-price="145"
+    >
+      100 + 10 Diamonds — 145 GDS
+    </option>
+
+    <option
+      value="310 + 31"
+      data-price="450"
+    >
+      310 + 31 Diamonds — 450 GDS
+    </option>
+
+    <option
+      value="520 + 52"
+      data-price="750"
+    >
+      520 + 52 Diamonds — 750 GDS
+    </option>
+
+    <option
+      value="1060 + 106"
+      data-price="1500"
+    >
+      1060 + 106 Diamonds — 1,500 GDS
+    </option>
+
+    <option
+      value="2180 + 218"
+      data-price="3000"
+    >
+      2180 + 218 Diamonds — 3,000 GDS
+    </option>
+
+  </select>
+
+
+  <div
+    id="freeFirePrice"
+    style="
+      margin-top:10px;
+      font-weight:bold;
+    "
+  >
+    Montant à payer : 0 GDS
+  </div>
 
 
   <input
@@ -874,29 +930,29 @@
   >
 
 
-  <input
-    type="text"
-    id="freeFireName"
-    placeholder="Nom du joueur"
-  >
-
-
-  <input
-    type="number"
-    id="freeFireAmount"
-    placeholder="Montant en USD"
-    min="1"
-    step="0.01"
-  >
-
-
   <div
     style="
-      margin-top:10px;
-      font-size:14px;
+      margin-top:15px;
+      padding:15px;
+      background:#eff6ff;
+      border-radius:12px;
     "
   >
-    Paiement disponible via Natcash.
+
+    <strong>
+      Paiement Natcash
+    </strong>
+
+    <p style="margin-top:8px;">
+      Numéro :
+      <strong>509 40886629</strong>
+    </p>
+
+    <p style="margin-top:5px;">
+      Nom :
+      <strong>JUNIOR AUGUSTE</strong>
+    </p>
+
   </div>
 
 
@@ -933,7 +989,8 @@
     class="message"
   ></div>
 
-   </section>
+ </section>
+   
   
     <script>
 
