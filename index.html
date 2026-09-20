@@ -1816,7 +1816,47 @@
 
                     return;
 
-      }
+      }                  const freeFirePack =
+                    byId(
+                      "freeFirePack"
+                    );
+
+                  const freeFirePrice =
+                    byId(
+                      "freeFirePrice"
+                    );
+
+
+                  if (
+                    freeFirePack &&
+                    freeFirePrice
+                  ) {
+
+                    freeFirePack.addEventListener(
+                      "change",
+                      function () {
+
+                        const selected =
+                          freeFirePack
+                            .options[
+                              freeFirePack.selectedIndex
+                            ];
+
+                        const price =
+                          selected
+                            .dataset
+                            .price || 0;
+
+
+                        freeFirePrice.textContent =
+                          "Montant à payer : " +
+                          Number(price).toLocaleString() +
+                          " GDS";
+
+                      }
+                    );
+
+                  }
                     
               
 
