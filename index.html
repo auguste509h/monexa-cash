@@ -2274,7 +2274,44 @@
 
                     return;
 
-      }                  
+      }           
+
+                                    if (
+                    serviceName ===
+                    "Crypto"
+                  ) {
+
+                    hide(
+                      mainDashboard
+                    );
+
+                    hide(
+                      byId(
+                        "rechargeForm"
+                      )
+                    );
+
+                    hide(
+                      byId(
+                        "genericServiceForm"
+                      )
+                    );
+
+                    hide(
+                      byId(
+                        "freeFireForm"
+                      )
+                    );
+
+                    show(
+                      byId(
+                        "cryptoForm"
+                      )
+                    );
+
+                    return;
+
+                }
                   
                   const freeFirePack =
                     byId(
