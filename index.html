@@ -852,6 +852,89 @@
 
   </section>
 
+
+   <section
+  id="freeFireForm"
+  class="card hidden"
+>
+
+  <h2>
+    🎮 Free Fire
+  </h2>
+
+  <p style="margin:10px 0;">
+    Entrez les informations de votre compte Free Fire.
+  </p>
+
+
+  <input
+    type="text"
+    id="freeFireId"
+    placeholder="ID joueur Free Fire"
+  >
+
+
+  <input
+    type="text"
+    id="freeFireName"
+    placeholder="Nom du joueur"
+  >
+
+
+  <input
+    type="number"
+    id="freeFireAmount"
+    placeholder="Montant en USD"
+    min="1"
+    step="0.01"
+  >
+
+
+  <div
+    style="
+      margin-top:10px;
+      font-size:14px;
+    "
+  >
+    Paiement disponible via Natcash.
+  </div>
+
+
+  <input
+    type="file"
+    id="freeFireProof"
+    accept="image/*"
+  >
+
+
+  <p style="font-size:13px;margin-top:8px;">
+    📄 Preuve de paiement obligatoire.
+  </p>
+
+
+  <button
+    id="freeFireSubmit"
+    class="primary"
+  >
+    Envoyer la demande
+  </button>
+
+
+  <button
+    id="freeFireBack"
+    class="link"
+  >
+    🏠 Retour à l'accueil
+  </button>
+
+
+  <div
+    id="freeFireMessage"
+    class="message"
+  ></div>
+
+   </section>
+  
     <script>
 
     document.addEventListener(
