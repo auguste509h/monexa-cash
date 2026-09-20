@@ -1590,44 +1590,348 @@
 
             }
           );
-
-
+        
+  
         // MODE SOMBRE
 
+document
+  .getElementById(
+    "darkButton"
+  )
+  .addEventListener(
+    "click",
+    function () {
+
+      document
+        .body
+        .classList
+        .toggle("dark");
+
+    }
+  );
+
+        // RETOUR DEPUIS RECHARGE
+
+const rechargeForm =
+  document.getElementById("rechargeForm");
+
+const rechargeBack =
+  document.getElementById("rechargeBack");
+
+const rechargeAmount =
+  document.getElementById("rechargeAmount");
+
+const rechargeService =
+  document.getElementById("rechargeService");
+
+const rechargeSubmit =
+  document.getElementById("rechargeSubmit");
+
+if (
+  rechargeForm &&
+  rechargeBack &&
+  rechargeAmount &&
+  rechargeService &&
+  rechargeSubmit
+) {
+
+  rechargeBack.addEventListener(
+    "click",
+    function () {
+
+      rechargeForm
+        .classList
+        .add("hidden");
+
+      mainDashboard
+        .classList
+        .remove("hidden");
+
+      document
+        .getElementById(
+          "rechargeMessage"
+        )
+        .textContent = "";
+
+    }
+  );
+
+
+  rechargeAmount.addEventListener(
+    "input",
+    function () {
+
+      const amount =
+        parseFloat(
+          rechargeAmount.value
+        ) || 0;
+
+      let fee = 0;
+
+      if (
+        amount > 0 &&
+        amount <= 10
+      ) {
+        fee = 1;
+      }
+
+      if (
+        amount > 10
+      ) {
+        fee = 2;
+      }
+
+      const total =
+        (amount + fee) * 145;
+
+      document
+        .getElementById(
+          "rechargeFee"
+        )
+        .textContent =
+        "Frais : $" +
+        fee.toFixed(2);
+
+      document
+        .getElementById(
+          "rechargeTotal"
+        )
+        .textContent =
+        "Total : " +
+        total.toFixed(0) +
+        " G";
+
+    }
+  );
+
+
+  rechargeService.addEventListener(
+    "change",
+    function () {
+
+      const accountInput =
+        document.getElementById(
+          "rechargeAccount"
+        );
+
+      if (!accountInput) {
+        return;
+      }
+
+      if (
+        rechargeService.value === "Meru"
+      ) {
+
+        accountInput.placeholder =
+          "Entrez votre email Meru";
+
+      } else if (
+        rechargeService.value === "Wise"
+      ) {
+
+        accountInput.placeholder =
+          "Entrez votre email Wise";
+
+      } else if (
+        rechargeService.value === "Morse"
+      ) {
+
+        accountInput.placeholder =
+          "Entrez votre nom d'utilisateur Morse";
+
+      } else {
+
+        accountInput.placeholder =
+          "Email ou nom d'utilisateur";
+
+      }
+
+    }
+  );
+
+
+  rechargeSubmit.addEventListener(
+    "click",
+    async function () {
+
+      const service =
+        rechargeService.value;
+
+      const amount =
+        parseFloat(
+          rechargeAmount.value
+        ) || 0;
+
+      const accountInput =
+        document.getElementById(
+          "rechargeAccount"
+        );
+
+      const proof =
+        document.getElementById(
+          "rechargeProof"
+        );
+
+      const message =
+        document.getElementById(
+          "rechargeMessage"
+        );
+
+      if (
+        !accountInput ||
+        !proof ||
+        !message
+      ) {
+        return;
+      }
+
+      const account =
+        accountInput.value.trim();
+
+      if (!service) {
+
+        message.textContent =
+          "Veuillez sélectionner un service.";
+
+        return;
+      }
+
+      if (amount <= 0) {
+
+        message.textContent =
+          "Veuillez entrer un montant valide.";
+
+        return;
+      }
+
+      if (!account) {
+
+        message.textContent =
+          "Veuillez entrer votre email ou nom d'utilisateur.";
+
+        return;
+      }
+
+      if (
+        !proof.files ||
+        !proof.files[0]
+      ) {
+
+        message.textContent =
+          "Veuillez ajouter la preuve de paiement.";
+
+        return;
+      }
+
+      message.textContent =
+        "Envoi de la demande en cours...";
+
+      try {
+
+        const userResult =
+          await db.auth.getUser();
+
+        const user =
+          userResult.data.user;
+
+        if (!user) {
+
+          message.textContent =
+            "Votre session a expiré. Veuillez vous reconnecter.";
+
+          return;
+        }
+
+        const file =
+          proof.files[0];
+
+        const fileName =
+          user.id +
+          "/" +
+          Date.now() +
+          "-" +
+          file.name;
+
+        const uploadResult =
+          await db
+            .storage
+            .from("payment-proofs")
+            .upload(
+              fileName,
+              file
+            );
+
+        if (
+          uploadResult.error
+        ) {
+
+          message.textContent =
+            "Erreur lors de l'envoi de la preuve : " +
+            uploadResult.error.message;
+
+          return;
+        }
+
+        const insertResult =
+          await db
+            .from("service_requests")
+            .insert({
+              user_id: user.id,
+              service: service,
+              amount: amount,
+              status: "En attente",
+              account: account,
+              proof_url: fileName
+            });
+
+        if (
+          insertResult.error
+        ) {
+
+          message.textContent =
+            "La preuve a été envoyée, mais la demande n'a pas pu être enregistrée : " +
+            insertResult.error.message;
+
+          return;
+        }
+
+        message.textContent =
+          "Demande envoyée avec succès !";
+
+        rechargeService.value = "";
+
+        rechargeAmount.value = "";
+
+        accountInput.value = "";
+
+        proof.value = "";
+
         document
           .getElementById(
-            "darkButton"
+            "rechargeFee"
           )
-          .addEventListener(
-            "click",
-            function () {
-
-              document
-                .body
-                .classList
-                .toggle("dark");
-
-            }
-          );
-
-
-        // PAYS
+          .textContent =
+          "Frais : $0";
 
         document
           .getElementById(
-            "countryButton"
+            "rechargeTotal"
           )
-          .addEventListener(
-            "click",
-            function () {
+          .textContent =
+          "Total : 0 G";
 
-              alert(
-                "Pays disponible : République dominicaine"
-              );
+      } catch (error) {
 
-            }
-          );
+        message.textContent =
+          "Une erreur est survenue : " +
+          error.message;
 
+      }
+
+    }
+  );
+
+  }    
 
         // CODE DE PARRAINAGE
 
