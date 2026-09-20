@@ -1647,27 +1647,26 @@
                     serviceName;
 
 
-                  if (
-                    serviceName ===
-                    "Retrait"
-                  ) {
+                 if (
+                   serviceName ===
+                   "Retrait"
+                 ) {
 
-                    content.innerHTML = `
-                      <p>
-                        Service de retrait disponible.
-                      </p>
-                      <p style="margin-top:10px;">
-                        Contactez MONEXA CASH pour effectuer votre demande.
-                      </p>
-                    `;
+                   hide(mainDashboard);
+                   hide(byId("rechargeForm"));
 
+                   show(
+                     byId("genericServiceForm")
+                   );
+
+                    return;
                   }
 
 
                   else if (
                     serviceName ===
                     "Free Fire"
-                  ) {
+                 ) {
 
                     content.innerHTML = `
                       <p>
