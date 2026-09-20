@@ -752,25 +752,103 @@
 
 
   <section
-    id="genericServiceForm"
-    class="card hidden"
+  id="genericServiceForm"
+  class="card hidden"
+>
+
+  <h2>
+    🏦 Retrait
+  </h2>
+
+  <p style="margin:10px 0;">
+    Choisissez le service que vous souhaitez utiliser.
+  </p>
+
+  <select id="retraitService">
+
+    <option value="">
+      Sélectionner un service
+    </option>
+
+    <option value="Meru">
+      Meru
+    </option>
+
+    <option value="Wise">
+      Wise
+    </option>
+
+    <option value="Morse">
+      Morse
+    </option>
+
+  </select>
+
+  <input
+    type="number"
+    id="retraitAmount"
+    placeholder="Montant à recevoir en HTG"
+    min="1"
+    step="1"
   >
 
-    <h2 id="genericServiceTitle">
-      Service
-    </h2>
+  <div
+    id="retraitConversion"
+    style="margin-top:10px;"
+  >
+    Équivalent : $0 USD
+  </div>
 
-    <div
-      id="genericServiceContent"
-      style="margin-top:15px;"
-    ></div>
+  <div
+    style="
+      margin-top:10px;
+      font-size:14px;
+    "
+  >
+    Taux de retrait :
+    <strong>135 HTG = 1 USD</strong>
+  </div>
 
-    <button
-      id="genericServiceBack"
-      class="link"
-    >
-      🏠 Retour à l'accueil
-    </button>
+  <input
+    type="text"
+    id="retraitName"
+    placeholder="Nom complet du bénéficiaire"
+  >
+
+  <input
+    type="tel"
+    id="retraitPhone"
+    placeholder="Numéro Natcash du bénéficiaire"
+  >
+
+  <input
+    type="file"
+    id="retraitProof"
+    accept="image/*"
+  >
+
+  <p style="font-size:13px;margin-top:8px;">
+    📄 Preuve de paiement obligatoire.
+  </p>
+
+  <button
+    id="retraitSubmit"
+    class="primary"
+  >
+    Envoyer la demande
+  </button>
+
+  <button
+    id="genericServiceBack"
+    class="link"
+  >
+    🏠 Retour à l'accueil
+  </button>
+
+  <div
+    id="retraitMessage"
+    class="message"
+  ></div>
 
   </section>
 
