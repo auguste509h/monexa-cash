@@ -911,7 +911,465 @@
 
   </select>
 
+ <section
+  id="cryptoForm"
+  class="card hidden"
+>
 
+  <h2>
+    🪙 Crypto
+  </h2>
+
+  <p style="margin:10px 0;">
+    Achetez USDT ou USDC et recevez-les directement sur votre wallet.
+  </p>
+
+
+  <div
+    style="
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:15px;
+    "
+  >
+
+    <button
+      type="button"
+      id="cryptoBuy"
+      class="primary"
+    >
+      🛒 Achat
+    </button>
+
+    <button
+      type="button"
+      id="cryptoWithdraw"
+      class="link"
+      disabled
+      style="
+        opacity:0.6;
+        cursor:not-allowed;
+      "
+    >
+      🔒 Retrait
+      <br>
+      <small>
+        Bientôt disponible
+      </small>
+    </button>
+
+  </div>
+
+
+  <div
+    id="cryptoBuyForm"
+    style="
+      margin-top:20px;
+    "
+  >
+
+    <h3>
+      Achat USDT / USDC
+    </h3>
+
+
+    <p
+      style="
+        font-size:13px;
+        margin-top:8px;
+      "
+    >
+      Taux :
+      <strong>
+        143 GDS = 1 USDT / 1 USDC
+      </strong>
+    </p>
+
+
+    <select
+      id="cryptoAsset"
+    >
+
+      <option value="">
+        Sélectionner la crypto
+      </option>
+
+      <option value="USDT">
+        🟢 USDT
+      </option>
+
+      <option value="USDC">
+        🔵 USDC
+      </option>
+
+    </select>
+
+
+    <h3
+      style="
+        margin-top:18px;
+      "
+    >
+      Choisissez le réseau
+    </h3>
+
+
+    <div
+      id="cryptoNetworks"
+      style="
+        display:grid;
+        gap:10px;
+        margin-top:10px;
+      "
+    >
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="TRC20"
+        style="
+          border:2px solid #ef4444;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🔴 TRON
+        </strong>
+
+        <br>
+
+        <small>
+          TRC20
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="BEP20"
+        style="
+          border:2px solid #f0b90b;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🟡 BNB Smart Chain
+        </strong>
+
+        <br>
+
+        <small>
+          BEP20
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="ERC20"
+        style="
+          border:2px solid #6b7280;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          ◈ Ethereum
+        </strong>
+
+        <br>
+
+        <small>
+          ERC20
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="Polygon"
+        style="
+          border:2px solid #8247e5;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🟣 Polygon
+        </strong>
+
+        <br>
+
+        <small>
+          Polygon
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="Solana"
+        style="
+          border:2px solid #14f195;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🟣 Solana
+        </strong>
+
+        <br>
+
+        <small>
+          Solana
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="Arbitrum"
+        style="
+          border:2px solid #28a0f0;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🔵 Arbitrum One
+        </strong>
+
+        <br>
+
+        <small>
+          Arbitrum
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="Optimism"
+        style="
+          border:2px solid #ff0420;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🔴 Optimism
+        </strong>
+
+        <br>
+
+        <small>
+          Optimism
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="Avalanche"
+        style="
+          border:2px solid #e84142;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🔺 Avalanche
+        </strong>
+
+        <br>
+
+        <small>
+          C-Chain
+        </small>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="cryptoNetwork"
+        data-network="Base"
+        style="
+          border:2px solid #0052ff;
+          border-radius:14px;
+          padding:14px;
+          background:#fff;
+          text-align:left;
+        "
+      >
+
+        <strong>
+          🔵 Base
+        </strong>
+
+        <br>
+
+        <small>
+          Base
+        </small>
+
+      </button>
+
+    </div>
+
+
+    <div
+      id="cryptoSelectedNetwork"
+      style="
+        margin-top:12px;
+        font-weight:bold;
+      "
+    >
+      Réseau : Aucun
+    </div>
+
+
+    <input
+      type="number"
+      id="cryptoAmount"
+      placeholder="Montant en USD"
+      min="1"
+      step="0.01"
+    >
+
+
+    <div
+      id="cryptoTotal"
+      style="
+        margin-top:10px;
+        font-weight:bold;
+      "
+    >
+      Total à payer : 0 GDS
+    </div>
+
+
+    <input
+      type="text"
+      id="cryptoWallet"
+      placeholder="Adresse de votre wallet"
+    >
+
+
+    <div
+      style="
+        margin-top:15px;
+        padding:15px;
+        background:#eff6ff;
+        border-radius:12px;
+      "
+    >
+
+      <strong>
+        Paiement Natcash
+      </strong>
+
+      <p style="margin-top:8px;">
+        Numéro :
+        <strong>
+          509 40886629
+        </strong>
+      </p>
+
+      <p style="margin-top:5px;">
+        Nom :
+        <strong>
+          JUNIOR AUGUSTE
+        </strong>
+      </p>
+
+    </div>
+
+
+    <input
+      type="file"
+      id="cryptoProof"
+      accept="image/*"
+    >
+
+
+    <p
+      style="
+        font-size:13px;
+        margin-top:8px;
+      "
+    >
+      📄 Preuve de paiement obligatoire.
+    </p>
+
+
+    <button
+      id="cryptoSubmit"
+      class="primary"
+    >
+      Envoyer la demande
+    </button>
+
+  </div>
+
+
+  <button
+    id="cryptoBack"
+    class="link"
+  >
+    🏠 Retour à l'accueil
+  </button>
+
+
+  <div
+    id="cryptoMessage"
+    class="message"
+  ></div>
+
+ </section>
+   
   <div
     id="freeFirePrice"
     style="
