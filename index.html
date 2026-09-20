@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+  <title>MONEXA CASH</title>
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<title>MONEXA CASH</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<div id="app">
+  <div id="app"></div>
 
-</div>
-</head>
+</body>
+</html>
 
-<body>
-  <style>
+<style>
 
 * {
   box-sizing: border-box;
@@ -32,27 +29,9 @@
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Inter", sans-serif;
   background: #f5f7fb;
-  color: #111827;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.app {
-  max-width: 520px;
-  min-height: 100vh;
-  margin: auto;
-}
-
-.card {
-  background: white;
-  margin: 15px;
-  padding: 18px;
-  border-radius: 16px;
-  box-shadow: 0 5px 18px #00000012;
+  color: #101828;
 }
 
 button,
@@ -62,908 +41,1666 @@ select {
 }
 
 button {
-  border: 0;
   cursor: pointer;
 }
 
-input,
-select {
+.hidden {
+  display: none !important;
+}
+
+#app {
   width: 100%;
-  padding: 13px;
-  margin-top: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-}
-
-.primary {
-  width: 100%;
-  margin-top: 12px;
-  padding: 13px;
-  border-radius: 10px;
-  background: #2563eb;
-  color: white;
-  font-weight: bold;
-}
-
-.link {
-  width: 100%;
-  margin-top: 10px;
-  padding: 13px;
-  border-radius: 10px;
-  background: #eee;
-}
-
-.service-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 15px;
-}
-
-.service {
-  min-height: 100px;
-  border-radius: 16px;
-  background: white;
-  box-shadow: 0 5px 18px #00000012;
-  font-weight: bold;
-}
-
-.service span {
-  display: block;
-  font-size: 30px;
-  margin-bottom: 8px;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
-  background: white;
-  border-bottom: 1px solid #ddd;
-}
-
-.brand {
-  font-weight: 800;
-  font-size: 19px;
-}
-
-.icon-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: #eee;
-  font-size: 20px;
-}
-
-.message {
-  margin-top: 10px;
-  font-size: 14px;
+  min-height: 100vh;
 }
 
   </style>
 
-  <div id="app">
-
   <section id="loginSection" class="card">
 
-    <h2>MONEXA CASH</h2>
+  <h1>MONEXA CASH</h1>
 
-    <p>
-      Connectez-vous à votre compte.
-    </p>
+  <p>Connectez-vous à votre compte.</p>
 
-    <input
-      type="email"
-      id="loginEmail"
-      placeholder="Adresse email"
-    >
+  <input
+    type="email"
+    id="loginEmail"
+    placeholder="Adresse email"
+  >
 
-    <input
-      type="password"
-      id="loginPassword"
-      placeholder="Mot de passe"
-    >
+  <input
+    type="password"
+    id="loginPassword"
+    placeholder="Mot de passe"
+  >
 
-    <button
-      id="loginButton"
-      class="primary"
-    >
-      Se connecter
-    </button>
+  <button id="loginButton" class="primary">
+    Se connecter
+  </button>
 
-    <button
-      id="showRegister"
-      class="link"
-    >
-      Créer un compte
-    </button>
+  <button id="showRegister" class="link">
+    Créer un compte
+  </button>
 
-    <div
-      id="loginMessage"
-      class="message"
-    ></div>
+  <div id="loginMessage" class="message"></div>
 
   </section>
 
-      <section
-    id="registerSection"
-    class="card hidden"
+  <section id="registerSection" class="card hidden">
+
+  <h2>Créer un compte</h2>
+
+  <p>Créez votre compte MONEXA CASH.</p>
+
+  <input
+    type="text"
+    id="registerName"
+    placeholder="Nom complet"
   >
 
-    <h2>
-      Créer un compte
-    </h2>
+  <input
+    type="email"
+    id="registerEmail"
+    placeholder="Adresse email"
+  >
 
+  <input
+    type="tel"
+    id="registerPhone"
+    placeholder="Numéro de téléphone"
+  >
+
+  <input
+    type="password"
+    id="registerPassword"
+    placeholder="Mot de passe"
+  >
+
+  <input
+    type="password"
+    id="registerPassword2"
+    placeholder="Confirmer le mot de passe"
+  >
+
+  <button id="registerButton" class="primary">
+    Créer mon compte
+  </button>
+
+  <button id="backLogin" class="link">
+    Retour à la connexion
+  </button>
+
+  <div id="registerMessage" class="message"></div>
+
+  </section>
+
+  <section id="dashboard" class="hidden">
+
+  <header class="topbar">
+
+    <button id="profileButton" class="icon-btn">
+      👤
+    </button>
+
+    <strong>MONEXA CASH</strong>
+
+    <button id="menuButton" class="icon-btn">
+      ☰
+    </button>
+
+  </header>
+
+  <div class="welcome">
+    <p>Bienvenue 👋</p>
+    <h2 id="userName">Utilisateur</h2>
+  </div>
+
+  <div class="balance-card">
+
+    <small>Solde disponible</small>
+
+    <h1>
+      <span id="balanceAmount">0</span> GDS
+    </h1>
+
+    <button id="toggleBalance">
+      👁️
+    </button>
+
+  </div>
+
+  </section>
+
+  <div class="quick-actions">
+
+  <button
+    class="quick-action"
+    data-action="deposit"
+  >
+    <span>➕</span>
+    <strong>Déposer</strong>
+  </button>
+
+  <button
+    class="quick-action"
+    data-action="withdraw"
+  >
+    <span>💸</span>
+    <strong>Retirer</strong>
+  </button>
+
+  <button
+    class="quick-action"
+    data-action="services"
+  >
+    <span>✨</span>
+    <strong>Services</strong>
+  </button>
+
+  </div>
+
+  <section class="services-section">
+
+  <div class="section-title">
+    <h2>Nos services</h2>
+    <p>Utilisez votre solde MONEXA CASH.</p>
+  </div>
+
+  <div class="service-grid">
+
+    <button class="service-card"
+      data-service="Recharge">
+      <span>💳</span>
+      <strong>Recharge</strong>
+      <small>Meru • Wise • Morse</small>
+    </button>
+
+    <button class="service-card"
+      data-service="Retrait">
+      <span>🏦</span>
+      <strong>Retrait</strong>
+      <small>Recevez vos fonds</small>
+    </button>
+
+    <button class="service-card"
+      data-service="Free Fire">
+      <span>🎮</span>
+      <strong>Free Fire</strong>
+      <small>Diamonds</small>
+    </button>
+
+    <button class="service-card"
+      data-service="Crypto">
+      <span>🪙</span>
+      <strong>Crypto</strong>
+      <small>USDT • USDC</small>
+    </button>
+
+    <button class="service-card"
+      data-service="Binance">
+      <span>🟡</span>
+      <strong>Binance</strong>
+      <small>Achat • Retrait</small>
+    </button>
+
+    <button class="service-card"
+      data-service="Création de carte">
+      <span>💳</span>
+      <strong>Création de carte</strong>
+      <small>Meru • Morse</small>
+    </button>
+
+  </div>
+
+  </section>
+
+  <!-- KÒD 7 — FONCTIONNEMENT DES SERVICES -->
+
+<section class="how-it-works">
+
+  <div class="section-title">
+    <h2>Comment ça fonctionne ?</h2>
+    <p>Utilisez simplement votre solde MONEXA CASH.</p>
+  </div>
+
+  <div class="steps-grid">
+
+    <div class="step-card">
+      <span>1️⃣</span>
+      <strong>Alimentez votre solde</strong>
+      <small>
+        Envoyez votre paiement et ajoutez de l'argent
+        à votre compte MONEXA CASH.
+      </small>
+    </div>
+
+    <div class="step-card">
+      <span>2️⃣</span>
+      <strong>Choisissez un service</strong>
+      <small>
+        Sélectionnez Recharge, Retrait, Free Fire,
+        Crypto, Binance ou Création de carte.
+      </small>
+    </div>
+
+    <div class="step-card">
+      <span>3️⃣</span>
+      <strong>Utilisez votre solde</strong>
+      <small>
+        Le montant de votre service est déduit
+        directement de votre solde MONEXA CASH.
+      </small>
+    </div>
+
+    <div class="step-card">
+      <span>4️⃣</span>
+      <strong>Traitement de la demande</strong>
+      <small>
+        Votre demande est vérifiée et traitée
+        manuellement par MONEXA CASH.
+      </small>
+    </div>
+
+  </div>
+
+  <div class="important-notice">
+    <strong>⚠️ Important</strong>
     <p>
-      Créez votre compte MONEXA CASH.
+      Une preuve de paiement est obligatoire uniquement
+      lorsque vous alimentez votre solde MONEXA CASH.
+      Après validation du dépôt, vous pouvez utiliser
+      votre solde pour les autres services sans envoyer
+      une nouvelle preuve de paiement.
     </p>
+  </div>
+
+</section>
+
+<section class="service-form-section" id="recharge-form">
+
+  <div class="section-title">
+    <h2>Recharge</h2>
+    <p>Rechargez votre compte ou service facilement.</p>
+  </div>
+
+  <form class="service-form">
+
+    <label for="recharge-method">
+      Choisissez le service
+    </label>
+
+    <select id="recharge-method" required>
+      <option value="">Sélectionnez un service</option>
+      <option value="Meru">Meru</option>
+      <option value="Wise">Wise</option>
+      <option value="Morse">Morse</option>
+    </select>
+
+    <label for="recharge-amount">
+      Montant
+    </label>
+
+    <input
+      type="number"
+      id="recharge-amount"
+      placeholder="Entrez le montant"
+      min="1"
+      step="0.01"
+      required
+    >
+
+    <div id="meru-wise-email" style="display:none;">
+
+      <label for="account-email">
+        Email du compte
+      </label>
+
+      <input
+        type="email"
+        id="account-email"
+        placeholder="Entrez l'email utilisé pour votre compte"
+      >
+
+    </div>
+
+    <div id="morse-username" style="display:none;">
+
+      <label for="morse-user">
+        Nom d'utilisateur Morse
+      </label>
+
+      <input
+        type="text"
+        id="morse-user"
+        placeholder="Entrez votre nom d'utilisateur Morse"
+      >
+
+    </div>
+
+    <button type="submit" class="primary-button">
+      Continuer
+    </button>
+
+  </form>
+
+</section>
+
+<section class="service-form-section" id="retrait-form">
+
+  <div class="section-title">
+    <h2>Retrait</h2>
+    <p>Recevez vos fonds directement sur votre compte.</p>
+  </div>
+
+  <form class="service-form">
+
+    <label for="retrait-method">
+      Choisissez le service
+    </label>
+
+    <select id="retrait-method" required>
+      <option value="">Sélectionnez un service</option>
+      <option value="Meru">Meru</option>
+      <option value="Wise">Wise</option>
+      <option value="Morse">Morse</option>
+      <option value="USDT">USDT</option>
+      <option value="USDC">USDC</option>
+    </select>
+
+    <label for="retrait-amount">
+      Montant
+    </label>
+
+    <input
+      type="number"
+      id="retrait-amount"
+      placeholder="Entrez le montant"
+      min="1"
+      step="0.01"
+      required
+    >
+
+    <div id="retrait-name" style="display:none;">
+
+      <label for="recipient-name">
+        Nom complet
+      </label>
+
+      <input
+        type="text"
+        id="recipient-name"
+        placeholder="Entrez votre nom complet"
+      >
+
+    </div>
+
+    <div id="retrait-natcash" style="display:none;">
+
+      <label for="natcash-number">
+        Numéro Natcash
+      </label>
+
+      <input
+        type="tel"
+        id="natcash-number"
+        placeholder="Entrez votre numéro Natcash"
+      >
+
+    </div>
+
+    <div id="retrait-email" style="display:none;">
+
+      <label for="retrait-account-email">
+        Email du compte
+      </label>
+
+      <input
+        type="email"
+        id="retrait-account-email"
+        placeholder="Entrez l'email de votre compte"
+      >
+
+    </div>
+
+    <div id="retrait-username" style="display:none;">
+
+      <label for="retrait-morse-user">
+        Nom d'utilisateur Morse
+      </label>
+
+      <input
+        type="text"
+        id="retrait-morse-user"
+        placeholder="Entrez votre nom d'utilisateur Morse"
+      >
+
+    </div>
+
+    <div id="crypto-network" style="display:none;">
+
+      <label for="network">
+        Réseau
+      </label>
+
+      <select id="network">
+        <option value="">Sélectionnez le réseau</option>
+        <option value="TRC20">TRON (TRC20)</option>
+        <option value="ERC20">Ethereum (ERC20)</option>
+        <option value="BEP20">BNB Smart Chain (BEP20)</option>
+        <option value="Polygon">Polygon</option>
+        <option value="Solana">Solana</option>
+        <option value="Arbitrum">Arbitrum</option>
+        <option value="Optimism">Optimism</option>
+      </select>
+
+    </div>
+
+    <div id="crypto-address" style="display:none;">
+
+      <label for="wallet-address">
+        Adresse du portefeuille
+      </label>
+
+      <input
+        type="text"
+        id="wallet-address"
+        placeholder="Entrez votre adresse de portefeuille"
+      >
+
+    </div>
+
+    <button type="submit" class="primary-button">
+      Demander le retrait
+    </button>
+
+  </form>
+
+  </section>
+
+  <section class="service-form-section" id="free-fire-form">
+
+  <div class="section-title">
+    <h2>Free Fire</h2>
+    <p>Achetez vos Diamonds rapidement avec votre solde MONEXA CASH.</p>
+  </div>
+
+  <form class="service-form">
+
+    <label for="freefire-player-id">
+      ID du joueur Free Fire
+    </label>
+
+    <input
+      type="text"
+      id="freefire-player-id"
+      placeholder="Entrez votre ID joueur"
+      required
+    >
+
+    <label for="freefire-diamonds">
+      Choisissez votre pack
+    </label>
+
+    <select id="freefire-diamonds" required>
+      <option value="">Sélectionnez un pack</option>
+      <option value="110">110 Diamonds — 145 HTG</option>
+      <option value="341">341 Diamonds — 500 HTG</option>
+      <option value="572">572 Diamonds — 805 HTG</option>
+      <option value="1166">1 166 Diamonds — 1 590 HTG</option>
+      <option value="2398">2 398 Diamonds — 3 215 HTG</option>
+      <option value="6120">6 120 Diamonds — 8 130 HTG</option>
+      <option value="12400">12 400 Diamonds — 16 420 HTG</option>
+    </select>
+
+    <div class="service-info">
+      <strong>💡 Information</strong>
+      <p>
+        Le montant sera déduit de votre solde
+        MONEXA CASH après confirmation de la commande.
+      </p>
+    </div>
+
+    <button type="submit" class="primary-button">
+      Commander les Diamonds
+    </button>
+
+  </form>
+
+  </section>
+
+  <section class="service-form-section" id="crypto-form">
+
+  <div class="section-title">
+    <h2>Crypto</h2>
+    <p>Achetez ou recevez des USDT et USDC avec votre solde MONEXA CASH.</p>
+  </div>
+
+  <form class="service-form">
+
+    <label for="crypto-type">
+      Choisissez la crypto
+    </label>
+
+    <select id="crypto-type" required>
+      <option value="">Sélectionnez une crypto</option>
+      <option value="USDT">USDT</option>
+      <option value="USDC">USDC</option>
+    </select>
+
+    <label for="crypto-amount">
+      Montant
+    </label>
+
+    <input
+      type="number"
+      id="crypto-amount"
+      placeholder="Entrez le montant en USD"
+      min="1"
+      step="0.01"
+      required
+    >
+
+    <label for="crypto-network-select">
+      Choisissez le réseau
+    </label>
+
+    <select id="crypto-network-select" required>
+      <option value="">Sélectionnez le réseau</option>
+      <option value="TRC20">TRON (TRC20)</option>
+      <option value="ERC20">Ethereum (ERC20)</option>
+      <option value="BEP20">BNB Smart Chain (BEP20)</option>
+      <option value="Polygon">Polygon</option>
+      <option value="Solana">Solana</option>
+      <option value="Arbitrum">Arbitrum</option>
+      <option value="Optimism">Optimism</option>
+    </select>
+
+    <label for="crypto-wallet">
+      Adresse du portefeuille
+    </label>
+
+    <input
+      type="text"
+      id="crypto-wallet"
+      placeholder="Entrez votre adresse wallet"
+      required
+    >
+
+    <div class="service-info">
+      <strong>💡 Information</strong>
+      <p>
+        1 USDT = 143 HTG et 1 USDC = 143 HTG.
+        Aucun frais de service n'est appliqué.
+      </p>
+    </div>
+
+    <button type="submit" class="primary-button">
+      Continuer
+    </button>
+
+  </form>
+
+  </section>
+
+  <section class="service-form-section" id="binance-form">
+
+  <div class="section-title">
+    <h2>Binance</h2>
+    <p>Achat ou retrait avec votre solde MONEXA CASH.</p>
+  </div>
+
+  <form class="service-form">
+
+    <label for="binance-operation">
+      Type d'opération
+    </label>
+
+    <select id="binance-operation" required>
+      <option value="">Sélectionnez une opération</option>
+      <option value="Achat">Achat</option>
+      <option value="Retrait">Retrait</option>
+    </select>
+
+    <label for="binance-account">
+      Binance ID ou Email
+    </label>
+
+    <input
+      type="text"
+      id="binance-account"
+      placeholder="Entrez votre Binance ID ou email"
+      required
+    >
+
+    <label for="binance-amount">
+      Montant
+    </label>
+
+    <input
+      type="number"
+      id="binance-amount"
+      placeholder="Entrez le montant"
+      min="1"
+      step="0.01"
+      required
+    >
+
+    <div class="service-info">
+      <strong>💡 Information</strong>
+      <p>
+        Le montant sera déduit de votre solde
+        MONEXA CASH après confirmation de la demande.
+      </p>
+    </div>
+
+    <button type="submit" class="primary-button">
+      Envoyer la demande
+    </button>
+
+  </form>
+
+  </section>
+
+  <section class="service-form-section" id="card-creation-form">
+
+  <div class="section-title">
+    <h2>Création de carte</h2>
+    <p>Obtenez votre carte virtuelle Meru ou Morse.</p>
+  </div>
+
+  <form class="service-form">
+
+    <label for="card-provider">
+      Choisissez la carte
+    </label>
+
+    <select id="card-provider" required>
+      <option value="">Sélectionnez une carte</option>
+      <option value="Meru">Meru</option>
+      <option value="Morse">Morse</option>
+    </select>
+
+    <label for="card-email">
+      Email
+    </label>
 
     <input
       type="email"
-      id="registerEmail"
-      placeholder="Adresse email"
+      id="card-email"
+      placeholder="Entrez votre adresse email"
+      required
     >
 
-    <input
-      type="password"
-      id="registerPassword"
-      placeholder="Mot de passe"
-    >
+    <div class="service-info">
+      <strong>💳 Tarif</strong>
+      <p>
+        Création de carte : 1 500 GDS + 5 USD.
+      </p>
+      <p>
+        Les 5 USD sont crédités sur votre compte.
+      </p>
+    </div>
 
-    <input
-      type="password"
-      id="registerPassword2"
-      placeholder="Confirmer le mot de passe"
-    >
-
-    <button
-      id="registerButton"
-      class="primary"
-    >
-      Créer mon compte
+    <button type="submit" class="primary-button">
+      Demander la création
     </button>
 
-    <button
-      id="backLogin"
-      class="link"
-    >
-      Retour à la connexion
-    </button>
+  </form>
 
-    <div
-      id="registerMessage"
-      class="message"
-    ></div>
+  </section>
 
-      </section>
+  const rechargeMethod = document.getElementById("recharge-method");
+const meruWiseEmail = document.getElementById("meru-wise-email");
+const morseUsername = document.getElementById("morse-username");
 
-      <section
-    id="dashboard"
-    class="hidden"
-  >
+if (rechargeMethod) {
+  rechargeMethod.addEventListener("change", function () {
+    meruWiseEmail.style.display = "none";
+    morseUsername.style.display = "none";
 
-    <div class="topbar">
+    if (this.value === "Meru" || this.value === "Wise") {
+      meruWiseEmail.style.display = "block";
+    }
 
-      <button
-        id="profileButton"
-        class="icon-btn"
-      >
-        👤
-      </button>
+    if (this.value === "Morse") {
+      morseUsername.style.display = "block";
+    }
+  });
+}
 
-      <div class="brand">
-        MONEXA CASH
+
+const retraitMethod = document.getElementById("retrait-method");
+const retraitName = document.getElementById("retrait-name");
+const retraitNatcash = document.getElementById("retrait-natcash");
+const retraitEmail = document.getElementById("retrait-email");
+const retraitUsername = document.getElementById("retrait-username");
+const cryptoNetwork = document.getElementById("crypto-network");
+const cryptoAddress = document.getElementById("crypto-address");
+
+if (retraitMethod) {
+  retraitMethod.addEventListener("change", function () {
+
+    retraitName.style.display = "none";
+    retraitNatcash.style.display = "none";
+    retraitEmail.style.display = "none";
+    retraitUsername.style.display = "none";
+    cryptoNetwork.style.display = "none";
+    cryptoAddress.style.display = "none";
+
+    if (
+      this.value === "Meru" ||
+      this.value === "Wise" ||
+      this.value === "Morse"
+    ) {
+      retraitName.style.display = "block";
+      retraitNatcash.style.display = "block";
+    }
+
+    if (this.value === "Wise" || this.value === "Meru") {
+      retraitEmail.style.display = "block";
+    }
+
+    if (this.value === "Morse") {
+      retraitUsername.style.display = "block";
+    }
+
+    if (this.value === "USDT" || this.value === "USDC") {
+      cryptoNetwork.style.display = "block";
+      cryptoAddress.style.display = "block";
+    }
+  });
+}
+
+document.querySelectorAll(".service-card").forEach(function (card) {
+
+  card.addEventListener("click", function () {
+
+    const service = this.getAttribute("data-service");
+
+    const forms = {
+      "Recharge": "recharge-form",
+      "Retrait": "retrait-form",
+      "Free Fire": "free-fire-form",
+      "Crypto": "crypto-form",
+      "Binance": "binance-form",
+      "Création de carte": "card-creation-form"
+    };
+
+    const formId = forms[service];
+
+    if (!formId) return;
+
+    const target = document.getElementById(formId);
+
+    if (!target) return;
+
+    document.querySelectorAll(".service-form-section").forEach(function (section) {
+      section.style.display = "none";
+    });
+
+    target.style.display = "block";
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  });
+
+});
+
+
+document.querySelectorAll(".service-form-section").forEach(function (section) {
+  section.style.display = "none";
+});
+
+.service-form-section {
+  display: none;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 25px 20px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.service-form-section .section-title {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.service-form-section .section-title h2 {
+  margin-bottom: 8px;
+  color: #071a33;
+  font-size: 26px;
+}
+
+.service-form-section .section-title p {
+  margin: 0;
+  color: #667085;
+  font-size: 14px;
+}
+
+.service-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.service-form label {
+  color: #071a33;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.service-form input,
+.service-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 15px;
+  border: 1px solid #d9e1ec;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #071a33;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.service-form input:focus,
+.service-form select:focus {
+  border-color: #00b8c8;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 184, 200, 0.12);
+}
+
+.primary-button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #071a33;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.service-info {
+  margin-top: 10px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #f0fbfc;
+  border: 1px solid #c7eef1;
+}
+
+.service-info strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #071a33;
+}
+
+.service-info p {
+  margin: 4px 0;
+  color: #475467;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+
+  .service-form-section {
+    margin: 20px 12px;
+    padding: 22px 16px;
+    border-radius: 16px;
+  }
+
+  .service-form-section .section-title h2 {
+    font-size: 23px;
+  }
+
+  .service-form input,
+  .service-form select {
+    padding: 13px;
+  }
+
+}
+
+document.querySelectorAll(".service-form").forEach(function (form) {
+
+  form.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+    const section = form.closest(".service-form-section");
+    const serviceName = section.querySelector("h2").textContent;
+
+    const oldMessage = form.querySelector(".success-message");
+
+    if (oldMessage) {
+      oldMessage.remove();
+    }
+
+    const successMessage = document.createElement("div");
+
+    successMessage.className = "success-message";
+
+    successMessage.innerHTML = `
+      <strong>✅ Demande envoyée</strong>
+      <p>
+        Votre demande pour le service
+        <strong>${serviceName}</strong>
+        a été enregistrée.
+      </p>
+      <p>
+        MONEXA CASH va vérifier et traiter votre demande.
+      </p>
+    `;
+
+    form.appendChild(successMessage);
+
+    form.reset();
+
+  });
+
+});
+
+.success-message {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #ecfdf3;
+  border: 1px solid #abefc6;
+  color: #067647;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.success-message strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.success-message p {
+  margin: 5px 0;
+}
+
+<div class="balance-card">
+
+  <div class="balance-header">
+    <span>Solde disponible</span>
+    <span>💰</span>
+  </div>
+
+  <div class="balance-amount">
+    <span id="user-balance">0.00</span>
+    <span>HTG</span>
+  </div>
+
+  <p class="balance-note">
+    Utilisez votre solde pour acheter nos services.
+  </p>
+
+</div>
+
+.balance-card {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 22px;
+  border-radius: 20px;
+  background: #071a33;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.balance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.balance-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+  color: #00c8d7;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.balance-amount span:last-child {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.balance-note {
+  margin: 10px 0 0;
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+const balanceElement = document.getElementById("user-balance");
+
+async function loadUserBalance() {
+  try {
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      balanceElement.textContent = "0.00";
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("balance")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      console.error("Erreur lors du chargement du solde :", error);
+      balanceElement.textContent = "0.00";
+      return;
+    }
+
+    const balance = Number(data?.balance || 0);
+
+    balanceElement.textContent = balance.toLocaleString("fr-FR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+  } catch (error) {
+    console.error("Erreur :", error);
+    balanceElement.textContent = "0.00";
+  }
+}
+
+loadUserBalance();
+
+async function checkUserBalance(requiredAmount) {
+
+  try {
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert("Veuillez vous connecter à votre compte MONEXA CASH.");
+      return false;
+    }
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("balance")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      console.error("Erreur lors de la vérification du solde :", error);
+      alert("Impossible de vérifier votre solde. Veuillez réessayer.");
+      return false;
+    }
+
+    const currentBalance = Number(data?.balance || 0);
+    const amount = Number(requiredAmount || 0);
+
+    if (currentBalance < amount) {
+
+      alert(
+        "Solde insuffisant.\n\n" +
+        "Votre solde : " +
+        currentBalance.toFixed(2) +
+        " HTG\n" +
+        "Montant requis : " +
+        amount.toFixed(2) +
+        " HTG"
+      );
+
+      return false;
+    }
+
+    return true;
+
+  } catch (error) {
+
+    console.error("Erreur :", error);
+
+    alert(
+      "Une erreur est survenue pendant la vérification de votre solde."
+    );
+
+    return false;
+  }
+
+}
+
+      async function createServiceOrder(serviceName, amount, details = {}) {
+
+  try {
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert("Veuillez vous connecter à votre compte MONEXA CASH.");
+      return;
+    }
+
+    const hasEnoughBalance = await checkUserBalance(amount);
+
+    if (!hasEnoughBalance) {
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("service_orders")
+      .insert([
+        {
+          user_id: user.id,
+          service_type: serviceName,
+          amount: Number(amount),
+          details: details,
+          status: "pending"
+        }
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Erreur lors de la création de la demande :", error);
+
+      alert(
+        "Impossible d'envoyer votre demande pour le moment. " +
+        "Veuillez réessayer."
+      );
+
+      return;
+    }
+
+    alert(
+      "✅ Votre demande a été envoyée avec succès !\n\n" +
+      "Service : " + serviceName + "\n" +
+      "Montant : " + Number(amount).toFixed(2) + " HTG\n\n" +
+      "Votre demande sera vérifiée et traitée par MONEXA CASH."
+    );
+
+    console.log("Demande créée :", data);
+
+  } catch (error) {
+
+    console.error("Erreur :", error);
+
+    alert(
+      "Une erreur est survenue. Veuillez réessayer."
+    );
+
+  }
+
+}
+
+     document.querySelectorAll(".service-form").forEach(function (form) {
+
+  form.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    const section = form.closest(".service-form-section");
+    const serviceName = section.querySelector("h2").textContent.trim();
+
+    let amount = 0;
+    let details = {};
+
+    if (serviceName === "Recharge") {
+
+      const method = document.getElementById("recharge-method").value;
+      amount = document.getElementById("recharge-amount").value;
+
+      if (!method || !amount) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      details = {
+        method: method
+      };
+
+      if (method === "Meru" || method === "Wise") {
+        details.email =
+          document.getElementById("account-email").value;
+      }
+
+      if (method === "Morse") {
+        details.username =
+          document.getElementById("morse-user").value;
+      }
+
+    }
+
+
+    if (serviceName === "Retrait") {
+
+      const method = document.getElementById("retrait-method").value;
+      amount = document.getElementById("retrait-amount").value;
+
+      if (!method || !amount) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      details = {
+        method: method
+      };
+
+      if (
+        method === "Meru" ||
+        method === "Wise" ||
+        method === "Morse"
+      ) {
+        details.name =
+          document.getElementById("recipient-name").value;
+
+        details.natcash =
+          document.getElementById("natcash-number").value;
+      }
+
+      if (method === "Meru" || method === "Wise") {
+        details.email =
+          document.getElementById("retrait-account-email").value;
+      }
+
+      if (method === "Morse") {
+        details.username =
+          document.getElementById("retrait-morse-user").value;
+      }
+
+      if (method === "USDT" || method === "USDC") {
+        details.network =
+          document.getElementById("network").value;
+
+        details.wallet =
+          document.getElementById("wallet-address").value;
+      }
+
+    }
+
+
+    if (serviceName === "Free Fire") {
+
+      const playerId =
+        document.getElementById("freefire-player-id").value;
+
+      const pack =
+        document.getElementById("freefire-diamonds");
+
+      amount = pack.options[pack.selectedIndex].text
+        .split("—")[1]
+        .replace("HTG", "")
+        .trim();
+
+      if (!playerId || !pack.value) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      details = {
+        player_id: playerId,
+        diamonds: pack.value
+      };
+
+    }
+
+
+    if (serviceName === "Crypto") {
+
+      const crypto =
+        document.getElementById("crypto-type").value;
+
+      amount =
+        document.getElementById("crypto-amount").value;
+
+      const network =
+        document.getElementById("crypto-network-select").value;
+
+      const wallet =
+        document.getElementById("crypto-wallet").value;
+
+      if (!crypto || !amount || !network || !wallet) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      details = {
+        crypto: crypto,
+        network: network,
+        wallet: wallet
+      };
+
+    }
+
+
+    if (serviceName === "Binance") {
+
+      const operation =
+        document.getElementById("binance-operation").value;
+
+      const account =
+        document.getElementById("binance-account").value;
+
+      amount =
+        document.getElementById("binance-amount").value;
+
+      if (!operation || !account || !amount) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      details = {
+        operation: operation,
+        binance_account: account
+      };
+
+    }
+
+
+    if (serviceName === "Création de carte") {
+
+      const provider =
+        document.getElementById("card-provider").value;
+
+      const email =
+        document.getElementById("card-email").value;
+
+      amount = 1500;
+
+      if (!provider || !email) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      details = {
+        card_provider: provider,
+        email: email,
+        additional_fee_usd: 5
+      };
+
+    }
+
+
+    if (!amount || Number(amount) <= 0) {
+      alert("Veuillez entrer un montant valide.");
+      return;
+    }
+
+    await createServiceOrder(
+      serviceName,
+      Number(amount),
+      details
+    );
+
+  });
+
+});
+
+      create table if not exists service_orders (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null references auth.users(id) on delete cascade,
+
+  service_type text not null,
+
+  amount numeric(12,2) not null default 0,
+
+  details jsonb not null default '{}'::jsonb,
+
+  status text not null default 'pending',
+
+  created_at timestamptz not null default now(),
+
+  updated_at timestamptz not null default now()
+);
+
+
+alter table service_orders enable row level security;
+
+
+create policy "Users can view their own orders"
+on service_orders
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+
+create policy "Users can create their own orders"
+on service_orders
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+
+create index if not exists service_orders_user_id_idx
+on service_orders(user_id);
+
+
+create index if not exists service_orders_status_idx
+on service_orders(status);
+
+
+create index if not exists service_orders_created_at_idx
+on service_orders(created_at desc);
+
+      async function loadServiceOrders() {
+
+  const ordersContainer =
+    document.getElementById("admin-orders");
+
+  if (!ordersContainer) return;
+
+  ordersContainer.innerHTML =
+    "<p>Chargement des demandes...</p>";
+
+  const { data: orders, error } = await supabase
+    .from("service_orders")
+    .select("*")
+    .order("created_at", {
+      ascending: false
+    });
+
+  if (error) {
+
+    console.error(
+      "Erreur lors du chargement des demandes :",
+      error
+    );
+
+    ordersContainer.innerHTML =
+      "<p>Impossible de charger les demandes.</p>";
+
+    return;
+  }
+
+  if (!orders || orders.length === 0) {
+
+    ordersContainer.innerHTML =
+      "<p>Aucune demande pour le moment.</p>";
+
+    return;
+  }
+
+  ordersContainer.innerHTML = "";
+
+  orders.forEach(function (order) {
+
+    const card = document.createElement("div");
+
+    card.className = "admin-order-card";
+
+    const date = new Date(order.created_at);
+
+    const formattedDate =
+      date.toLocaleString("fr-FR");
+
+    const details =
+      order.details || {};
+
+    card.innerHTML = `
+      <div class="admin-order-header">
+        <strong>${order.service_type}</strong>
+        <span class="order-status">
+          ${order.status}
+        </span>
       </div>
 
-      <button
-        id="menuButton"
-        class="icon-btn"
-      >
-        ☰
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <h2>
-        Bienvenue 👋
-      </h2>
-
-      <p id="userEmail">
-      </p>
-
-      <p style="margin-top:8px;">
-        Choisissez le service que vous souhaitez utiliser.
-      </p>
-
-    </div>
-
-    <div class="service-grid">
-
-      <button
-        class="service"
-        data-service="Recharge"
-      >
-        <span>💳</span>
-        Recharge
-      </button>
-
-      <button
-        class="service"
-        data-service="Retrait"
-      >
-        <span>🏦</span>
-        Retrait
-      </button>
-
-      <button
-        class="service"
-        data-service="Free Fire"
-      >
-        <span>🎮</span>
-        Free Fire
-      </button>
-
-      <button
-        class="service"
-        data-service="Crypto"
-      >
-        <span>🪙</span>
-        Crypto
-      </button>
-
-      <button
-        class="service"
-        data-service="Binance"
-      >
-        <span>🟡</span>
-        Binance
-      </button>
-
-      <button
-        class="service"
-        data-service="Création de carte"
-      >
-        <span>💳</span>
-        Création de carte
-      </button>
-
-    </div>
-
-      </section>
-
-      <section
-    id="rechargeForm"
-    class="card hidden"
-  >
-
-    <h2>
-      💳 Recharge
-    </h2>
-
-    <p>
-      Choisissez votre service.
-    </p>
-
-    <select id="rechargeService">
-
-      <option value="">
-        Sélectionner un service
-      </option>
-
-      <option value="Meru">
-        Meru
-      </option>
-
-      <option value="Wise">
-        Wise
-      </option>
-
-      <option value="Morse">
-        Morse
-      </option>
-
-    </select>
-
-    <input
-      type="number"
-      id="rechargeAmount"
-      placeholder="Montant à recevoir en USD"
-      min="1"
-      step="0.01"
-    >
-
-    <div
-      id="rechargeFee"
-      style="margin-top:10px;"
-    >
-      Frais : $0
-    </div>
-
-    <div
-      id="rechargeTotal"
-      style="margin-top:8px;font-weight:bold;"
-    >
-      Total : 0 G
-    </div>
-
-    <div class="payment-box">
-
-      <strong>
-        Paiement Natcash
-      </strong>
-
       <p>
-        Numéro :
-        <strong>509 40886629</strong>
+        <strong>Montant :</strong>
+        ${Number(order.amount).toLocaleString("fr-FR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })} HTG
       </p>
 
       <p>
-        Nom :
-        <strong>JUNIOR AUGUSTE</strong>
+        <strong>Date :</strong>
+        ${formattedDate}
       </p>
 
-      <p>
-        Taux :
-        <strong>145 G = 1 USD</strong>
-      </p>
-
-    </div>
-
-    <input
-      type="text"
-      id="rechargeAccount"
-      placeholder="Email ou nom d'utilisateur"
-    >
-
-    <input
-      type="file"
-      id="rechargeProof"
-      accept="image/*"
-    >
-
-    <button
-      id="rechargeSubmit"
-      class="primary"
-    >
-      Envoyer la demande
-    </button>
-
-    <button
-      id="rechargeBack"
-      class="link"
-    >
-      🏠 Retour
-    </button>
-
-    <div
-      id="rechargeMessage"
-      class="message"
-    ></div>
-
-      </section>
-
-      <section
-    id="retraitForm"
-    class="card hidden"
-  >
-
-    <h2>
-      🏦 Retrait
-    </h2>
-
-    <p>
-      Choisissez le service que vous souhaitez utiliser.
-    </p>
-
-    <select id="retraitService">
-
-      <option value="">
-        Sélectionner un service
-      </option>
-
-      <option value="Meru">
-        Meru
-      </option>
-
-      <option value="Wise">
-        Wise
-      </option>
-
-      <option value="Morse">
-        Morse
-      </option>
-
-    </select>
-
-    <input
-      type="number"
-      id="retraitAmount"
-      placeholder="Montant à retirer en USD"
-      min="0.01"
-      step="0.01"
-    >
-
-    <div
-      id="retraitConversion"
-      style="margin-top:10px;font-weight:bold;"
-    >
-      Vous recevrez : 0 HTG
-    </div>
-
-    <p style="margin-top:8px;font-size:13px;">
-      Taux de retrait :
-      <strong>135 HTG = 1 USD</strong>
-    </p>
-
-    <input
-      type="text"
-      id="retraitName"
-      placeholder="Nom complet du bénéficiaire"
-    >
-
-    <input
-      type="tel"
-      id="retraitPhone"
-      placeholder="Numéro Natcash du bénéficiaire"
-    >
-
-    <input
-      type="file"
-      id="retraitProof"
-      accept="image/*"
-    >
-
-    <p style="font-size:13px;margin-top:8px;">
-      📄 Preuve de paiement obligatoire.
-    </p>
-
-    <button
-      id="retraitSubmit"
-      class="primary"
-    >
-      Envoyer la demande
-    </button>
-
-    <button
-      id="retraitBack"
-      class="link"
-    >
-      🏠 Retour
-    </button>
-
-    <div
-      id="retraitMessage"
-      class="message"
-    ></div>
-
-  </section>
-
-
-  <section
-    id="freeFireForm"
-    class="card hidden"
-  >
-
-    <h2>
-      🎮 Free Fire
-    </h2>
-
-    <p>
-      Choisissez votre pack de Diamonds.
-    </p>
-
-    <select id="freeFirePack">
-
-      <option value="">
-        Sélectionner un pack
-      </option>
-
-      <option
-        value="100 + 10"
-        data-price="145"
-      >
-        100 + 10 Diamonds — 145 GDS
-      </option>
-
-      <option
-        value="310 + 31"
-        data-price="450"
-      >
-        310 + 31 Diamonds — 450 GDS
-      </option>
-
-      <option
-        value="520 + 52"
-        data-price="750"
-      >
-        520 + 52 Diamonds — 750 GDS
-      </option>
-
-      <option
-        value="1060 + 106"
-        data-price="1500"
-      >
-        1060 + 106 Diamonds — 1,500 GDS
-      </option>
-
-      <option
-        value="2180 + 218"
-        data-price="3000"
-      >
-        2180 + 218 Diamonds — 3,000 GDS
-      </option>
-
-    </select>
-
-    <div
-      id="freeFirePrice"
-      style="margin-top:10px;font-weight:bold;"
-    >
-      Montant à payer : 0 GDS
-    </div>
-
-    <input
-      type="text"
-      id="freeFireId"
-      placeholder="ID joueur Free Fire"
-    >
-
-    <div class="payment-box">
-
-      <strong>
-        Paiement Natcash
-      </strong>
-
-      <p>
-        Numéro :
-        <strong>509 40886629</strong>
-      </p>
-
-      <p>
-        Nom :
-        <strong>JUNIOR AUGUSTE</strong>
-      </p>
-
-    </div>
-
-    <input
-      type="file"
-      id="freeFireProof"
-      accept="image/*"
-    >
-
-    <p style="font-size:13px;margin-top:8px;">
-      📄 Preuve de paiement obligatoire.
-    </p>
-
-    <button
-      id="freeFireSubmit"
-      class="primary"
-    >
-      Envoyer la demande
-    </button>
-
-    <button
-      id="freeFireBack"
-      class="link"
-    >
-      🏠 Retour
-    </button>
-
-    <div
-      id="freeFireMessage"
-      class="message"
-    ></div>
-
-  </section>
-
-      <section
-    id="cryptoForm"
-    class="card hidden"
-  >
-
-    <h2>
-      🪙 Crypto
-    </h2>
-
-    <p>
-      Achetez USDT ou USDC.
-    </p>
-
-    <div
-      style="
-        margin-top:12px;
-        padding:12px;
-        background:#eff6ff;
-        border-radius:12px;
-      "
-    >
-      Taux :
-      <strong>143 GDS = 1 USD</strong>
-    </div>
-
-    <select id="cryptoAsset">
-
-      <option value="">
-        Sélectionner la crypto
-      </option>
-
-      <option value="USDT">
-        USDT
-      </option>
-
-      <option value="USDC">
-        USDC
-      </option>
-
-    </select>
-
-    <h3 style="margin-top:18px;">
-      Réseau
-    </h3>
-
-    <div class="network-grid">
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="TRC20"
-      >
-        🔴 TRON — TRC20
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="BEP20"
-      >
-        🟡 BNB Smart Chain — BEP20
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="ERC20"
-      >
-        ◈ Ethereum — ERC20
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="Polygon"
-      >
-        🟣 Polygon
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="Solana"
-      >
-        🟣 Solana
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="Arbitrum"
-      >
-        🔵 Arbitrum One
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="Optimism"
-      >
-        🔴 Optimism
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="Avalanche"
-      >
-        🔺 Avalanche C-Chain
-      </button>
-
-      <button
-        type="button"
-        class="network-button cryptoNetwork"
-        data-network="Base"
-      >
-        🔵 Base
-      </button>
-
-    </div>
-
-    <div
-      id="cryptoSelectedNetwork"
-      style="margin-top:12px;font-weight:bold;"
-    >
-      Réseau : Aucun
-    </div>
-
-    <input
-      type="number"
-      id="cryptoAmount"
-      placeholder="Montant en USD"
-      min="1"
-      step="0.01"
-    >
-
-    <div
-      id="cryptoTotal"
-      style="margin-top:10px;font-weight:bold;"
-    >
-      Total à payer : 0 GDS
-    </div>
-
-    <input
-      type="text"
-      id="cryptoWallet"
-      placeholder="Adresse de votre wallet"
-    >
-
-    <div class="payment-box">
-
-      <strong>
-        Paiement Natcash
-      </strong>
-
-      <p>
-        Numéro :
-        <strong>509 40886629</strong>
-      </p>
-
-      <p>
-        Nom :
-        <strong>JUNIOR AUGUSTE</strong>
-      </p>
-
-    </div>
-
-    <input
-      type="file"
-      id="cryptoProof"
-      accept="image/*"
-    >
-
-    <p style="font-size:13px;margin-top:8px;">
-      📄 Preuve de paiement obligatoire.
-    </p>
-
-    <button
-      id="cryptoSubmit"
-      class="primary"
-    >
-      Envoyer la demande
-    </button>
-
-    <button
-      id="cryptoBack"
-      class="link"
-    >
-      🏠 Retour
-    </button>
-
-    <div
-      id="cryptoMessage"
-      class="message"
-    ></div>
-
-        </section
-          
-          
-        <section
-    id="binanceForm"
-    class="card hidden"
-  >
-
-    <h2>
-      🟡 Binance
-    </h2>
-
-    <p>
-      Choisissez l'opération.
-    </p>
-
-    <select id="binanceOperation">
-
-      <option value="">
-        Sélectionner
-      </option>
-
-      <option value="Achat">
-        Achat
-      </option>
-
-      <option value="Retrait">
-        Retrait
-      </option>
-
-    </select>
-
-    <input
-      type="text"
-      id="binanceAccount"
-      placeholder="Binance ID ou email"
-    >
-
-    <input
-      type="number"
-      id="binanceAmount"
-      placeholder="Montant en USD"
-      min="1"
-      step="0.01"
-    >
-
-    <div
-      id="binanceTotal"
-      style="margin-top:10px;font-weight:bold;"
-    >
-      Total à payer : 0 GDS
-    </div>
-
-    <div class="payment-box">
-
-      <strong>
-        Paiement Natcash
-      </strong>
-
-      <p>
-        Numéro :
-        <strong>509 40886629</strong>
-      </p>
-
-      <p>
-        Nom :
-        <strong>JUNIOR AUGUSTE</strong>
-      </p>
-
-      <p>
-        Taux :
-        <strong>143 GDS = 1 USD</strong>
-      </p>
-
-    </div>
-
-    <input
-      type="file"
-      id="binanceProof"
-      accept="image/*"
-    >
-
-    <p style="font-size:13px;margin-top:8px;">
-      📄 Preuve de paiement obligatoire.
-    </p>
-
-    <button
-      id="binanceSubmit"
-      class="primary"
-    >
-      Envoyer la demande
-    </button>
-
-    <button
-      id="binanceBack"
-      class="link"
-    >
-      🏠 Retour
-    </button>
-
-    <div
-      id="binanceMessage"
-      class="message"
-    ></div>
-
-  </section>
-
-
-  <section
-    id="card>
-    
+      <div class="order-details">
+        <strong>Détails :</strong>
+        <pre>${JSON.stringify(details, null, 2)}</pre>
+      </div>
+
+      <div class="admin-order-actions">
+
+        <button
+          class="approve-order"
+          data-order-id="${order.id}">
+          ✅ Approuver
+        </button>
+
+        <button
+          class="reject-order"
+          data-order-id="${order.id}">
+          ❌ Refuser
+        </button>
+
+      </div>
+    `;
+
+    ordersContainer.appendChild(card);
+
+  });
+
+}
+
+      document.addEventListener("click", async function (event) {
+
+  const approveButton = event.target.closest(".approve-order");
+  const rejectButton = event.target.closest(".reject-order");
+
+  if (!approveButton && !rejectButton) {
+    return;
+  }
+
+  const button = approveButton || rejectButton;
+  const orderId = button.getAttribute("data-order-id");
+
+  if (!orderId) {
+    return;
+  }
+
+  if (approveButton) {
+
+    const confirmed = confirm(
+      "Voulez-vous vraiment approuver cette demande ?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const { error } = await supabase
+      .from("service_orders")
+      .update({
+        status: "approved",
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", orderId);
+
+    if (error) {
+
+      console.error(
+        "Erreur lors de l'approbation :",
+        error
+      );
+
+      alert(
+        "Impossible d'approuver cette demande."
+      );
+
+      return;
+    }
+
+    alert(
+      "✅ Demande approuvée avec succès."
+    );
+
+  }
+
+
+  if (rejectButton) {
+
+    const confirmed = confirm(
+      "Voulez-vous vraiment refuser cette demande ?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const { error } = await supabase
+      .from("service_orders")
+      .update({
+        status: "rejected",
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", orderId);
+
+    if (error) {
+
+      console.error(
+        "Erreur lors du refus :",
+        error
+      );
+
+      alert(
+        "Impossible de refuser cette demande."
+      );
+
+      return;
+    }
+
+    alert(
+      "❌ Demande refusée."
+    );
+
+  }
+
+  loadServiceOrders();
+
+});
+
+      
