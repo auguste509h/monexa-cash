@@ -1,365 +1,792 @@
-<!DOCTYPE 
-  
-<section
-  id="cryptoForm"
-  class="card hidden"
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
 >
 
-  <h2>
-    🪙 Crypto
-  </h2>
+<title>MONEXA CASH</title>
 
-  <p style="margin:10px 0;">
-    Achetez USDT ou USDC et recevez-les directement sur votre wallet.
-  </p>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+</head>
 
-  <div
-    style="
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:15px;
-    "
-  >
+<body>
+
+<div id="app">
+
+</div>
+</head>
+
+<body>
+  <style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #111827;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app {
+  max-width: 520px;
+  min-height: 100vh;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  margin: 15px;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px #00000012;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 13px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.primary {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+}
+
+.link {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  border-radius: 10px;
+  background: #eee;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 15px;
+}
+
+.service {
+  min-height: 100px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 5px 18px #00000012;
+  font-weight: bold;
+}
+
+.service span {
+  display: block;
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 19px;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eee;
+  font-size: 20px;
+}
+
+.message {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+  </style>
+
+  <div id="app">
+
+  <section id="loginSection" class="card">
+
+    <h2>MONEXA CASH</h2>
+
+    <p>
+      Connectez-vous à votre compte.
+    </p>
+
+    <input
+      type="email"
+      id="loginEmail"
+      placeholder="Adresse email"
+    >
+
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Mot de passe"
+    >
 
     <button
-      type="button"
-      id="cryptoBuy"
+      id="loginButton"
       class="primary"
     >
-      🛒 Achat
+      Se connecter
     </button>
 
     <button
-      type="button"
-      id="cryptoWithdraw"
+      id="showRegister"
       class="link"
-      disabled
-      style="
-        opacity:0.6;
-        cursor:not-allowed;
-      "
     >
-      🔒 Retrait
-      <br>
-      <small>
-        Bientôt disponible
-      </small>
+      Créer un compte
     </button>
 
-  </div>
+    <div
+      id="loginMessage"
+      class="message"
+    ></div>
+
+  </section>
+
+      <section
+    id="registerSection"
+    class="card hidden"
+  >
+
+    <h2>
+      Créer un compte
+    </h2>
+
+    <p>
+      Créez votre compte MONEXA CASH.
+    </p>
+
+    <input
+      type="email"
+      id="registerEmail"
+      placeholder="Adresse email"
+    >
+
+    <input
+      type="password"
+      id="registerPassword"
+      placeholder="Mot de passe"
+    >
+
+    <input
+      type="password"
+      id="registerPassword2"
+      placeholder="Confirmer le mot de passe"
+    >
+
+    <button
+      id="registerButton"
+      class="primary"
+    >
+      Créer mon compte
+    </button>
+
+    <button
+      id="backLogin"
+      class="link"
+    >
+      Retour à la connexion
+    </button>
+
+    <div
+      id="registerMessage"
+      class="message"
+    ></div>
+
+      </section>
+
+      <section
+    id="dashboard"
+    class="hidden"
+  >
+
+    <div class="topbar">
+
+      <button
+        id="profileButton"
+        class="icon-btn"
+      >
+        👤
+      </button>
+
+      <div class="brand">
+        MONEXA CASH
+      </div>
+
+      <button
+        id="menuButton"
+        class="icon-btn"
+      >
+        ☰
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <h2>
+        Bienvenue 👋
+      </h2>
+
+      <p id="userEmail">
+      </p>
+
+      <p style="margin-top:8px;">
+        Choisissez le service que vous souhaitez utiliser.
+      </p>
+
+    </div>
+
+    <div class="service-grid">
+
+      <button
+        class="service"
+        data-service="Recharge"
+      >
+        <span>💳</span>
+        Recharge
+      </button>
+
+      <button
+        class="service"
+        data-service="Retrait"
+      >
+        <span>🏦</span>
+        Retrait
+      </button>
+
+      <button
+        class="service"
+        data-service="Free Fire"
+      >
+        <span>🎮</span>
+        Free Fire
+      </button>
+
+      <button
+        class="service"
+        data-service="Crypto"
+      >
+        <span>🪙</span>
+        Crypto
+      </button>
+
+      <button
+        class="service"
+        data-service="Binance"
+      >
+        <span>🟡</span>
+        Binance
+      </button>
+
+      <button
+        class="service"
+        data-service="Création de carte"
+      >
+        <span>💳</span>
+        Création de carte
+      </button>
+
+    </div>
+
+      </section>
+
+      <section
+    id="rechargeForm"
+    class="card hidden"
+  >
+
+    <h2>
+      💳 Recharge
+    </h2>
+
+    <p>
+      Choisissez votre service.
+    </p>
+
+    <select id="rechargeService">
+
+      <option value="">
+        Sélectionner un service
+      </option>
+
+      <option value="Meru">
+        Meru
+      </option>
+
+      <option value="Wise">
+        Wise
+      </option>
+
+      <option value="Morse">
+        Morse
+      </option>
+
+    </select>
+
+    <input
+      type="number"
+      id="rechargeAmount"
+      placeholder="Montant à recevoir en USD"
+      min="1"
+      step="0.01"
+    >
+
+    <div
+      id="rechargeFee"
+      style="margin-top:10px;"
+    >
+      Frais : $0
+    </div>
+
+    <div
+      id="rechargeTotal"
+      style="margin-top:8px;font-weight:bold;"
+    >
+      Total : 0 G
+    </div>
+
+    <div class="payment-box">
+
+      <strong>
+        Paiement Natcash
+      </strong>
+
+      <p>
+        Numéro :
+        <strong>509 40886629</strong>
+      </p>
+
+      <p>
+        Nom :
+        <strong>JUNIOR AUGUSTE</strong>
+      </p>
+
+      <p>
+        Taux :
+        <strong>145 G = 1 USD</strong>
+      </p>
+
+    </div>
+
+    <input
+      type="text"
+      id="rechargeAccount"
+      placeholder="Email ou nom d'utilisateur"
+    >
+
+    <input
+      type="file"
+      id="rechargeProof"
+      accept="image/*"
+    >
+
+    <button
+      id="rechargeSubmit"
+      class="primary"
+    >
+      Envoyer la demande
+    </button>
+
+    <button
+      id="rechargeBack"
+      class="link"
+    >
+      🏠 Retour
+    </button>
+
+    <div
+      id="rechargeMessage"
+      class="message"
+    ></div>
+
+      </section>
+
+      <section
+    id="retraitForm"
+    class="card hidden"
+  >
+
+    <h2>
+      🏦 Retrait
+    </h2>
+
+    <p>
+      Choisissez le service que vous souhaitez utiliser.
+    </p>
+
+    <select id="retraitService">
+
+      <option value="">
+        Sélectionner un service
+      </option>
+
+      <option value="Meru">
+        Meru
+      </option>
+
+      <option value="Wise">
+        Wise
+      </option>
+
+      <option value="Morse">
+        Morse
+      </option>
+
+    </select>
+
+    <input
+      type="number"
+      id="retraitAmount"
+      placeholder="Montant à retirer en USD"
+      min="0.01"
+      step="0.01"
+    >
+
+    <div
+      id="retraitConversion"
+      style="margin-top:10px;font-weight:bold;"
+    >
+      Vous recevrez : 0 HTG
+    </div>
+
+    <p style="margin-top:8px;font-size:13px;">
+      Taux de retrait :
+      <strong>135 HTG = 1 USD</strong>
+    </p>
+
+    <input
+      type="text"
+      id="retraitName"
+      placeholder="Nom complet du bénéficiaire"
+    >
+
+    <input
+      type="tel"
+      id="retraitPhone"
+      placeholder="Numéro Natcash du bénéficiaire"
+    >
+
+    <input
+      type="file"
+      id="retraitProof"
+      accept="image/*"
+    >
+
+    <p style="font-size:13px;margin-top:8px;">
+      📄 Preuve de paiement obligatoire.
+    </p>
+
+    <button
+      id="retraitSubmit"
+      class="primary"
+    >
+      Envoyer la demande
+    </button>
+
+    <button
+      id="retraitBack"
+      class="link"
+    >
+      🏠 Retour
+    </button>
+
+    <div
+      id="retraitMessage"
+      class="message"
+    ></div>
+
+  </section>
 
 
-  <div
-  id="cryptoBuyForm"
-  style="
-    margin-top:20px;
-    display:block;
-  "
->
+  <section
+    id="freeFireForm"
+    class="card hidden"
+  >
 
-    <h3>
-      Achat USDT / USDC
-    </h3>
+    <h2>
+      🎮 Free Fire
+    </h2>
 
+    <p>
+      Choisissez votre pack de Diamonds.
+    </p>
 
-    <p
+    <select id="freeFirePack">
+
+      <option value="">
+        Sélectionner un pack
+      </option>
+
+      <option
+        value="100 + 10"
+        data-price="145"
+      >
+        100 + 10 Diamonds — 145 GDS
+      </option>
+
+      <option
+        value="310 + 31"
+        data-price="450"
+      >
+        310 + 31 Diamonds — 450 GDS
+      </option>
+
+      <option
+        value="520 + 52"
+        data-price="750"
+      >
+        520 + 52 Diamonds — 750 GDS
+      </option>
+
+      <option
+        value="1060 + 106"
+        data-price="1500"
+      >
+        1060 + 106 Diamonds — 1,500 GDS
+      </option>
+
+      <option
+        value="2180 + 218"
+        data-price="3000"
+      >
+        2180 + 218 Diamonds — 3,000 GDS
+      </option>
+
+    </select>
+
+    <div
+      id="freeFirePrice"
+      style="margin-top:10px;font-weight:bold;"
+    >
+      Montant à payer : 0 GDS
+    </div>
+
+    <input
+      type="text"
+      id="freeFireId"
+      placeholder="ID joueur Free Fire"
+    >
+
+    <div class="payment-box">
+
+      <strong>
+        Paiement Natcash
+      </strong>
+
+      <p>
+        Numéro :
+        <strong>509 40886629</strong>
+      </p>
+
+      <p>
+        Nom :
+        <strong>JUNIOR AUGUSTE</strong>
+      </p>
+
+    </div>
+
+    <input
+      type="file"
+      id="freeFireProof"
+      accept="image/*"
+    >
+
+    <p style="font-size:13px;margin-top:8px;">
+      📄 Preuve de paiement obligatoire.
+    </p>
+
+    <button
+      id="freeFireSubmit"
+      class="primary"
+    >
+      Envoyer la demande
+    </button>
+
+    <button
+      id="freeFireBack"
+      class="link"
+    >
+      🏠 Retour
+    </button>
+
+    <div
+      id="freeFireMessage"
+      class="message"
+    ></div>
+
+  </section>
+
+      <section
+    id="cryptoForm"
+    class="card hidden"
+  >
+
+    <h2>
+      🪙 Crypto
+    </h2>
+
+    <p>
+      Achetez USDT ou USDC.
+    </p>
+
+    <div
       style="
-        font-size:13px;
-        margin-top:8px;
+        margin-top:12px;
+        padding:12px;
+        background:#eff6ff;
+        border-radius:12px;
       "
     >
       Taux :
-      <strong>
-        143 GDS = 1 USDT / 1 USDC
-      </strong>
-    </p>
+      <strong>143 GDS = 1 USD</strong>
+    </div>
 
-
-    <select
-      id="cryptoAsset"
-    >
+    <select id="cryptoAsset">
 
       <option value="">
         Sélectionner la crypto
       </option>
 
       <option value="USDT">
-        🟢 USDT
+        USDT
       </option>
 
       <option value="USDC">
-        🔵 USDC
+        USDC
       </option>
 
     </select>
 
-
-    <h3
-      style="
-        margin-top:18px;
-      "
-    >
-      Choisissez le réseau
+    <h3 style="margin-top:18px;">
+      Réseau
     </h3>
 
-
-    <div
-      id="cryptoNetworks"
-      style="
-        display:grid;
-        gap:10px;
-        margin-top:10px;
-      "
-    >
+    <div class="network-grid">
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="TRC20"
-        style="
-          border:2px solid #ef4444;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🔴 TRON
-        </strong>
-
-        <br>
-
-        <small>
-          TRC20
-        </small>
-
+        🔴 TRON — TRC20
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="BEP20"
-        style="
-          border:2px solid #f0b90b;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🟡 BNB Smart Chain
-        </strong>
-
-        <br>
-
-        <small>
-          BEP20
-        </small>
-
+        🟡 BNB Smart Chain — BEP20
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="ERC20"
-        style="
-          border:2px solid #6b7280;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          ◈ Ethereum
-        </strong>
-
-        <br>
-
-        <small>
-          ERC20
-        </small>
-
+        ◈ Ethereum — ERC20
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="Polygon"
-        style="
-          border:2px solid #8247e5;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🟣 Polygon
-        </strong>
-
-        <br>
-
-        <small>
-          Polygon
-        </small>
-
+        🟣 Polygon
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="Solana"
-        style="
-          border:2px solid #14f195;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🟣 Solana
-        </strong>
-
-        <br>
-
-        <small>
-          Solana
-        </small>
-
+        🟣 Solana
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="Arbitrum"
-        style="
-          border:2px solid #28a0f0;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🔵 Arbitrum One
-        </strong>
-
-        <br>
-
-        <small>
-          Arbitrum
-        </small>
-
+        🔵 Arbitrum One
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="Optimism"
-        style="
-          border:2px solid #ff0420;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🔴 Optimism
-        </strong>
-
-        <br>
-
-        <small>
-          Optimism
-        </small>
-
+        🔴 Optimism
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="Avalanche"
-        style="
-          border:2px solid #e84142;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🔺 Avalanche
-        </strong>
-
-        <br>
-
-        <small>
-          C-Chain
-        </small>
-
+        🔺 Avalanche C-Chain
       </button>
-
 
       <button
         type="button"
-        class="cryptoNetwork"
+        class="network-button cryptoNetwork"
         data-network="Base"
-        style="
-          border:2px solid #0052ff;
-          border-radius:14px;
-          padding:14px;
-          background:#fff;
-          text-align:left;
-        "
       >
-
-        <strong>
-          🔵 Base
-        </strong>
-
-        <br>
-
-        <small>
-          Base
-        </small>
-
+        🔵 Base
       </button>
 
     </div>
-
 
     <div
       id="cryptoSelectedNetwork"
-      style="
-        margin-top:12px;
-        font-weight:bold;
-      "
+      style="margin-top:12px;font-weight:bold;"
     >
       Réseau : Aucun
     </div>
-
 
     <input
       type="number"
@@ -369,17 +796,12 @@
       step="0.01"
     >
 
-
     <div
       id="cryptoTotal"
-      style="
-        margin-top:10px;
-        font-weight:bold;
-      "
+      style="margin-top:10px;font-weight:bold;"
     >
       Total à payer : 0 GDS
     </div>
-
 
     <input
       type="text"
@@ -387,36 +809,23 @@
       placeholder="Adresse de votre wallet"
     >
 
-
-    <div
-      style="
-        margin-top:15px;
-        padding:15px;
-        background:#eff6ff;
-        border-radius:12px;
-      "
-    >
+    <div class="payment-box">
 
       <strong>
         Paiement Natcash
       </strong>
 
-      <p style="margin-top:8px;">
+      <p>
         Numéro :
-        <strong>
-          509 40886629
-        </strong>
+        <strong>509 40886629</strong>
       </p>
 
-      <p style="margin-top:5px;">
+      <p>
         Nom :
-        <strong>
-          JUNIOR AUGUSTE
-        </strong>
+        <strong>JUNIOR AUGUSTE</strong>
       </p>
 
     </div>
-
 
     <input
       type="file"
@@ -424,16 +833,9 @@
       accept="image/*"
     >
 
-
-    <p
-      style="
-        font-size:13px;
-        margin-top:8px;
-      "
-    >
+    <p style="font-size:13px;margin-top:8px;">
       📄 Preuve de paiement obligatoire.
     </p>
-
 
     <button
       id="cryptoSubmit"
@@ -442,1795 +844,126 @@
       Envoyer la demande
     </button>
 
-  </div>
+    <button
+      id="cryptoBack"
+      class="link"
+    >
+      🏠 Retour
+    </button>
 
+    <div
+      id="cryptoMessage"
+      class="message"
+    ></div>
 
-  <button
-    id="cryptoBack"
-    class="link"
-  >
-    🏠 Retour à l'accueil
-  </button>
-
-
-  <div
-    id="cryptoMessage"
-    class="message"
-  ></div>
-
- </section>
-
-  <input
-    type="text"
-    id="freeFireId"
-    placeholder="ID joueur Free Fire"
+        </section
+          
+          
+        <section
+    id="binanceForm"
+    class="card hidden"
   >
 
+    <h2>
+      🟡 Binance
+    </h2>
 
-  <div
-    style="
-      margin-top:15px;
-      padding:15px;
-      background:#eff6ff;
-      border-radius:12px;
-    "
-  >
-
-    <strong>
-      Paiement Natcash
-    </strong>
-
-    <p style="margin-top:8px;">
-      Numéro :
-      <strong>509 40886629</strong>
+    <p>
+      Choisissez l'opération.
     </p>
 
-    <p style="margin-top:5px;">
-      Nom :
-      <strong>JUNIOR AUGUSTE</strong>
+    <select id="binanceOperation">
+
+      <option value="">
+        Sélectionner
+      </option>
+
+      <option value="Achat">
+        Achat
+      </option>
+
+      <option value="Retrait">
+        Retrait
+      </option>
+
+    </select>
+
+    <input
+      type="text"
+      id="binanceAccount"
+      placeholder="Binance ID ou email"
+    >
+
+    <input
+      type="number"
+      id="binanceAmount"
+      placeholder="Montant en USD"
+      min="1"
+      step="0.01"
+    >
+
+    <div
+      id="binanceTotal"
+      style="margin-top:10px;font-weight:bold;"
+    >
+      Total à payer : 0 GDS
+    </div>
+
+    <div class="payment-box">
+
+      <strong>
+        Paiement Natcash
+      </strong>
+
+      <p>
+        Numéro :
+        <strong>509 40886629</strong>
+      </p>
+
+      <p>
+        Nom :
+        <strong>JUNIOR AUGUSTE</strong>
+      </p>
+
+      <p>
+        Taux :
+        <strong>143 GDS = 1 USD</strong>
+      </p>
+
+    </div>
+
+    <input
+      type="file"
+      id="binanceProof"
+      accept="image/*"
+    >
+
+    <p style="font-size:13px;margin-top:8px;">
+      📄 Preuve de paiement obligatoire.
     </p>
 
-  </div>
-
-   
-  
-    <script>
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      async function () {
-
-        const SUPABASE_URL =
-          "https://nakaajakjrefzmacqlhv.supabase.co";
-
-        const SUPABASE_KEY =
-          "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
-
-
-        const db =
-          window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-          );
-
-
-        function byId(id) {
-          return document.getElementById(id);
-        }
-
-
-        const loginSection =
-          byId("loginSection");
-
-        const registerSection =
-          byId("registerSection");
-
-        const dashboard =
-          byId("dashboard");
-
-        const mainDashboard =
-          byId("mainDashboard");
-
-        const profileSection =
-          byId("profileSection");
-
-        const loginButton =
-          byId("loginButton");
-
-        const registerButton =
-          byId("registerButton");
-
-        const loginMessage =
-          byId("message");
-
-        const registerMessage =
-          byId("registerMessage");
-
-        const sideMenu =
-          byId("sideMenu");
-
-        const overlay =
-          byId("overlay");
-
-        const profilePhoto =
-          byId("profilePhoto");
-
-        const defaultProfileIcon =
-          byId("defaultProfileIcon");
-
-
-        function show(element) {
-
-          if (element) {
-            element.classList.remove("hidden");
-          }
-
-        }
-
-
-        function hide(element) {
-
-          if (element) {
-            element.classList.add("hidden");
-          }
-
-        }
-
-
-        function showDashboard(user) {
-
-          hide(loginSection);
-
-          hide(registerSection);
-
-          show(dashboard);
-
-          show(mainDashboard);
-
-          hide(profileSection);
-
-          const userEmail =
-            byId("userEmail");
-
-          if (userEmail) {
-            userEmail.textContent =
-              user.email || "";
-          }
-
-        }
-
-
-        async function logoutUser() {
-
-          await db.auth.signOut();
-
-          hide(dashboard);
-
-          hide(profileSection);
-
-          hide(mainDashboard);
-
-          show(loginSection);
-
-          hide(sideMenu);
-
-          hide(overlay);
-
-          const email =
-            byId("email");
-
-          const password =
-            byId("password");
-
-          if (email) {
-            email.value = "";
-          }
-
-          if (password) {
-            password.value = "";
-          }
-
-        }
-
-
-        if (byId("showRegister")) {
-
-          byId("showRegister")
-            .addEventListener(
-              "click",
-              function () {
-
-                hide(loginSection);
-                show(registerSection);
-
-              }
-            );
-
-        }
-
-
-        if (byId("backLogin")) {
-
-          byId("backLogin")
-            .addEventListener(
-              "click",
-              function () {
-
-                hide(registerSection);
-                show(loginSection);
-
-              }
-            );
-
-        }
-
-
-        if (loginButton) {
-
-          loginButton
-            .addEventListener(
-              "click",
-              async function () {
-
-                const email =
-                  byId("email").value.trim();
-
-                const password =
-                  byId("password").value;
-
-
-                if (!email || !password) {
-
-                  loginMessage.textContent =
-                    "Veuillez remplir tous les champs.";
-
-                  return;
-
-                }
-
-
-                loginMessage.textContent =
-                  "Connexion en cours...";
-
-
-                const result =
-                  await db.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                  });
-
-
-                if (result.error) {
-
-                  loginMessage.textContent =
-                    result.error.message;
-
-                  return;
-
-                }
-
-
-                loginMessage.textContent = "";
-
-                showDashboard(
-                  result.data.user
-                );
-
-                await loadProfile();
-
-              }
-            );
-
-        }
-
-        if (registerButton) {
-
-          registerButton
-            .addEventListener(
-              "click",
-              async function () {
-
-                const name =
-                  byId("registerName")
-                    .value
-                    .trim();
-
-                const phone =
-                  byId("registerPhone")
-                    .value
-                    .trim();
-
-                const email =
-                  byId("registerEmail")
-                    .value
-                    .trim();
-
-                const password =
-                  byId("registerPassword")
-                    .value;
-
-
-                if (
-                  !name ||
-                  !phone ||
-                  !email ||
-                  !password
-                ) {
-
-                  registerMessage.textContent =
-                    "Veuillez remplir tous les champs.";
-
-                  return;
-
-                }
-
-
-                registerMessage.textContent =
-                  "Création du compte...";
-
-
-                const result =
-                  await db.auth.signUp({
-                    email: email,
-                    password: password
-                  });
-
-
-                if (result.error) {
-
-                  registerMessage.textContent =
-                    result.error.message;
-
-                  return;
-
-                }
-
-
-                const user =
-                  result.data.user;
-
-
-                if (user) {
-
-                  await db
-                    .from("profiles")
-                    .upsert({
-                      id: user.id,
-                      full_name: name,
-                      phone: phone
-                    });
-
-                }
-
-
-                registerMessage.textContent =
-                  "Compte créé avec succès.";
-
-                hide(registerSection);
-                show(loginSection);
-
-              }
-            );
-
-        }
-
-
-        async function loadProfile() {
-
-          const userResult =
-            await db.auth.getUser();
-
-          const user =
-            userResult.data.user;
-
-
-          if (!user) {
-            return;
-          }
-
-
-          const profileEmail =
-            byId("profileEmail");
-
-          if (profileEmail) {
-
-            profileEmail.textContent =
-              user.email || "";
-
-          }
-
-
-          const result =
-            await db
-              .from("profiles")
-              .select(
-                "full_name, phone, avatar_url"
-              )
-              .eq("id", user.id)
-              .maybeSingle();
-
-
-          if (result.data) {
-
-            const name =
-              byId("profileName");
-
-            const phone =
-              byId("profilePhone");
-
-
-            if (name) {
-              name.value =
-                result.data.full_name || "";
-            }
-
-
-            if (phone) {
-              phone.value =
-                result.data.phone || "";
-            }
-
-
-            if (
-              result.data.avatar_url
-            ) {
-
-              profilePhoto.src =
-                result.data.avatar_url;
-
-              profilePhoto.style.display =
-                "block";
-
-              defaultProfileIcon.style.display =
-                "none";
-
-            }
-
-          }
-
-        }
-
-
-        if (byId("profileButton")) {
-
-          byId("profileButton")
-            .addEventListener(
-              "click",
-              async function () {
-
-                hide(mainDashboard);
-
-                show(profileSection);
-
-                await loadProfile();
-
-              }
-            );
-
-        }
-
-
-        if (byId("backDashboard")) {
-
-          byId("backDashboard")
-            .addEventListener(
-              "click",
-              function () {
-
-                hide(profileSection);
-
-                show(mainDashboard);
-
-              }
-            );
-
-        }
-
-
-        if (byId("saveProfile")) {
-
-          byId("saveProfile")
-            .addEventListener(
-              "click",
-              async function () {
-
-                const userResult =
-                  await db.auth.getUser();
-
-                const user =
-                  userResult.data.user;
-
-
-                if (!user) {
-                  return;
-                }
-
-
-                const name =
-                  byId("profileName")
-                    .value
-                    .trim();
-
-                const phone =
-                  byId("profilePhone")
-                    .value
-                    .trim();
-
-                const file =
-                  byId("profilePhotoInput")
-                    .files[0];
-
-
-                const message =
-                  byId("profileMessage");
-
-
-                message.textContent =
-                  "Enregistrement...";
-
-
-                let avatarUrl = null;
-
-
-                if (file) {
-
-                  const fileName =
-                    user.id +
-                    "/" +
-                    Date.now() +
-                    "-" +
-                    file.name;
-
-
-                  const upload =
-                    await db.storage
-                      .from("profile-photos")
-                      .upload(
-                        fileName,
-                        file
-                      );
-
-
-                  if (upload.error) {
-
-                    message.textContent =
-                      upload.error.message;
-
-                    return;
-
-                  }
-
-
-                  const signed =
-                    await db.storage
-                      .from("profile-photos")
-                      .createSignedUrl(
-                        fileName,
-                        31536000
-                      );
-
-
-                  if (signed.error) {
-
-                    message.textContent =
-                      signed.error.message;
-
-                    return;
-
-                  }
-
-
-                  avatarUrl =
-                    signed.data.signedUrl;
-
-                }
-
-
-                const updateData = {
-                  full_name: name,
-                  phone: phone
-                };
-
-
-                if (avatarUrl) {
-                  updateData.avatar_url =
-                    avatarUrl;
-                }
-
-
-                const result =
-                  await db
-                    .from("profiles")
-                    .upsert(
-                      {
-                        id: user.id,
-                        ...updateData
-                      }
-                    );
-
-
-                if (result.error) {
-
-                  message.textContent =
-                    result.error.message;
-
-                  return;
-
-                }
-
-
-                if (avatarUrl) {
-
-                  profilePhoto.src =
-                    avatarUrl;
-
-                  profilePhoto.style.display =
-                    "block";
-
-                  defaultProfileIcon.style.display =
-                    "none";
-
-                }
-
-
-                message.textContent =
-                  "Profil enregistré avec succès.";
-
-              }
-            );
-
-      }
-
-
-              if (byId("menuButton")) {
-
-          byId("menuButton")
-            .addEventListener(
-              "click",
-              function () {
-
-                show(sideMenu);
-                sideMenu.classList.add("open");
-
-                show(overlay);
-
-              }
-            );
-
-        }
-
-
-        if (byId("closeMenu")) {
-
-          byId("closeMenu")
-            .addEventListener(
-              "click",
-              function () {
-
-                sideMenu.classList.remove("open");
-
-                hide(overlay);
-
-              }
-            );
-
-        }
-
-
-        if (overlay) {
-
-          overlay.addEventListener(
-            "click",
-            function () {
-
-              sideMenu.classList.remove("open");
-
-              hide(overlay);
-
-            }
-          );
-
-        }
-
-
-        if (byId("menuLogoutButton")) {
-
-          byId("menuLogoutButton")
-            .addEventListener(
-              "click",
-              async function () {
-
-                await logoutUser();
-
-              }
-            );
-
-        }
-
-
-        if (byId("darkButton")) {
-
-          byId("darkButton")
-            .addEventListener(
-              "click",
-              function () {
-
-                document.body
-                  .classList
-                  .toggle("dark");
-
-              }
-            );
-
-        }
-
-
-        if (byId("referralButton")) {
-
-          byId("referralButton")
-            .addEventListener(
-              "click",
-              function () {
-
-                alert(
-                  "Votre code de parrainage sera disponible prochainement."
-                );
-
-              }
-            );
-
-        }
-
-
-        if (byId("settingsButton")) {
-
-          byId("settingsButton")
-            .addEventListener(
-              "click",
-              function () {
-
-                alert(
-                  "Les paramètres seront disponibles prochainement."
-                );
-
-              }
-            );
-
-        }
-
-
-        if (byId("helpButton")) {
-
-          byId("helpButton")
-            .addEventListener(
-              "click",
-              function () {
-
-                alert(
-                  "Pour assistance, contactez MONEXA CASH."
-                );
-
-              }
-            );
-
-        }
-
-
-        document
-          .querySelectorAll(".service")
-          .forEach(
-            function (service) {
-
-              service.addEventListener(
-                "click",
-                function () {
-
-                  const serviceName =
-                    this.dataset.service;
-
-
-                  if (
-                    serviceName ===
-                    "Recharge"
-                  ) {
-
-                    hide(mainDashboard);
-
-                    hide(profileSection);
-
-                    hide(
-                      byId(
-                        "genericServiceForm"
-                      )
-                    );
-
-                    show(
-                      byId(
-                        "rechargeForm"
-                      )
-                    );
-
-                    return;
-
-                  }
-
-
-                  hide(mainDashboard);
-
-                  hide(
-                    byId(
-                      "rechargeForm"
-                    )
-                  );
-
-
-                                    if (
-                    serviceName ===
-                    "Retrait"
-                  ) {
-
-                    hide(
-                      mainDashboard
-                    );
-
-                    hide(
-                      byId(
-                        "rechargeForm"
-                      )
-                    );
-
-                    show(
-                      byId(
-                        "genericServiceForm"
-                      )
-                    );
-
-                    return;
-
-                                    }
-
-                                    if (
-                    serviceName ===
-                    "Free Fire"
-                  ) {
-
-                    hide(
-                      mainDashboard
-                    );
-
-                    hide(
-                      byId(
-                        "rechargeForm"
-                      )
-                    );
-
-                    hide(
-                      byId(
-                        "genericServiceForm"
-                      )
-                    );
-
-                    show(
-                      byId(
-                        "freeFireForm"
-                      )
-                    );
-
-                    return;
-
-                                    }
-
-                                      if (
-                      serviceName ===
-                      "Crypto"
-                    ) {
-
-                      hide(
-                        mainDashboard
-                      );
-
-                      hide(
-                        byId(
-                          "rechargeForm"
-                        )
-                      );
-
-                      hide(
-                        byId(
-                          "genericServiceForm"
-                        )
-                      );
-
-                      hide(
-                        byId(
-                          "freeFireForm"
-                        )
-                      );
-
-                      show(
-                        byId(
-                          "cryptoForm"
-                        )
-                      );
-
-                      return;
-
-                                                      }
-
-                  
-                  
-                  const freeFirePack =
-                    byId(
-                      "freeFirePack"
-                    );
-
-                  const freeFirePrice =
-                    byId(
-                      "freeFirePrice"
-                    );
-
-
-                  if (
-                    freeFirePack &&
-                    freeFirePrice
-                  ) {
-
-                    freeFirePack.addEventListener(
-                      "change",
-                      function () {
-
-                        const selected =
-                          freeFirePack
-                            .options[
-                              freeFirePack.selectedIndex
-                            ];
-
-                        const price =
-                          selected
-                            .dataset
-                            .price || 0;
-
-
-                        freeFirePrice.textContent =
-                          "Montant à payer : " +
-                          Number(price).toLocaleString() +
-                          " GDS";
-
-                      }
-                    );
-
-                  }
-                    
-              
-
-                  else if (
-                    serviceName ===
-                    "Free Fire"
-                 ) {
-
-                    content.innerHTML = `
-                      <p>
-                        🎮 Service Free Fire
-                      </p>
-                      <p style="margin-top:10px;">
-                        Envoyez votre demande pour votre compte Free Fire.
-                      </p>
-                    `;
-
-                  }
-
-
-                  else if (
-                    serviceName ===
-                    "Crypto"
-                  ) {
-
-                    content.innerHTML = `
-                      <p>
-                        🪙 USDT / USDC
-                      </p>
-
-                      <p style="margin-top:10px;">
-                        Taux : 143 G = 1 USDT / 1 USDC
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Achat et retrait disponibles.
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Aucun frais de service.
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Réseaux : BEP20, TRC20, ERC20,
-                        Polygon, Solana et autres réseaux disponibles.
-                      </p>
-                    `;
-
-                  }
-
-
-                  else if (
-                    serviceName ===
-                    "Binance"
-                  ) {
-
-                    content.innerHTML = `
-                      <p>
-                        🟡 Binance
-                      </p>
-
-                      <p style="margin-top:10px;">
-                        Achat / Retrait
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Taux : 143 G = 1 USD
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Aucun frais de service.
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Binance ID ou email requis.
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Preuve de paiement obligatoire.
-                      </p>
-                    `;
-
-                  }
-
-
-                  else if (
-                    serviceName ===
-                    "Création de carte"
-                  ) {
-
-                    content.innerHTML = `
-                      <p>
-                        💳 Création de carte virtuelle
-                      </p>
-
-                      <p style="margin-top:10px;">
-                        Meru ou Morse
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Prix total : 1,500 GDS
-                      </p>
-
-                      <p style="margin-top:8px;">
-                        Les 5 USD sont inclus dans les 1,500 GDS
-                        et seront chargés sur le compte du client.
-                      </p>
-                    `;
-
-                  }
-
-
-                  else {
-
-                    content.innerHTML = `
-                      <p>
-                        Service sélectionné :
-                        ${serviceName}
-                      </p>
-                    `;
-
-                  }
-
-
-                  show(generic);
-
-                }
-              );
-
-            }
-          );
-
-
-        if (byId("genericServiceBack")) {
-
-          byId("genericServiceBack")
-            .addEventListener(
-              "click",
-              function () {
-
-                hide(
-                  byId(
-                    "genericServiceForm"
-                  )
-                );
-
-                show(mainDashboard);
-
-              }
-            );
-
-      }
-
-              const rechargeForm =
-          byId("rechargeForm");
-
-        const rechargeBack =
-          byId("rechargeBack");
-
-        const rechargeAmount =
-          byId("rechargeAmount");
-
-        const rechargeService =
-          byId("rechargeService");
-
-        const rechargeSubmit =
-          byId("rechargeSubmit");
-
-
-        function updateRechargeTotal() {
-
-          const amount =
-            parseFloat(
-              rechargeAmount.value
-            ) || 0;
-
-
-          let fee = 0;
-
-
-          if (amount > 0 && amount <= 10) {
-            fee = 1;
-          }
-
-          else if (amount > 10) {
-            fee = 2;
-          }
-
-
-          const total =
-            (amount + fee) * 145;
-
-
-          byId("rechargeFee")
-            .textContent =
-            "Frais : $" + fee.toFixed(2);
-
-
-          byId("rechargeTotal")
-            .textContent =
-            "Total : " + total.toFixed(2) + " G";
-
-        }
-
-
-        if (rechargeAmount) {
-
-          rechargeAmount
-            .addEventListener(
-              "input",
-              updateRechargeTotal
-            );
-
-        }
-
-
-        if (rechargeService) {
-
-          rechargeService
-            .addEventListener(
-              "change",
-              function () {
-
-                const account =
-                  byId(
-                    "rechargeAccount"
-                  );
-
-                if (!account) {
-                  return;
-                }
-
-
-                if (
-                  rechargeService.value ===
-                  "Meru"
-                ) {
-
-                  account.placeholder =
-                    "Email Meru";
-
-                }
-
-                else if (
-                  rechargeService.value ===
-                  "Wise"
-                ) {
-
-                  account.placeholder =
-                    "Email Wise";
-
-                }
-
-                else if (
-                  rechargeService.value ===
-                  "Morse"
-                ) {
-
-                  account.placeholder =
-                    "Nom d'utilisateur Morse";
-
-                }
-
-                else {
-
-                  account.placeholder =
-                    "Email ou nom d'utilisateur";
-
-                }
-
-              }
-            );
-
-        }
-
-
-        if (rechargeBack) {
-
-          rechargeBack
-            .addEventListener(
-              "click",
-              function () {
-
-                hide(rechargeForm);
-
-                show(mainDashboard);
-
-              }
-            );
-
-        }
-
-
-        if (rechargeSubmit) {
-
-          rechargeSubmit
-            .addEventListener(
-              "click",
-              async function () {
-
-                const service =
-                  rechargeService.value;
-
-                const amount =
-                  parseFloat(
-                    rechargeAmount.value
-                  ) || 0;
-
-                const accountInput =
-                  byId(
-                    "rechargeAccount"
-                  );
-
-                const proof =
-                  byId(
-                    "rechargeProof"
-                  );
-
-                const message =
-                  byId(
-                    "rechargeMessage"
-                  );
-
-
-                if (
-                  !service ||
-                  amount <= 0 ||
-                  !accountInput ||
-                  !proof ||
-                  !message
-                ) {
-
-                  message.textContent =
-                    "Veuillez remplir tous les champs.";
-
-                  return;
-
-                }
-
-
-                const account =
-                  accountInput.value.trim();
-
-
-                if (!account) {
-
-                  message.textContent =
-                    "Veuillez entrer votre email ou nom d'utilisateur.";
-
-                  return;
-
-                }
-
-
-                if (
-                  !proof.files ||
-                  !proof.files[0]
-                ) {
-
-                  message.textContent =
-                    "La preuve de paiement est obligatoire.";
-
-                  return;
-
-                }
-
-
-                const userResult =
-                  await db.auth.getUser();
-
-                const user =
-                  userResult.data.user;
-
-
-                if (!user) {
-
-                  message.textContent =
-                    "Votre session a expiré. Veuillez vous reconnecter.";
-
-                  return;
-
-                }
-
-
-                const file =
-                  proof.files[0];
-
-
-                message.textContent =
-                  "Envoi de la demande...";
-
-
-                const fileName =
-                  user.id +
-                  "/" +
-                  Date.now() +
-                  "-" +
-                  file.name;
-
-
-                const uploadResult =
-                  await db.storage
-                    .from("payment-proofs")
-                    .upload(
-                      fileName,
-                      file
-                    );
-
-
-                if (uploadResult.error) {
-
-                  message.textContent =
-                    uploadResult.error.message;
-
-                  return;
-
-                }
-
-
-                const insertResult =
-                  await db
-                    .from("service_requests")
-                    .insert({
-                      user_id: user.id,
-                      service: service,
-                      amount: amount,
-                      status: "En attente",
-                      account: account,
-                      proof_url: fileName
-                    });
-
-
-                if (insertResult.error) {
-
-                  message.textContent =
-                    insertResult.error.message;
-
-                  return;
-
-                }
-
-
-                message.textContent =
-                  "Votre demande a été envoyée avec succès.";
-
-
-                rechargeAmount.value = "";
-
-                rechargeService.value = "";
-
-                accountInput.value = "";
-
-                proof.value = "";
-
-                updateRechargeTotal();
-
-              }
-            );
-
-        }
-
-                const retraitService =
-          byId(
-            "retraitService"
-          );
-
-        const retraitAmount =
-          byId(
-            "retraitAmount"
-          );
-
-        const retraitConversion =
-          byId(
-            "retraitConversion"
-          );
-
-        const retraitSubmit =
-          byId(
-            "retraitSubmit"
-          );
-
-        const retraitProof =
-          byId(
-            "retraitProof"
-          );
-
-        const retraitName =
-          byId(
-            "retraitName"
-          );
-
-        const retraitPhone =
-          byId(
-            "retraitPhone"
-          );
-
-        const retraitMessage =
-          byId(
-            "retraitMessage"
-          );
-
-
-                function updateRetraitConversion() {
-
-          const amount =
-            parseFloat(
-              retraitAmount.value
-            ) || 0;
-
-
-          const htg =
-            amount * 135;
-
-
-          retraitConversion.textContent =
-            "Vous recevrez : " +
-            htg.toFixed(0) +
-            " HTG";
-
-                }
-
-
-        if (retraitAmount) {
-
-          retraitAmount.addEventListener(
-            "input",
-            updateRetraitConversion
-          );
-
-        }
-
-
-        if (retraitSubmit) {
-
-          retraitSubmit.addEventListener(
-            "click",
-            async function () {
-
-              const service =
-                retraitService.value;
-
-              const amount =
-                parseFloat(
-                  retraitAmount.value
-                ) || 0;
-
-              const name =
-                retraitName.value.trim();
-
-              const phone =
-                retraitPhone.value.trim();
-
-              const proof =
-                retraitProof.files[0];
-
-
-              if (
-                !service ||
-                amount <= 0 ||
-                !name ||
-                !phone ||
-                !proof
-              ) {
-
-                retraitMessage.textContent =
-                  "Veuillez remplir tous les champs et ajouter la preuve de paiement.";
-
-                return;
-
-              }
-
-
-              const userResult =
-                await db.auth.getUser();
-
-              const user =
-                userResult.data.user;
-
-
-              if (!user) {
-
-                retraitMessage.textContent =
-                  "Votre session a expiré. Veuillez vous reconnecter.";
-
-                return;
-
-              }
-
-
-              retraitMessage.textContent =
-                "Envoi de la demande...";
-
-
-              const fileName =
-                user.id +
-                "/" +
-                Date.now() +
-                "-" +
-                proof.name;
-
-
-              const uploadResult =
-                await db.storage
-                  .from(
-                    "payment-proofs"
-                  )
-                  .upload(
-                    fileName,
-                    proof
-                  );
-
-
-              if (uploadResult.error) {
-
-                retraitMessage.textContent =
-                  uploadResult.error.message;
-
-                return;
-
-              }
-
-
-              const account =
-                "Bénéficiaire : " +
-                name +
-                " | Natcash : " +
-                phone +
-                " | Montant : " +
-                amount +
-                " HTG";
-
-
-              const insertResult =
-                await db
-                  .from(
-                    "service_requests"
-                  )
-                  .insert({
-                    user_id: user.id,
-                    service:
-                      "Retrait - " +
-                      service,
-                    amount:
-                      amount,
-                    status:
-                      "En attente",
-                    account:
-                      account,
-                    proof_url:
-                      fileName
-                  });
-
-
-              if (insertResult.error) {
-
-                retraitMessage.textContent =
-                  insertResult.error.message;
-
-                return;
-
-              }
-
-
-              retraitMessage.textContent =
-                "Votre demande de retrait a été envoyée avec succès.";
-
-
-              retraitService.value =
-                "";
-
-              retraitAmount.value =
-                "";
-
-              retraitName.value =
-                "";
-
-              retraitPhone.value =
-                "";
-
-              retraitProof.value =
-                "";
-
-              updateRetraitConversion();
-
-            }
-          );
-
-        }
-
-
-        const genericServiceBack =
-          byId(
-            "genericServiceBack"
-          );
-
-
-        if (genericServiceBack) {
-
-          genericServiceBack.addEventListener(
-            "click",
-            function () {
-
-              hide(
-                byId(
-                  "genericServiceForm"
-                )
-              );
-
-              show(
-                mainDashboard
-              );
-
-            }
-          );
-
-      }
-
-     const freeFirePack =
-       byId(
-         "freeFirePack"
-       );
-
-        const freeFirePrice =
-          byId(
-            "freeFirePrice"
-          );
-
-
-        if (
-          freeFirePack &&
-          freeFirePrice
-        ) {
-
-          freeFirePack.addEventListener(
-            "change",
-            function () {
-
-              const selected =
-                freeFirePack.options[
-                  freeFirePack.selectedIndex
-                ];
-
-              const price =
-                selected.dataset.price || "0";
-
-
-              freeFirePrice.textContent =
-                "Montant à payer : " +
-                Number(price).toLocaleString() +
-                " GDS";
-
-            }
-          );
-
-        }
-
-       const freeFireBack =
-         byId(
-           "freeFireBack"
-         );
-
-
-        if (freeFireBack) {
-
-          freeFireBack.addEventListener(
-            "click",
-            function () {
-
-              hide(
-                byId(
-                  "freeFireForm"
-                )
-              );
-
-              show(
-                mainDashboard
-              );
-
-            }
-          );
-
-        }
-      
-        const sessionResult =
-          await db.auth.getSession();
-
-        const currentSession =
-          sessionResult.data.session;
-
-
-        if (
-          currentSession &&
-          currentSession.user
-        ) {
-
-          showDashboard(
-            currentSession.user
-          );
-
-          await loadProfile();
-
-        }
-
-
-        db.auth.onAuthStateChange(
-          async function (
-            event,
-            session
-          ) {
-
-            if (
-              session &&
-              session.user
-            ) {
-
-              showDashboard(
-                session.user
-              );
-
-              await loadProfile();
-
-            }
-
-          }
-        );
-
-      }
-    );
-
-  </script>
-
-</body>
-
-</html>
+    <button
+      id="binanceSubmit"
+      class="primary"
+    >
+      Envoyer la demande
+    </button>
+
+    <button
+      id="binanceBack"
+      class="link"
+    >
+      🏠 Retour
+    </button>
+
+    <div
+      id="binanceMessage"
+      class="message"
+    ></div>
+
+  </section>
+
+
+  <section
+    id="card>
+    
