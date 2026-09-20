@@ -1622,45 +1622,30 @@
                   );
 
 
-                  const generic =
-                    byId(
-                      "genericServiceForm"
+                                    if (
+                    serviceName ===
+                    "Retrait"
+                  ) {
+
+                    hide(
+                      mainDashboard
                     );
 
-                  const title =
-                    byId(
-                      "genericServiceTitle"
+                    hide(
+                      byId(
+                        "rechargeForm"
+                      )
                     );
 
-                  const content =
-                    byId(
-                      "genericServiceContent"
+                    show(
+                      byId(
+                        "genericServiceForm"
+                      )
                     );
-
-
-                  if (!generic) {
-                    return;
-                  }
-
-
-                  title.textContent =
-                    serviceName;
-
-
-                 if (
-                   serviceName ===
-                   "Retrait"
-                 ) {
-
-                   hide(mainDashboard);
-                   hide(byId("rechargeForm"));
-
-                   show(
-                     byId("genericServiceForm")
-                   );
 
                     return;
-                  }
+
+                                    }
 
 
                   else if (
