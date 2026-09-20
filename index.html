@@ -2121,6 +2121,260 @@
 
         }
 
+                const retraitService =
+          byId(
+            "retraitService"
+          );
+
+        const retraitAmount =
+          byId(
+            "retraitAmount"
+          );
+
+        const retraitConversion =
+          byId(
+            "retraitConversion"
+          );
+
+        const retraitSubmit =
+          byId(
+            "retraitSubmit"
+          );
+
+        const retraitProof =
+          byId(
+            "retraitProof"
+          );
+
+        const retraitName =
+          byId(
+            "retraitName"
+          );
+
+        const retraitPhone =
+          byId(
+            "retraitPhone"
+          );
+
+        const retraitMessage =
+          byId(
+            "retraitMessage"
+          );
+
+
+        function updateRetraitConversion() {
+
+          const amount =
+            parseFloat(
+              retraitAmount.value
+            ) || 0;
+
+          const usd =
+            amount / 135;
+
+
+          retraitConversion.textContent =
+            "Équivalent : $" +
+            usd.toFixed(2) +
+            " USD";
+
+        }
+
+
+        if (retraitAmount) {
+
+          retraitAmount.addEventListener(
+            "input",
+            updateRetraitConversion
+          );
+
+        }
+
+
+        if (retraitSubmit) {
+
+          retraitSubmit.addEventListener(
+            "click",
+            async function () {
+
+              const service =
+                retraitService.value;
+
+              const amount =
+                parseFloat(
+                  retraitAmount.value
+                ) || 0;
+
+              const name =
+                retraitName.value.trim();
+
+              const phone =
+                retraitPhone.value.trim();
+
+              const proof =
+                retraitProof.files[0];
+
+
+              if (
+                !service ||
+                amount <= 0 ||
+                !name ||
+                !phone ||
+                !proof
+              ) {
+
+                retraitMessage.textContent =
+                  "Veuillez remplir tous les champs et ajouter la preuve de paiement.";
+
+                return;
+
+              }
+
+
+              const userResult =
+                await db.auth.getUser();
+
+              const user =
+                userResult.data.user;
+
+
+              if (!user) {
+
+                retraitMessage.textContent =
+                  "Votre session a expiré. Veuillez vous reconnecter.";
+
+                return;
+
+              }
+
+
+              retraitMessage.textContent =
+                "Envoi de la demande...";
+
+
+              const fileName =
+                user.id +
+                "/" +
+                Date.now() +
+                "-" +
+                proof.name;
+
+
+              const uploadResult =
+                await db.storage
+                  .from(
+                    "payment-proofs"
+                  )
+                  .upload(
+                    fileName,
+                    proof
+                  );
+
+
+              if (uploadResult.error) {
+
+                retraitMessage.textContent =
+                  uploadResult.error.message;
+
+                return;
+
+              }
+
+
+              const account =
+                "Bénéficiaire : " +
+                name +
+                " | Natcash : " +
+                phone +
+                " | Montant : " +
+                amount +
+                " HTG";
+
+
+              const insertResult =
+                await db
+                  .from(
+                    "service_requests"
+                  )
+                  .insert({
+                    user_id: user.id,
+                    service:
+                      "Retrait - " +
+                      service,
+                    amount:
+                      amount,
+                    status:
+                      "En attente",
+                    account:
+                      account,
+                    proof_url:
+                      fileName
+                  });
+
+
+              if (insertResult.error) {
+
+                retraitMessage.textContent =
+                  insertResult.error.message;
+
+                return;
+
+              }
+
+
+              retraitMessage.textContent =
+                "Votre demande de retrait a été envoyée avec succès.";
+
+
+              retraitService.value =
+                "";
+
+              retraitAmount.value =
+                "";
+
+              retraitName.value =
+                "";
+
+              retraitPhone.value =
+                "";
+
+              retraitProof.value =
+                "";
+
+              updateRetraitConversion();
+
+            }
+          );
+
+        }
+
+
+        const genericServiceBack =
+          byId(
+            "genericServiceBack"
+          );
+
+
+        if (genericServiceBack) {
+
+          genericServiceBack.addEventListener(
+            "click",
+            function () {
+
+              hide(
+                byId(
+                  "genericServiceForm"
+                )
+              );
+
+              show(
+                mainDashboard
+              );
+
+            }
+          );
+
+      }
 
         const sessionResult =
           await db.auth.getSession();
