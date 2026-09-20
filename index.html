@@ -1730,6 +1730,38 @@
 
                                     }
 
+                                    if (
+                    serviceName ===
+                    "Free Fire"
+                  ) {
+
+                    hide(
+                      mainDashboard
+                    );
+
+                    hide(
+                      byId(
+                        "rechargeForm"
+                      )
+                    );
+
+                    hide(
+                      byId(
+                        "genericServiceForm"
+                      )
+                    );
+
+                    show(
+                      byId(
+                        "freeFireForm"
+                      )
+                    );
+
+                    return;
+
+      }
+                    
+              
 
                   else if (
                     serviceName ===
