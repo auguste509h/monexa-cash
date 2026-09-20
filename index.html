@@ -2614,7 +2614,34 @@
           );
 
         }
-        
+
+       const freeFireBack =
+         byId(
+           "freeFireBack"
+         );
+
+
+        if (freeFireBack) {
+
+          freeFireBack.addEventListener(
+            "click",
+            function () {
+
+              hide(
+                byId(
+                  "freeFireForm"
+                )
+              );
+
+              show(
+                mainDashboard
+              );
+
+            }
+          );
+
+        }
+      
         const sessionResult =
           await db.auth.getSession();
 
