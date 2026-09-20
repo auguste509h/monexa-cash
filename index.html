@@ -2147,23 +2147,24 @@
           );
 
 
-        function updateRetraitConversion() {
+                function updateRetraitConversion() {
 
           const amount =
             parseFloat(
               retraitAmount.value
             ) || 0;
 
-          const usd =
-            amount / 135;
+
+          const htg =
+            amount * 135;
 
 
           retraitConversion.textContent =
-            "Équivalent : $" +
-            usd.toFixed(2) +
-            " USD";
+            "Vous recevrez : " +
+            htg.toFixed(0) +
+            " HTG";
 
-        }
+                }
 
 
         if (retraitAmount) {
