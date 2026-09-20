@@ -474,6 +474,2428 @@
       </div>
     </footer>
 
+      <style>
+      .main-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.96);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(14px);
+      }
+
+      .header-inner {
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        background: var(--navy);
+        color: var(--cyan);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--navy);
+        white-space: nowrap;
+      }
+
+      .brand-subtitle {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .header-btn {
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        color: var(--navy);
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+      }
+
+      .header-account-btn {
+        border: 0;
+        background: var(--navy);
+        color: var(--white);
+        border-radius: 13px;
+        padding: 12px 14px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .mobile-nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 10px 0 12px;
+        scrollbar-width: none;
+      }
+
+      .mobile-nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-link {
+        flex-shrink: 0;
+        border: 1px solid var(--border);
+        background: var(--white);
+        color: var(--navy);
+        border-radius: 30px;
+        padding: 9px 14px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .nav-link.active {
+        background: var(--cyan);
+        border-color: var(--cyan);
+      }
+
+      @media (min-width: 768px) {
+        .header-inner {
+          min-height: 82px;
+        }
+
+        .brand-logo {
+          width: 48px;
+          height: 48px;
+        }
+
+        .brand-name {
+          font-size: 18px;
+        }
+
+        .mobile-nav {
+          justify-content: center;
+          padding-bottom: 16px;
+        }
+
+        .nav-link {
+          padding: 10px 18px;
+          font-size: 13px;
+        }
+      }
+    </style>
+
+    <header class="main-header">
+      <div class="container">
+        <div class="header-inner">
+
+          <a href="#home" class="brand">
+            <div class="brand-logo">MC</div>
+
+            <div>
+              <div class="brand-name">MONEXA CASH</div>
+              <div class="brand-subtitle">Services financiers numériques</div>
+            </div>
+          </a>
+
+          <div class="header-actions">
+            <button type="button" class="header-btn" aria-label="Changer la langue">
+              🌐
+            </button>
+
+            <button type="button" class="header-account-btn">
+              Mon compte
+            </button>
+          </div>
+
+        </div>
+
+        <nav class="mobile-nav" aria-label="Navigation principale">
+          <a href="#home" class="nav-link active">Accueil</a>
+          <a href="#services" class="nav-link">Services</a>
+          <a href="#deposit-info" class="nav-link">Dépôt</a>
+          <a href="#account-preview" class="nav-link">Mon compte</a>
+          <a href="#contact" class="nav-link">Support</a>
+        </nav>
+      </div>
+    </header>
+
+        <section id="auth-section" style="padding: 10px 0 60px;">
+      <div class="container">
+        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 24px; padding: 24px 18px; box-shadow: var(--shadow);">
+
+          <div style="text-align: center; margin-bottom: 24px;">
+            <div style="width: 58px; height: 58px; margin: 0 auto 12px; border-radius: 17px; background: var(--navy); color: var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800;">
+              MC
+            </div>
+
+            <h2 style="font-size: 27px; color: var(--navy); margin-bottom: 7px;">
+              Votre compte MONEXA
+            </h2>
+
+            <p style="font-size: 13px; color: var(--muted);">
+              Créez votre compte ou connectez-vous pour accéder à vos services.
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 8px; background: var(--bg); padding: 5px; border-radius: 14px; margin-bottom: 22px;">
+            <button
+              type="button"
+              id="login-tab"
+              style="flex: 1; border: 0; background: var(--navy); color: var(--white); border-radius: 10px; padding: 12px 8px; font-size: 13px; font-weight: 700;">
+              Se connecter
+            </button>
+
+            <button
+              type="button"
+              id="signup-tab"
+              style="flex: 1; border: 0; background: transparent; color: var(--navy); border-radius: 10px; padding: 12px 8px; font-size: 13px; font-weight: 700;">
+              Créer un compte
+            </button>
+          </div>
+
+          <form id="login-form">
+
+            <div style="margin-bottom: 15px;">
+              <label for="login-email" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Adresse e-mail
+              </label>
+
+              <input
+                id="login-email"
+                type="email"
+                autocomplete="email"
+                placeholder="exemple@email.com"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 18px;">
+              <label for="login-password" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Mot de passe
+              </label>
+
+              <input
+                id="login-password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Votre mot de passe"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+            </div>
+
+            <button
+              type="submit"
+              style="width: 100%; border: 0; background: var(--cyan); color: var(--navy); border-radius: 14px; padding: 15px; font-weight: 800;">
+              Se connecter
+            </button>
+
+          </form>
+
+          <form id="signup-form" class="hidden">
+
+            <div style="margin-bottom: 15px;">
+              <label for="signup-name" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Nom complet
+              </label>
+
+              <input
+                id="signup-name"
+                type="text"
+                autocomplete="name"
+                placeholder="Votre nom complet"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+              <label for="signup-email" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Adresse e-mail
+              </label>
+
+              <input
+                id="signup-email"
+                type="email"
+                autocomplete="email"
+                placeholder="exemple@email.com"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+              <label for="signup-phone" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Numéro de téléphone
+              </label>
+
+              <input
+                id="signup-phone"
+                type="tel"
+                autocomplete="tel"
+                placeholder="Votre numéro de téléphone"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+
+              <p style="font-size: 11px; color: var(--muted); margin-top: 5px;">
+                Ce numéro ne doit pas nécessairement être lié à WhatsApp.
+              </p>
+            </div>
+
+            <div style="margin-bottom: 18px;">
+              <label for="signup-password" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Mot de passe
+              </label>
+
+              <input
+                id="signup-password"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Choisissez un mot de passe"
+                minlength="6"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+            </div>
+
+            <button
+              type="submit"
+              style="width: 100%; border: 0; background: var(--cyan); color: var(--navy); border-radius: 14px; padding: 15px; font-weight: 800;">
+              Créer mon compte
+            </button>
+
+          </form>
+
+          <div id="auth-message" class="hidden" style="margin-top: 15px; padding: 13px; border-radius: 13px; font-size: 12px; text-align: center;"></div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="dashboard-section" class="hidden" style="padding: 10px 0 60px;">
+      <div class="container">
+
+        <div style="background: var(--navy); border-radius: 24px; padding: 24px 20px; color: var(--white); margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;">
+
+            <div>
+              <p style="font-size: 12px; color: #aebed1; margin-bottom: 5px;">
+                Bienvenue
+              </p>
+
+              <h2 id="dashboard-name" style="font-size: 23px; line-height: 1.2;">
+                Client MONEXA
+              </h2>
+            </div>
+
+            <div style="width: 46px; height: 46px; border-radius: 14px; background: rgba(18,217,208,0.13); color: var(--cyan); display: flex; align-items: center; justify-content: center; font-weight: 800;">
+              MC
+            </div>
+
+          </div>
+
+          <div style="margin-top: 24px;">
+            <p style="font-size: 12px; color: #aebed1; margin-bottom: 5px;">
+              Solde disponible
+            </p>
+
+            <div style="display: flex; align-items: baseline; gap: 7px;">
+              <strong id="dashboard-balance" style="font-size: 34px; line-height: 1;">
+                0.00
+              </strong>
+
+              <span id="dashboard-currency" style="font-size: 13px; color: var(--cyan); font-weight: 700;">
+                USD
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+
+          <button
+            type="button"
+            id="dashboard-deposit-btn"
+            style="border: 0; background: var(--cyan); color: var(--navy); border-radius: 16px; padding: 17px 10px; font-weight: 800; box-shadow: var(--shadow);">
+            <span style="display: block; font-size: 21px; margin-bottom: 5px;">＋</span>
+            Ajouter des fonds
+          </button>
+
+          <button
+            type="button"
+            id="dashboard-services-btn"
+            style="border: 1px solid var(--border); background: var(--white); color: var(--navy); border-radius: 16px; padding: 17px 10px; font-weight: 800; box-shadow: var(--shadow);">
+            <span style="display: block; font-size: 21px; margin-bottom: 5px;">▦</span>
+            Nos services
+          </button>
+
+        </div>
+
+        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 20px; box-shadow: var(--shadow);">
+
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <div>
+              <h3 style="font-size: 18px; color: var(--navy);">
+                Mes transactions
+              </h3>
+
+              <p style="font-size: 11px; color: var(--muted); margin-top: 2px;">
+                Vos dernières opérations apparaîtront ici.
+              </p>
+            </div>
+
+            <span style="font-size: 20px;">📋</span>
+          </div>
+
+          <div id="transaction-list">
+
+            <div style="text-align: center; padding: 25px 10px; border: 1px dashed var(--border); border-radius: 15px;">
+              <div style="font-size: 28px; margin-bottom: 8px;">📊</div>
+
+              <p style="font-size: 13px; color: var(--muted);">
+                Aucune transaction pour le moment.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          id="logout-btn"
+          style="width: 100%; margin-top: 14px; border: 1px solid #fecaca; background: #fff7f7; color: var(--danger); border-radius: 14px; padding: 14px; font-weight: 700;">
+          Se déconnecter
+        </button>
+
+      </div>
+        </section>
+
+        <section id="dashboard-section" class="hidden" style="padding: 10px 0 60px;">
+      <div class="container">
+
+        <div style="background: var(--navy); border-radius: 24px; padding: 24px 20px; color: var(--white); margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;">
+
+            <div>
+              <p style="font-size: 12px; color: #aebed1; margin-bottom: 5px;">
+                Bienvenue
+              </p>
+
+              <h2 id="dashboard-name" style="font-size: 23px; line-height: 1.2;">
+                Client MONEXA
+              </h2>
+            </div>
+
+            <div style="width: 46px; height: 46px; border-radius: 14px; background: rgba(18,217,208,0.13); color: var(--cyan); display: flex; align-items: center; justify-content: center; font-weight: 800;">
+              MC
+            </div>
+
+          </div>
+
+          <div style="margin-top: 24px;">
+            <p style="font-size: 12px; color: #aebed1; margin-bottom: 5px;">
+              Solde disponible
+            </p>
+
+            <div style="display: flex; align-items: baseline; gap: 7px;">
+              <strong id="dashboard-balance" style="font-size: 34px; line-height: 1;">
+                0.00
+              </strong>
+
+              <span id="dashboard-currency" style="font-size: 13px; color: var(--cyan); font-weight: 700;">
+                USD
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+
+          <button
+            type="button"
+            id="dashboard-deposit-btn"
+            style="border: 0; background: var(--cyan); color: var(--navy); border-radius: 16px; padding: 17px 10px; font-weight: 800; box-shadow: var(--shadow);">
+            <span style="display: block; font-size: 21px; margin-bottom: 5px;">＋</span>
+            Ajouter des fonds
+          </button>
+
+          <button
+            type="button"
+            id="dashboard-services-btn"
+            style="border: 1px solid var(--border); background: var(--white); color: var(--navy); border-radius: 16px; padding: 17px 10px; font-weight: 800; box-shadow: var(--shadow);">
+            <span style="display: block; font-size: 21px; margin-bottom: 5px;">▦</span>
+            Nos services
+          </button>
+
+        </div>
+
+        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 20px; box-shadow: var(--shadow);">
+
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <div>
+              <h3 style="font-size: 18px; color: var(--navy);">
+                Mes transactions
+              </h3>
+
+              <p style="font-size: 11px; color: var(--muted); margin-top: 2px;">
+                Vos dernières opérations apparaîtront ici.
+              </p>
+            </div>
+
+            <span style="font-size: 20px;">📋</span>
+          </div>
+
+          <div id="transaction-list">
+
+            <div style="text-align: center; padding: 25px 10px; border: 1px dashed var(--border); border-radius: 15px;">
+              <div style="font-size: 28px; margin-bottom: 8px;">📊</div>
+
+              <p style="font-size: 13px; color: var(--muted);">
+                Aucune transaction pour le moment.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          id="logout-btn"
+          style="width: 100%; margin-top: 14px; border: 1px solid #fecaca; background: #fff7f7; color: var(--danger); border-radius: 14px; padding: 14px; font-weight: 700;">
+          Se déconnecter
+        </button>
+
+      </div>
+        </section>
+
+        <section id="deposit-form-section" class="hidden" style="padding: 10px 0 60px;">
+      <div class="container">
+
+        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 24px; padding: 24px 18px; box-shadow: var(--shadow);">
+
+          <div style="margin-bottom: 22px;">
+            <button
+              type="button"
+              id="back-to-dashboard"
+              style="border: 0; background: transparent; color: var(--navy); padding: 0; font-size: 13px; font-weight: 700;">
+              ← Retour
+            </button>
+
+            <div style="margin-top: 18px;">
+              <span style="display: inline-block; padding: 7px 13px; border-radius: 30px; background: rgba(18,217,208,0.12); color: var(--cyan-dark); font-size: 12px; font-weight: 700;">
+                DÉPÔT
+              </span>
+
+              <h2 style="font-size: 27px; color: var(--navy); margin: 12px 0 7px;">
+                Ajouter des fonds
+              </h2>
+
+              <p style="font-size: 13px; color: var(--muted);">
+                Ajoutez de l'argent à votre solde MONEXA CASH.
+              </p>
+            </div>
+          </div>
+
+          <div style="background: var(--navy); color: var(--white); border-radius: 18px; padding: 18px; margin-bottom: 18px;">
+
+            <p style="font-size: 11px; color: #aebed1; margin-bottom: 5px;">
+              Envoyer le paiement via
+            </p>
+
+            <strong style="font-size: 19px;">
+              Natcash
+            </strong>
+
+            <div style="height: 1px; background: rgba(255,255,255,0.12); margin: 15px 0;"></div>
+
+            <p style="font-size: 11px; color: #aebed1; margin-bottom: 4px;">
+              Numéro
+            </p>
+
+            <strong style="font-size: 20px;">
+              +509 40886629
+            </strong>
+
+            <p style="font-size: 12px; color: #c9d5e5; margin-top: 4px;">
+              JUNIOR AUGUSTE
+            </p>
+          </div>
+
+          <form id="deposit-form">
+
+            <div style="margin-bottom: 15px;">
+              <label for="deposit-amount" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Montant envoyé
+              </label>
+
+              <div style="position: relative;">
+                <input
+                  id="deposit-amount"
+                  type="number"
+                  min="1"
+                  step="0.01"
+                  placeholder="0.00"
+                  required
+                  style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 55px 14px 13px; outline: none;">
+
+                <span style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 700; color: var(--muted);">
+                  USD
+                </span>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 18px;">
+              <label for="deposit-reference" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Référence de paiement
+              </label>
+
+              <input
+                id="deposit-reference"
+                type="text"
+                placeholder="Référence de votre transaction Natcash"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+            </div>
+
+            <div style="background: #fff8e8; border: 1px solid #f5dfaa; border-radius: 15px; padding: 14px; margin-bottom: 18px;">
+              <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <span style="font-size: 19px;">⚠️</span>
+
+                <div>
+                  <strong style="display: block; color: #765400; font-size: 13px; margin-bottom: 4px;">
+                    Preuve de paiement obligatoire
+                  </strong>
+
+                  <p style="font-size: 11px; color: #806d42;">
+                    Vous devez joindre la preuve de votre paiement Natcash pour que votre dépôt puisse être vérifié.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+              <label for="deposit-proof" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Preuve de paiement
+              </label>
+
+              <input
+                id="deposit-proof"
+                type="file"
+                accept="image/*,.pdf"
+                required
+                style="width: 100%; border: 1px dashed var(--border); background: var(--bg); color: var(--muted); border-radius: 13px; padding: 12px; font-size: 12px;">
+
+              <p style="font-size: 10px; color: var(--muted); margin-top: 6px;">
+                Formats acceptés : image ou PDF.
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              style="width: 100%; border: 0; background: var(--cyan); color: var(--navy); border-radius: 14px; padding: 15px; font-weight: 800;">
+              Envoyer mon dépôt
+            </button>
+
+          </form>
+
+          <div id="deposit-message" class="hidden" style="margin-top: 15px; padding: 13px; border-radius: 13px; font-size: 12px; text-align: center;"></div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="service-order-section" class="hidden" style="padding: 10px 0 60px;">
+      <div class="container">
+
+        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 24px; padding: 24px 18px; box-shadow: var(--shadow);">
+
+          <div style="margin-bottom: 22px;">
+            <button
+              type="button"
+              id="service-order-back"
+              style="border: 0; background: transparent; color: var(--navy); padding: 0; font-size: 13px; font-weight: 700;">
+              ← Retour
+            </button>
+
+            <div style="margin-top: 18px;">
+              <span id="selected-service-label" style="display: inline-block; padding: 7px 13px; border-radius: 30px; background: rgba(18,217,208,0.12); color: var(--cyan-dark); font-size: 12px; font-weight: 700;">
+                SERVICE
+              </span>
+
+              <h2 id="service-order-title" style="font-size: 27px; color: var(--navy); margin: 12px 0 7px;">
+                Demande de service
+              </h2>
+
+              <p id="service-order-description" style="font-size: 13px; color: var(--muted);">
+                Remplissez les informations nécessaires pour votre demande.
+              </p>
+            </div>
+          </div>
+
+          <div style="background: #effdfc; border: 1px solid #c8f3f0; border-radius: 16px; padding: 15px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="font-size: 20px;">💳</span>
+
+              <div>
+                <strong style="display: block; color: var(--navy); font-size: 13px; margin-bottom: 4px;">
+                  Paiement avec votre solde
+                </strong>
+
+                <p style="font-size: 11px; color: var(--muted);">
+                  Le montant de votre demande sera déduit de votre solde MONEXA CASH après validation.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: var(--navy); color: var(--white); border-radius: 18px; padding: 18px; margin-bottom: 20px;">
+            <p style="font-size: 11px; color: #aebed1; margin-bottom: 5px;">
+              Solde disponible
+            </p>
+
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <strong id="service-order-balance" style="font-size: 28px;">
+                0.00
+              </strong>
+
+              <span style="font-size: 12px; color: var(--cyan);">
+                USD
+              </span>
+            </div>
+          </div>
+
+          <form id="service-order-form">
+
+            <div id="service-order-fields">
+
+              <div style="margin-bottom: 15px;">
+                <label for="service-order-amount" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                  Montant
+                </label>
+
+                <div style="position: relative;">
+                  <input
+                    id="service-order-amount"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="0.00"
+                    required
+                    style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 55px 14px 13px; outline: none;">
+
+                  <span style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 700; color: var(--muted);">
+                    USD
+                  </span>
+                </div>
+              </div>
+
+              <div id="service-extra-fields"></div>
+
+            </div>
+
+            <button
+              type="submit"
+              id="service-order-submit"
+              style="width: 100%; border: 0; background: var(--cyan); color: var(--navy); border-radius: 14px; padding: 15px; font-weight: 800;">
+              Envoyer la demande
+            </button>
+
+          </form>
+
+          <div id="service-order-message" class="hidden" style="margin-top: 15px; padding: 13px; border-radius: 13px; font-size: 12px; text-align: center;"></div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="free-fire-section" class="hidden" style="padding: 10px 0 60px;">
+      <div class="container">
+
+        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 24px; padding: 24px 18px; box-shadow: var(--shadow);">
+
+          <div style="margin-bottom: 22px;">
+            <button
+              type="button"
+              id="free-fire-back"
+              style="border: 0; background: transparent; color: var(--navy); padding: 0; font-size: 13px; font-weight: 700;">
+              ← Retour
+            </button>
+
+            <div style="margin-top: 18px;">
+              <span style="display: inline-block; padding: 7px 13px; border-radius: 30px; background: rgba(18,217,208,0.12); color: var(--cyan-dark); font-size: 12px; font-weight: 700;">
+                FREE FIRE
+              </span>
+
+              <h2 style="font-size: 27px; color: var(--navy); margin: 12px 0 7px;">
+                Achetez vos diamants
+              </h2>
+
+              <p style="font-size: 13px; color: var(--muted);">
+                Choisissez votre quantité de diamants et utilisez votre solde MONEXA CASH.
+              </p>
+            </div>
+          </div>
+
+          <div style="background: var(--navy); color: var(--white); border-radius: 18px; padding: 18px; margin-bottom: 20px;">
+            <p style="font-size: 11px; color: #aebed1; margin-bottom: 5px;">
+              Solde disponible
+            </p>
+
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <strong id="free-fire-balance" style="font-size: 28px;">
+                0.00
+              </strong>
+
+              <span style="font-size: 12px; color: var(--cyan);">
+                USD
+              </span>
+            </div>
+          </div>
+
+          <form id="free-fire-form">
+
+            <div style="margin-bottom: 18px;">
+              <label for="free-fire-package" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                Choisissez votre pack
+              </label>
+
+              <select
+                id="free-fire-package"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+
+                <option value="">Sélectionnez un pack</option>
+
+                <option value="110" data-price="145">
+                  110 diamants — 145 HTG
+                </option>
+
+                <option value="341" data-price="480">
+                  341 diamants — 480 HTG
+                </option>
+
+                <option value="572" data-price="805">
+                  572 diamants — 805 HTG
+                </option>
+
+                <option value="1166" data-price="1590">
+                  1 166 diamants — 1 590 HTG
+                </option>
+
+                <option value="2398" data-price="3215">
+                  2 398 diamants — 3 215 HTG
+                </option>
+
+                <option value="6120" data-price="8130">
+                  6 120 diamants — 8 130 HTG
+                </option>
+
+                <option value="12400" data-price="16420">
+                  12 400 diamants — 16 420 HTG
+                </option>
+
+              </select>
+            </div>
+
+            <div style="margin-bottom: 18px;">
+              <label for="free-fire-player-id" style="display: block; color: var(--navy); font-size: 13px; font-weight: 700; margin-bottom: 7px;">
+                ID du joueur Free Fire
+              </label>
+
+              <input
+                id="free-fire-player-id"
+                type="text"
+                inputmode="numeric"
+                placeholder="Entrez votre ID joueur"
+                required
+                style="width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 13px; padding: 14px 13px; outline: none;">
+            </div>
+
+            <div style="background: #effdfc; border: 1px solid #c8f3f0; border-radius: 15px; padding: 14px; margin-bottom: 18px;">
+              <div style="display: flex; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 12px; color: var(--muted);">
+                  Prix du pack
+                </span>
+
+                <strong id="free-fire-price" style="font-size: 14px; color: var(--navy);">
+                  0 HTG
+                </strong>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              id="free-fire-submit"
+              style="width: 100%; border: 0; background: var(--cyan); color: var(--navy); border-radius: 14px; padding: 15px; font-weight: 800;">
+              Acheter les diamants
+            </button>
+
+          </form>
+
+          <div id="free-fire-message" class="hidden" style="margin-top: 15px; padding: 13px; border-radius: 13px; font-size: 12px; text-align: center;"></div>
+
+        </div>
+      </div>
+    </section>
+
+        <section id="crypto-section" class="hidden" style="padding:10px 0 60px">
+      <div class="container">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 18px;box-shadow:var(--shadow)">
+
+          <button type="button" id="crypto-back" style="border:0;background:transparent;color:var(--navy);font-size:13px;font-weight:700;padding:0">← Retour</button>
+
+          <div style="margin:18px 0 20px">
+            <span style="display:inline-block;padding:7px 13px;border-radius:30px;background:rgba(18,217,208,.12);color:var(--cyan-dark);font-size:12px;font-weight:700">CRYPTO</span>
+            <h2 style="font-size:27px;color:var(--navy);margin:12px 0 7px">Services Crypto</h2>
+            <p style="font-size:13px;color:var(--muted)">USDT et USDC avec choix du réseau.</p>
+          </div>
+
+          <div style="background:var(--navy);color:white;border-radius:18px;padding:18px;margin-bottom:20px">
+            <small style="color:#aebed1">Solde disponible</small>
+            <div><strong id="crypto-balance" style="font-size:28px">0.00</strong> <span style="color:var(--cyan)">USD</span></div>
+          </div>
+
+          <form id="crypto-form">
+
+            <label for="crypto-type" style="display:block;color:var(--navy);font-size:13px;font-weight:700;margin-bottom:7px">Cryptomonnaie</label>
+            <select id="crypto-type" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">
+              <option value="">Choisissez</option>
+              <option value="USDT">USDT</option>
+              <option value="USDC">USDC</option>
+            </select>
+
+            <label for="crypto-network" style="display:block;color:var(--navy);font-size:13px;font-weight:700;margin-bottom:7px">Réseau</label>
+            <select id="crypto-network" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">
+              <option value="">Choisissez le réseau</option>
+              <option value="TRC20">TRON (TRC20)</option>
+              <option value="ERC20">Ethereum (ERC20)</option>
+              <option value="BEP20">BNB Smart Chain (BEP20)</option>
+              <option value="Polygon">Polygon</option>
+              <option value="Solana">Solana</option>
+              <option value="Arbitrum">Arbitrum</option>
+              <option value="Optimism">Optimism</option>
+            </select>
+
+            <label for="crypto-amount" style="display:block;color:var(--navy);font-size:13px;font-weight:700;margin-bottom:7px">Montant</label>
+            <input id="crypto-amount" type="number" min="1" step=".01" placeholder="0.00" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:18px">
+
+            <div style="background:#effdfc;border:1px solid #c8f3f0;border-radius:15px;padding:14px;margin-bottom:18px;font-size:12px;color:var(--muted)">
+              Frais de service : <strong style="color:var(--navy)">0 USD</strong><br>
+              Taux de référence : <strong style="color:var(--navy)">1 USDT / 1 USDC = 1 USD</strong>
+            </div>
+
+            <button type="submit" style="width:100%;border:0;background:var(--cyan);color:var(--navy);border-radius:14px;padding:15px;font-weight:800">
+              Envoyer la demande
+            </button>
+
+          </form>
+
+          <div id="crypto-message" class="hidden" style="margin-top:15px;padding:13px;border-radius:13px;font-size:12px;text-align:center"></div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="binance-section" class="hidden" style="padding:10px 0 60px">
+      <div class="container">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 18px;box-shadow:var(--shadow)">
+
+          <button type="button" id="binance-back" style="border:0;background:transparent;color:var(--navy);font-size:13px;font-weight:700;padding:0">← Retour</button>
+
+          <div style="margin:18px 0 20px">
+            <span style="display:inline-block;padding:7px 13px;border-radius:30px;background:rgba(18,217,208,.12);color:var(--cyan-dark);font-size:12px;font-weight:700">BINANCE</span>
+            <h2 style="font-size:27px;color:var(--navy);margin:12px 0 7px">Service Binance</h2>
+            <p style="font-size:13px;color:var(--muted)">Envoyez votre demande directement depuis votre solde.</p>
+          </div>
+
+          <div style="background:var(--navy);color:white;border-radius:18px;padding:18px;margin-bottom:20px">
+            <small style="color:#aebed1">Solde disponible</small>
+            <div><strong id="binance-balance" style="font-size:28px">0.00</strong> <span style="color:var(--cyan)">USD</span></div>
+          </div>
+
+          <form id="binance-form">
+
+            <label for="binance-id" style="display:block;color:var(--navy);font-size:13px;font-weight:700;margin-bottom:7px">
+              Binance ID ou e-mail
+            </label>
+
+            <input id="binance-id" type="text" placeholder="Votre Binance ID ou e-mail" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">
+
+            <label for="binance-amount" style="display:block;color:var(--navy);font-size:13px;font-weight:700;margin-bottom:7px">
+              Montant
+            </label>
+
+            <input id="binance-amount" type="number" min="1" step=".01" placeholder="0.00" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:18px">
+
+            <div style="background:#effdfc;border:1px solid #c8f3f0;border-radius:15px;padding:14px;margin-bottom:18px;font-size:12px;color:var(--muted)">
+              Le montant sera déduit de votre solde MONEXA CASH après validation de la demande.
+            </div>
+
+            <button type="submit" style="width:100%;border:0;background:var(--cyan);color:var(--navy);border-radius:14px;padding:15px;font-weight:800">
+              Envoyer la demande
+            </button>
+
+          </form>
+
+          <div id="binance-message" class="hidden" style="margin-top:15px;padding:13px;border-radius:13px;font-size:12px;text-align:center"></div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="withdraw-section" class="hidden" style="padding:10px 0 60px">
+      <div class="container">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 18px;box-shadow:var(--shadow)">
+
+          <button type="button" id="withdraw-back" style="border:0;background:transparent;color:var(--navy);font-size:13px;font-weight:700;padding:0">← Retour</button>
+
+          <div style="margin:18px 0 20px">
+            <span style="display:inline-block;padding:7px 13px;border-radius:30px;background:rgba(18,217,208,.12);color:var(--cyan-dark);font-size:12px;font-weight:700">RETRAIT</span>
+            <h2 style="font-size:27px;color:var(--navy);margin:12px 0 7px">Demander un retrait</h2>
+            <p style="font-size:13px;color:var(--muted)">Choisissez le service et indiquez les informations nécessaires.</p>
+          </div>
+
+          <div style="background:var(--navy);color:white;border-radius:18px;padding:18px;margin-bottom:20px">
+            <small style="color:#aebed1">Solde disponible</small>
+            <div><strong id="withdraw-balance" style="font-size:28px">0.00</strong> <span style="color:var(--cyan)">USD</span></div>
+          </div>
+
+          <form id="withdraw-form">
+
+            <select id="withdraw-method" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">
+              <option value="">Choisissez le service</option>
+              <option value="Meru">Meru</option>
+              <option value="Wise">Wise</option>
+              <option value="Morse">Morse</option>
+              <option value="USDT">USDT</option>
+              <option value="USDC">USDC</option>
+            </select>
+
+            <input id="withdraw-amount" type="number" min="1" step=".01" placeholder="Montant en USD" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">
+
+            <div id="withdraw-extra-fields"></div>
+
+            <div style="background:#fff8e8;border:1px solid #f5dfaa;border-radius:15px;padding:13px;margin:15px 0;font-size:11px;color:#765400">
+              ⚠️ Une preuve peut être demandée pour vérifier votre opération.
+            </div>
+
+            <button type="submit" style="width:100%;border:0;background:var(--cyan);color:var(--navy);border-radius:14px;padding:15px;font-weight:800">
+              Demander le retrait
+            </button>
+
+          </form>
+
+          <div id="withdraw-message" class="hidden" style="margin-top:15px;padding:13px;border-radius:13px;font-size:12px;text-align:center"></div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="card-section" class="hidden" style="padding:10px 0 60px">
+      <div class="container">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 18px;box-shadow:var(--shadow)">
+
+          <button type="button" id="card-back" style="border:0;background:transparent;color:var(--navy);font-size:13px;font-weight:700;padding:0">← Retour</button>
+
+          <div style="margin:18px 0 20px">
+            <span style="display:inline-block;padding:7px 13px;border-radius:30px;background:rgba(18,217,208,.12);color:var(--cyan-dark);font-size:12px;font-weight:700">CARTE</span>
+            <h2 style="font-size:27px;color:var(--navy);margin:12px 0 7px">Création de carte</h2>
+            <p style="font-size:13px;color:var(--muted)">Demandez la création d'une carte Meru ou Morse.</p>
+          </div>
+
+          <div style="background:#effdfc;border:1px solid #c8f3f0;border-radius:16px;padding:15px;margin-bottom:20px;font-size:12px;color:var(--muted)">
+            Prix du service : <strong style="color:var(--navy)">1 500 GDS + 5 USD</strong><br>
+            Les <strong>5 USD</strong> sont ajoutés à votre compte.
+          </div>
+
+          <form id="card-form">
+
+            <label for="card-type" style="display:block;color:var(--navy);font-size:13px;font-weight:700;margin-bottom:7px">Type de carte</label>
+
+            <select id="card-type" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">
+              <option value="">Choisissez</option>
+              <option value="Meru">Meru</option>
+              <option value="Morse">Morse</option>
+            </select>
+
+            <label for="card-email" style="display:block;color:var(--navy);font-size:13px;font-weight:700;margin-bottom:7px">E-mail du compte</label>
+
+            <input id="card-email" type="email" placeholder="Votre e-mail" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:18px">
+
+            <button type="submit" style="width:100%;border:0;background:var(--cyan);color:var(--navy);border-radius:14px;padding:15px;font-weight:800">
+              Demander ma carte
+            </button>
+
+          </form>
+
+          <div id="card-message" class="hidden" style="margin-top:15px;padding:13px;border-radius:13px;font-size:12px;text-align:center"></div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="orders-section" class="hidden" style="padding:10px 0 60px">
+      <div class="container">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 18px;box-shadow:var(--shadow)">
+
+          <button type="button" id="orders-back" style="border:0;background:transparent;color:var(--navy);font-size:13px;font-weight:700;padding:0">← Retour</button>
+
+          <h2 style="font-size:27px;color:var(--navy);margin:18px 0 7px">Mes demandes</h2>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Suivez l'état de vos opérations MONEXA CASH.</p>
+
+          <div id="orders-list">
+            <div style="text-align:center;padding:28px 10px;border:1px dashed var(--border);border-radius:15px">
+              <div style="font-size:28px;margin-bottom:8px">📋</div>
+              <p style="font-size:13px;color:var(--muted)">Aucune demande pour le moment.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="profile-section" class="hidden" style="padding:10px 0 60px">
+      <div class="container">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 18px;box-shadow:var(--shadow)">
+
+          <button type="button" id="profile-back" style="border:0;background:transparent;color:var(--navy);font-size:13px;font-weight:700;padding:0">← Retour</button>
+
+          <h2 style="font-size:27px;color:var(--navy);margin:18px 0 7px">Mon profil</h2>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Vos informations de compte MONEXA CASH.</p>
+
+          <div style="display:grid;gap:14px">
+            <div style="padding:15px;border:1px solid var(--border);border-radius:15px">
+              <small style="color:var(--muted)">Nom complet</small>
+              <strong id="profile-name" style="display:block;color:var(--navy);margin-top:3px">—</strong>
+            </div>
+
+            <div style="padding:15px;border:1px solid var(--border);border-radius:15px">
+              <small style="color:var(--muted)">E-mail</small>
+              <strong id="profile-email" style="display:block;color:var(--navy);margin-top:3px">—</strong>
+            </div>
+
+            <div style="padding:15px;border:1px solid var(--border);border-radius:15px">
+              <small style="color:var(--muted)">Téléphone</small>
+              <strong id="profile-phone" style="display:block;color:var(--navy);margin-top:3px">—</strong>
+            </div>
+          </div>
+
+        </div>
+      </div>
+        </section>
+
+        <section id="notification-section" class="hidden" style="padding:10px 0 60px">
+      <div class="container">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:24px;padding:24px 18px;box-shadow:var(--shadow)">
+          <button type="button" id="notification-back" style="border:0;background:transparent;color:var(--navy);font-size:13px;font-weight:700;padding:0">← Retour</button>
+          <h2 style="font-size:27px;color:var(--navy);margin:18px 0 7px">Notifications</h2>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Suivez les mises à jour de vos opérations.</p>
+
+          <div id="notification-list">
+            <div style="text-align:center;padding:28px 10px;border:1px dashed var(--border);border-radius:15px">
+              <div style="font-size:28px;margin-bottom:8px">🔔</div>
+              <p style="font-size:13px;color:var(--muted)">Aucune notification pour le moment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+        </section>
+
+        <div id="toast-message" class="hidden" style="position:fixed;left:18px;right:18px;bottom:20px;z-index:3000;background:var(--navy);color:var(--white);padding:15px 16px;border-radius:14px;box-shadow:0 12px 35px rgba(7,26,51,.22);font-size:13px;text-align:center"></div>
+
+    <div id="loading-overlay" class="hidden" style="position:fixed;inset:0;z-index:4000;background:rgba(7,26,51,.45);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+      <div style="background:var(--white);border-radius:18px;padding:24px;text-align:center;min-width:180px;box-shadow:var(--shadow)">
+        <div style="font-size:28px;margin-bottom:10px">⏳</div>
+        <strong style="display:block;color:var(--navy)">Veuillez patienter</strong>
+        <p style="font-size:12px;color:var(--muted);margin-top:5px">Traitement en cours...</p>
+      </div>
+    </div>
+
+        <style>
+      .service-card{cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+      .service-card:active{transform:scale(.98)}
+      .clickable{cursor:pointer}
+      @media(min-width:768px){.service-card:hover{transform:translateY(-3px);box-shadow:0 14px 35px rgba(7,26,51,.12)}}
+    </style>
+
+    <script>
+      const $=id=>document.getElementById(id);
+      const sections=["auth-section","dashboard-section","deposit-form-section","service-order-section","free-fire-section","crypto-section","binance-section","withdraw-section","card-section","orders-section","profile-section","notification-section"];
+
+      function showSection(id){
+        sections.forEach(x=>$(x)?.classList.add("hidden"));
+        $(id)?.classList.remove("hidden");
+        window.scrollTo({top:0,behavior:"smooth"});
+      }
+
+      function toast(message){
+        const t=$("toast-message");
+        if(!t)return;
+        t.textContent=message;
+        t.classList.remove("hidden");
+        setTimeout(()=>t.classList.add("hidden"),3000);
+      }
+
+      function loading(on){
+        const l=$("loading-overlay");
+        if(l)l.style.display=on?"flex":"none";
+      }
+
+      document.querySelectorAll(".service-card").forEach(card=>{
+        card.addEventListener("click",()=>{
+          const service=card.dataset.service;
+          if(service==="Free Fire")showSection("free-fire-section");
+          else if(service==="Crypto")showSection("crypto-section");
+          else if(service==="Binance")showSection("binance-section");
+          else if(service==="Retrait")showSection("withdraw-section");
+          else if(service==="Création de carte")showSection("card-section");
+          else showSection("service-order-section");
+        });
+      });
+    </script>
+
+        <script>
+      $("login-tab").onclick=()=>{
+        $("login-form").classList.remove("hidden");
+        $("signup-form").classList.add("hidden");
+        $("login-tab").style.background="var(--navy)";
+        $("login-tab").style.color="var(--white)";
+        $("signup-tab").style.background="transparent";
+        $("signup-tab").style.color="var(--navy)";
+      };
+
+      $("signup-tab").onclick=()=>{
+        $("signup-form").classList.remove("hidden");
+        $("login-form").classList.add("hidden");
+        $("signup-tab").style.background="var(--navy)";
+        $("signup-tab").style.color="var(--white)";
+        $("login-tab").style.background="transparent";
+        $("login-tab").style.color="var(--navy)";
+      };
+
+      $("dashboard-deposit-btn").onclick=()=>showSection("deposit-form-section");
+      $("dashboard-services-btn").onclick=()=>{
+        sections.forEach(x=>$(x)?.classList.add("hidden"));
+        $("services").scrollIntoView({behavior:"smooth"});
+      };
+
+      $("back-to-dashboard").onclick=()=>showSection("dashboard-section");
+      $("service-order-back").onclick=()=>showSection("dashboard-section");
+      $("free-fire-back").onclick=()=>showSection("dashboard-section");
+      $("crypto-back").onclick=()=>showSection("dashboard-section");
+      $("binance-back").onclick=()=>showSection("dashboard-section");
+      $("withdraw-back").onclick=()=>showSection("dashboard-section");
+      $("card-back").onclick=()=>showSection("dashboard-section");
+      $("orders-back").onclick=()=>showSection("dashboard-section");
+      $("profile-back").onclick=()=>showSection("dashboard-section");
+      $("notification-back").onclick=()=>showSection("dashboard-section");
+        </script>
+
+        <script>
+      $("free-fire-package").onchange=()=>{
+        const o=$("free-fire-package").selectedOptions[0];
+        $("free-fire-price").textContent=(o?.dataset.price||0)+" HTG";
+      };
+
+      $("withdraw-method").onchange=()=>{
+        const m=$("withdraw-method").value;
+        let h="";
+        if(m==="Meru"||m==="Wise"){
+          h='<input id="withdraw-account" type="email" placeholder="E-mail du compte" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">';
+        }else if(m==="Morse"){
+          h='<input id="withdraw-account" type="text" placeholder="Nom d’utilisateur Morse" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">';
+        }else if(m==="USDT"||m==="USDC"){
+          h='<select id="withdraw-network" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px"><option value="">Choisissez le réseau</option><option>TRON (TRC20)</option><option>Ethereum (ERC20)</option><option>BNB Smart Chain (BEP20)</option><option>Polygon</option><option>Solana</option><option>Arbitrum</option><option>Optimism</option></select><input id="withdraw-address" type="text" placeholder="Adresse de réception" required style="width:100%;border:1px solid var(--border);background:var(--bg);border-radius:13px;padding:14px;margin-bottom:15px">';
+        }
+        $("withdraw-extra-fields").innerHTML=h;
+      };
+
+      $("card-type").onchange=()=>{
+        $("card-email").placeholder="E-mail utilisé pour votre compte "+($("card-type").value||"");
+      };
+        </script>
+
+        <script>
+      function setMessage(id,msg,error=false){
+        const e=$(id);
+        if(!e)return;
+        e.textContent=msg;
+        e.classList.remove("hidden");
+        e.style.background=error?"#fff1f2":"#ecfdf5";
+        e.style.color=error?"#b91c1c":"#166534";
+        e.style.border="1px solid "+(error?"#fecdd3":"#bbf7d0");
+      }
+
+      function clearMessage(id){
+        $(id)?.classList.add("hidden");
+      }
+
+      $("login-form").onsubmit=async e=>{
+        e.preventDefault();
+        clearMessage("auth-message");
+        loading(true);
+
+        try{
+          const email=$("login-email").value.trim();
+          const password=$("login-password").value;
+
+          if(!email||!password){
+            setMessage("auth-message","Veuillez remplir tous les champs.",true);
+            return;
+          }
+
+          localStorage.setItem("monexa_demo_email",email);
+          localStorage.setItem("monexa_demo_name","Client MONEXA");
+
+          $("dashboard-name").textContent="Client MONEXA";
+          $("profile-email").textContent=email;
+          $("profile-name").textContent="Client MONEXA";
+          $("profile-phone").textContent="—";
+
+          showSection("dashboard-section");
+          toast("Connexion réussie.");
+        }catch(err){
+          setMessage("auth-message","Une erreur est survenue. Veuillez réessayer.",true);
+        }finally{
+          loading(false);
+        }
+      };
+        </script>
+
+        <script>
+      $("signup-form").onsubmit=async e=>{
+        e.preventDefault();
+        clearMessage("auth-message");
+        loading(true);
+
+        try{
+          const name=$("signup-name").value.trim();
+          const email=$("signup-email").value.trim();
+          const phone=$("signup-phone").value.trim();
+          const password=$("signup-password").value;
+
+          if(!name||!email||!phone||!password){
+            setMessage("auth-message","Veuillez remplir tous les champs.",true);
+            return;
+          }
+
+          if(password.length<6){
+            setMessage("auth-message","Le mot de passe doit contenir au moins 6 caractères.",true);
+            return;
+          }
+
+          localStorage.setItem("monexa_demo_name",name);
+          localStorage.setItem("monexa_demo_email",email);
+          localStorage.setItem("monexa_demo_phone",phone);
+
+          $("dashboard-name").textContent=name;
+          $("profile-name").textContent=name;
+          $("profile-email").textContent=email;
+          $("profile-phone").textContent=phone;
+
+          showSection("dashboard-section");
+          toast("Compte créé avec succès.");
+        }catch(err){
+          setMessage("auth-message","Impossible de créer le compte pour le moment.",true);
+        }finally{
+          loading(false);
+        }
+      };
+
+      $("logout-btn").onclick=()=>{
+        localStorage.removeItem("monexa_demo_name");
+        localStorage.removeItem("monexa_demo_email");
+        localStorage.removeItem("monexa_demo_phone");
+        showSection("auth-section");
+        toast("Vous êtes déconnecté.");
+      };
+        </script>
+
+        <script>
+      $("deposit-form").onsubmit=async e=>{
+        e.preventDefault();
+        clearMessage("deposit-message");
+
+        const amount=parseFloat($("deposit-amount").value);
+        const reference=$("deposit-reference").value.trim();
+        const proof=$("deposit-proof").files[0];
+
+        if(!amount||amount<=0||!reference||!proof){
+          setMessage("deposit-message","Veuillez remplir tous les champs et joindre votre preuve de paiement.",true);
+          return;
+        }
+
+        loading(true);
+
+        setTimeout(()=>{
+          loading(false);
+          setMessage("deposit-message","Votre demande de dépôt a été envoyée. Elle sera vérifiée manuellement par MONEXA CASH.");
+          $("deposit-form").reset();
+          toast("Dépôt envoyé.");
+        },800);
+      };
+
+      $("free-fire-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const pack=$("free-fire-package").value;
+        const player=$("free-fire-player-id").value.trim();
+
+        if(!pack||!player){
+          setMessage("free-fire-message","Veuillez choisir un pack et saisir votre ID joueur.",true);
+          return;
+        }
+
+        setMessage("free-fire-message","Votre demande Free Fire a été enregistrée. Elle sera traitée après vérification de votre solde.");
+        toast("Demande Free Fire envoyée.");
+      };
+  </script>
+
+        <script>
+      $("crypto-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const type=$("crypto-type").value;
+        const network=$("crypto-network").value;
+        const amount=parseFloat($("crypto-amount").value);
+
+        if(!type||!network||!amount||amount<=0){
+          setMessage("crypto-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        setMessage("crypto-message","Votre demande "+type+" sur "+network+" a été enregistrée.");
+        toast("Demande Crypto envoyée.");
+      };
+
+      $("binance-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const account=$("binance-id").value.trim();
+        const amount=parseFloat($("binance-amount").value);
+
+        if(!account||!amount||amount<=0){
+          setMessage("binance-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        setMessage("binance-message","Votre demande Binance a été enregistrée et sera traitée manuellement.");
+        toast("Demande Binance envoyée.");
+      };
+
+      $("card-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const type=$("card-type").value;
+        const email=$("card-email").value.trim();
+
+        if(!type||!email){
+          setMessage("card-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        setMessage("card-message","Votre demande de création de carte "+type+" a été enregistrée.");
+        toast("Demande de carte envoyée.");
+      };
+        </script>
+
+        <script>
+      $("withdraw-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const method=$("withdraw-method").value;
+        const amount=parseFloat($("withdraw-amount").value);
+
+        if(!method||!amount||amount<=0){
+          setMessage("withdraw-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        setMessage("withdraw-message","Votre demande de retrait "+method+" a été enregistrée. Elle sera traitée manuellement.");
+        toast("Demande de retrait envoyée.");
+      };
+
+      function loadDemoProfile(){
+        const name=localStorage.getItem("monexa_demo_name");
+        const email=localStorage.getItem("monexa_demo_email");
+        const phone=localStorage.getItem("monexa_demo_phone");
+
+        if(name){
+          $("dashboard-name").textContent=name;
+          $("profile-name").textContent=name;
+        }
+
+        if(email)$("profile-email").textContent=email;
+        if(phone)$("profile-phone").textContent=phone;
+      }
+
+      $("header-account-btn")?.addEventListener("click",()=>{
+        const email=localStorage.getItem("monexa_demo_email");
+        showSection(email?"profile-section":"auth-section");
+      });
+
+      document.querySelector(".header-account-btn")?.addEventListener("click",()=>{
+        const email=localStorage.getItem("monexa_demo_email");
+        showSection(email?"profile-section":"auth-section");
+      });
+
+      loadDemoProfile();
+        </script>
+
+        <script>
+      document.querySelectorAll(".nav-link").forEach(link=>{
+        link.onclick=()=>{
+          document.querySelectorAll(".nav-link").forEach(x=>x.classList.remove("active"));
+          link.classList.add("active");
+        };
+      });
+
+      document.querySelector(".header-btn")?.addEventListener("click",()=>{
+        $("language-select")?.scrollIntoView({behavior:"smooth"});
+      });
+
+      $("language-select")?.addEventListener("change",e=>{
+        const lang=e.target.value;
+        const names={
+          fr:"Français",
+          ht:"Kreyòl Ayisyen",
+          es:"Español",
+          en:"English"
+        };
+        toast("Langue sélectionnée : "+(names[lang]||"Français"));
+      });
+
+      document.querySelectorAll(".service-card").forEach(card=>{
+        card.setAttribute("role","button");
+        card.setAttribute("tabindex","0");
+        card.addEventListener("keydown",e=>{
+          if(e.key==="Enter"||e.key===" "){
+            e.preventDefault();
+            card.click();
+          }
+        });
+      });
+        </script>
+
+        <script>
+      function updateBalanceDisplays(){
+        const balance=localStorage.getItem("monexa_demo_balance")||"0.00";
+        [
+          "dashboard-balance",
+          "service-order-balance",
+          "free-fire-balance",
+          "crypto-balance",
+          "binance-balance",
+          "withdraw-balance"
+        ].forEach(id=>{
+          if($(id))$(id).textContent=parseFloat(balance).toFixed(2);
+        });
+      }
+
+      function saveBalance(value){
+        localStorage.setItem("monexa_demo_balance",parseFloat(value).toFixed(2));
+        updateBalanceDisplays();
+      }
+
+      function getBalance(){
+        return parseFloat(localStorage.getItem("monexa_demo_balance")||"0");
+      }
+
+      updateBalanceDisplays();
+
+      $("service-order-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const amount=parseFloat($("service-order-amount").value);
+        const balance=getBalance();
+
+        if(!amount||amount<=0){
+          setMessage("service-order-message","Veuillez saisir un montant valide.",true);
+          return;
+        }
+
+        if(amount>balance){
+          setMessage("service-order-message","Solde insuffisant. Veuillez d'abord ajouter des fonds.",true);
+          return;
+        }
+
+        setMessage("service-order-message","Votre demande a été enregistrée. Elle sera traitée manuellement après vérification.");
+        toast("Demande envoyée.");
+      };
+        </script>
+
+        <script>
+      function addOrder(service,amount,details){
+        const orders=JSON.parse(localStorage.getItem("monexa_demo_orders")||"[]");
+
+        orders.unshift({
+          id:"MC-"+Date.now().toString().slice(-8),
+          service,
+          amount:parseFloat(amount||0),
+          details:details||"",
+          status:"En attente",
+          date:new Date().toLocaleString("fr-FR")
+        });
+
+        localStorage.setItem("monexa_demo_orders",JSON.stringify(orders));
+        renderOrders();
+        renderTransactions();
+      }
+
+      function renderOrders(){
+        const box=$("orders-list");
+        if(!box)return;
+
+        const orders=JSON.parse(localStorage.getItem("monexa_demo_orders")||"[]");
+
+        if(!orders.length){
+          box.innerHTML='<div style="text-align:center;padding:28px 10px;border:1px dashed var(--border);border-radius:15px"><div style="font-size:28px;margin-bottom:8px">📋</div><p style="font-size:13px;color:var(--muted)">Aucune demande pour le moment.</p></div>';
+          return;
+        }
+
+        box.innerHTML=orders.map(o=>`
+          <div style="border:1px solid var(--border);border-radius:16px;padding:15px;margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;gap:10px">
+              <strong style="color:var(--navy);font-size:14px">${o.service}</strong>
+              <span style="font-size:11px;color:#b45309;background:#fff8e8;padding:5px 8px;border-radius:20px">${o.status}</span>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-top:7px">${o.id} · ${o.date}</p>
+            ${o.amount?`<p style="font-size:12px;color:var(--navy);margin-top:7px"><strong>${o.amount.toFixed(2)} USD</strong></p>`:""}
+          </div>
+        `).join("");
+      }
+
+      function renderTransactions(){
+        const box=$("transaction-list");
+        if(!box)return;
+
+        const orders=JSON.parse(localStorage.getItem("monexa_demo_orders")||"[]");
+
+        if(!orders.length)return;
+
+        box.innerHTML=orders.slice(0,5).map(o=>`
+          <div style="display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid var(--border)">
+            <div>
+              <strong style="display:block;color:var(--navy);font-size:13px">${o.service}</strong>
+              <small style="color:var(--muted)">${o.date}</small>
+            </div>
+            <strong style="color:var(--navy);font-size:13px">${o.amount.toFixed(2)} USD</strong>
+          </div>
+        `).join("");
+      }
+
+      renderOrders();
+      renderTransactions();
+        </script>
+
+        <script>
+      $("free-fire-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const pack=$("free-fire-package").value;
+        const player=$("free-fire-player-id").value.trim();
+        const option=$("free-fire-package").selectedOptions[0];
+        const price=parseFloat(option?.dataset.price||0);
+        const amount=price/145;
+
+        if(!pack||!player){
+          setMessage("free-fire-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        if(amount>getBalance()){
+          setMessage("free-fire-message","Solde insuffisant. Veuillez ajouter des fonds.",true);
+          return;
+        }
+
+        addOrder("Free Fire",amount,"ID: "+player+" | "+pack+" diamants");
+        setMessage("free-fire-message","Votre demande a été enregistrée. Elle sera traitée manuellement.");
+        toast("Commande Free Fire créée.");
+        $("free-fire-form").reset();
+        $("free-fire-price").textContent="0 HTG";
+      };
+
+      $("crypto-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const type=$("crypto-type").value;
+        const network=$("crypto-network").value;
+        const amount=parseFloat($("crypto-amount").value);
+
+        if(!type||!network||!amount||amount<=0){
+          setMessage("crypto-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        if(amount>getBalance()){
+          setMessage("crypto-message","Solde insuffisant. Veuillez ajouter des fonds.",true);
+          return;
+        }
+
+        addOrder("Crypto",amount,type+" | "+network);
+        setMessage("crypto-message","Votre demande "+type+" a été enregistrée.");
+        toast("Commande Crypto créée.");
+        $("crypto-form").reset();
+      };
+        </script>
+
+        <script>
+      $("binance-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const account=$("binance-id").value.trim();
+        const amount=parseFloat($("binance-amount").value);
+
+        if(!account||!amount||amount<=0){
+          setMessage("binance-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        if(amount>getBalance()){
+          setMessage("binance-message","Solde insuffisant. Veuillez ajouter des fonds.",true);
+          return;
+        }
+
+        addOrder("Binance",amount,"Compte: "+account);
+        setMessage("binance-message","Votre demande Binance a été enregistrée.");
+        toast("Commande Binance créée.");
+        $("binance-form").reset();
+      };
+
+      $("card-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const type=$("card-type").value;
+        const email=$("card-email").value.trim();
+
+        if(!type||!email){
+          setMessage("card-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        const usd=5;
+        const gds=1500/145;
+
+        if(usd+gds>getBalance()){
+          setMessage("card-message","Votre solde est insuffisant pour cette demande.",true);
+          return;
+        }
+
+        addOrder("Création de carte",usd+gds,type+" | "+email);
+        setMessage("card-message","Votre demande de carte "+type+" a été enregistrée.");
+        toast("Demande de carte créée.");
+        $("card-form").reset();
+      };
+        </script>
+
+        <script>
+      $("binance-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const account=$("binance-id").value.trim();
+        const amount=parseFloat($("binance-amount").value);
+
+        if(!account||!amount||amount<=0){
+          setMessage("binance-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        if(amount>getBalance()){
+          setMessage("binance-message","Solde insuffisant. Veuillez ajouter des fonds.",true);
+          return;
+        }
+
+        addOrder("Binance",amount,"Compte: "+account);
+        setMessage("binance-message","Votre demande Binance a été enregistrée.");
+        toast("Commande Binance créée.");
+        $("binance-form").reset();
+      };
+
+      $("withdraw-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const method=$("withdraw-method").value;
+        const amount=parseFloat($("withdraw-amount").value);
+        const account=$("withdraw-account")?.value.trim()||"";
+        const network=$("withdraw-network")?.value||"";
+        const address=$("withdraw-address")?.value.trim()||"";
+
+        if(!method||!amount||amount<=0){
+          setMessage("withdraw-message","Veuillez remplir tous les champs.",true);
+          return;
+        }
+
+        if((method==="Meru"||method==="Wise"||method==="Morse")&&!account){
+          setMessage("withdraw-message","Veuillez saisir les informations du compte.",true);
+          return;
+        }
+
+        if((method==="USDT"||method==="USDC")&&(!network||!address)){
+          setMessage("withdraw-message","Veuillez saisir le réseau et l'adresse de réception.",true);
+          return;
+        }
+
+        if(amount>getBalance()){
+          setMessage("withdraw-message","Solde insuffisant pour effectuer ce retrait.",true);
+          return;
+        }
+
+        addOrder("Retrait "+method,amount,account||network+" | "+address);
+        setMessage("withdraw-message","Votre demande de retrait a été enregistrée.");
+        toast("Demande de retrait créée.");
+        $("withdraw-form").reset();
+        $("withdraw-extra-fields").innerHTML="";
+      };
+  </script>
+
+        <script>
+      $("orders-section")?.addEventListener("click",e=>{
+        if(e.target.closest("#orders-back"))showSection("dashboard-section");
+      });
+
+      $("profile-section")?.addEventListener("click",e=>{
+        if(e.target.closest("#profile-back"))showSection("dashboard-section");
+      });
+
+      $("notification-section")?.addEventListener("click",e=>{
+        if(e.target.closest("#notification-back"))showSection("dashboard-section");
+      });
+
+      document.querySelector(".brand")?.addEventListener("click",()=>{
+        sections.forEach(x=>$(x)?.classList.add("hidden"));
+      });
+
+      function openDashboard(){
+        if(localStorage.getItem("monexa_demo_email")){
+          loadDemoProfile();
+          updateBalanceDisplays();
+          showSection("dashboard-section");
+        }else{
+          showSection("auth-section");
+        }
+      }
+
+      document.querySelector(".header-account-btn")?.addEventListener("click",openDashboard);
+
+      const oldLogout=$("logout-btn");
+      if(oldLogout){
+        oldLogout.onclick=()=>{
+          localStorage.removeItem("monexa_demo_name");
+          localStorage.removeItem("monexa_demo_email");
+          localStorage.removeItem("monexa_demo_phone");
+          localStorage.removeItem("monexa_demo_balance");
+          showSection("auth-section");
+          toast("Vous êtes déconnecté.");
+        };
+      }
+        </script>
+
+        <script>
+      function saveCurrentUser(){
+        const user={
+          name:localStorage.getItem("monexa_demo_name")||"",
+          email:localStorage.getItem("monexa_demo_email")||"",
+          phone:localStorage.getItem("monexa_demo_phone")||"",
+          balance:localStorage.getItem("monexa_demo_balance")||"0.00"
+        };
+        localStorage.setItem("monexa_demo_user",JSON.stringify(user));
+        return user;
+      }
+
+      function restoreCurrentUser(){
+        const raw=localStorage.getItem("monexa_demo_user");
+        if(!raw)return;
+
+        try{
+          const user=JSON.parse(raw);
+          if(user.name)localStorage.setItem("monexa_demo_name",user.name);
+          if(user.email)localStorage.setItem("monexa_demo_email",user.email);
+          if(user.phone)localStorage.setItem("monexa_demo_phone",user.phone);
+          if(user.balance)localStorage.setItem("monexa_demo_balance",user.balance);
+        }catch(e){}
+      }
+
+      restoreCurrentUser();
+      loadDemoProfile();
+      updateBalanceDisplays();
+
+      window.addEventListener("beforeunload",saveCurrentUser);
+
+      document.addEventListener("visibilitychange",()=>{
+        if(document.hidden)saveCurrentUser();
+      });
+        </script>
+
+        <script>
+      function updateServiceOrder(){
+        const service=$("service-order-title");
+        const label=$("selected-service-label");
+        const desc=$("service-order-description");
+
+        if(service)service.textContent="Demande de service";
+        if(label)label.textContent="SERVICE";
+        if(desc)desc.textContent="Remplissez les informations nécessaires pour votre demande.";
+      }
+
+      document.querySelectorAll(".service-card").forEach(card=>{
+        card.addEventListener("click",()=>{
+          const service=card.dataset.service;
+
+          if(service==="Recharge"){
+            updateServiceOrder();
+            $("selected-service-label").textContent="RECHARGE";
+            $("service-order-title").textContent="Recharge";
+            $("service-order-description").textContent="Demandez une recharge avec votre solde MONEXA CASH.";
+          }
+        });
+      });
+
+      updateServiceOrder();
+        </script>
+
+        <script>
+      $("service-order-form").onsubmit=e=>{
+        e.preventDefault();
+
+        const amount=parseFloat($("service-order-amount").value);
+
+        if(!amount||amount<=0){
+          setMessage("service-order-message","Veuillez saisir un montant valide.",true);
+          return;
+        }
+
+        if(amount>getBalance()){
+          setMessage("service-order-message","Solde insuffisant. Veuillez ajouter des fonds.",true);
+          return;
+        }
+
+        addOrder(
+          $("selected-service-label").textContent||"Recharge",
+          amount,
+          "Demande de service"
+        );
+
+        setMessage(
+          "service-order-message",
+          "Votre demande a été enregistrée et sera traitée manuellement."
+        );
+
+        toast("Demande envoyée.");
+        $("service-order-form").reset();
+      };
+
+      $("profile-section")?.addEventListener("click",e=>{
+        if(e.target.closest("#profile-back"))openDashboard();
+      });
+
+      $("notification-section")?.addEventListener("click",e=>{
+        if(e.target.closest("#notification-back"))openDashboard();
+      });
+
+      $("orders-section")?.addEventListener("click",e=>{
+        if(e.target.closest("#orders-back"))openDashboard();
+      });
+        </script>
+
+        <script>
+      function startApp(){
+        loadDemoProfile();
+        updateBalanceDisplays();
+        renderOrders();
+        renderTransactions();
+
+        const email=localStorage.getItem("monexa_demo_email");
+
+        if(email){
+          showSection("dashboard-section");
+        }else{
+          showSection("auth-section");
+        }
+      }
+
+      startApp();
+        </script>
+
+        <script>
+      window.addEventListener("load",()=>{
+        document.querySelectorAll('a[href^="#"]').forEach(link=>{
+          link.addEventListener("click",e=>{
+            const id=link.getAttribute("href").slice(1);
+            const target=$(id);
+            if(target)target.scrollIntoView({behavior:"smooth"});
+          });
+        });
+
+        const brand=document.querySelector(".brand");
+        if(brand){
+          brand.addEventListener("click",e=>{
+            e.preventDefault();
+            window.scrollTo({top:0,behavior:"smooth"});
+          });
+        }
+      });
+        </script>
+
+        <script>
+      const savedLang=localStorage.getItem("monexa_language")||"fr";
+
+      if($("language-select")){
+        $("language-select").value=savedLang;
+
+        $("language-select").addEventListener("change",e=>{
+          localStorage.setItem("monexa_language",e.target.value);
+        });
+      }
+
+      const savedBalance=localStorage.getItem("monexa_demo_balance");
+      if(savedBalance!==null)updateBalanceDisplays();
+        </script>
+
+        <script>
+      function openOrders(){
+        renderOrders();
+        showSection("orders-section");
+      }
+
+      function openProfile(){
+        loadDemoProfile();
+        showSection("profile-section");
+      }
+
+      function openNotifications(){
+        showSection("notification-section");
+      }
+
+      const nav=document.querySelector(".mobile-nav");
+
+      if(nav){
+        const orders=document.createElement("button");
+        orders.type="button";
+        orders.className="nav-link";
+        orders.textContent="Demandes";
+        orders.onclick=openOrders;
+
+        const profile=document.createElement("button");
+        profile.type="button";
+        profile.className="nav-link";
+        profile.textContent="Profil";
+        profile.onclick=openProfile;
+
+        nav.appendChild(orders);
+        nav.appendChild(profile);
+      }
+        </script>
+
+        <script>
+      function refreshDashboard(){
+        loadDemoProfile();
+        updateBalanceDisplays();
+        renderOrders();
+        renderTransactions();
+      }
+
+      document.addEventListener("DOMContentLoaded",()=>{
+        refreshDashboard();
+
+        $("dashboard-services-btn")?.addEventListener("click",()=>{
+          document.querySelector("#services")?.scrollIntoView({behavior:"smooth"});
+        });
+
+        document.querySelectorAll(".service-card").forEach(card=>{
+          card.addEventListener("click",refreshDashboard);
+        });
+      });
+        </script>
+
+        <script>
+      const notificationList=$("notification-list");
+
+      function addNotification(title,text){
+        const items=JSON.parse(localStorage.getItem("monexa_demo_notifications")||"[]");
+
+        items.unshift({
+          title:title,
+          text:text,
+          date:new Date().toLocaleString("fr-FR")
+        });
+
+        localStorage.setItem("monexa_demo_notifications",JSON.stringify(items));
+        renderNotifications();
+      }
+
+      function renderNotifications(){
+        if(!notificationList)return;
+
+        const items=JSON.parse(localStorage.getItem("monexa_demo_notifications")||"[]");
+
+        if(!items.length){
+          notificationList.innerHTML='<div style="text-align:center;padding:28px 10px;border:1px dashed var(--border);border-radius:15px"><div style="font-size:28px;margin-bottom:8px">🔔</div><p style="font-size:13px;color:var(--muted)">Aucune notification pour le moment.</p></div>';
+          return;
+        }
+
+        notificationList.innerHTML=items.slice(0,10).map(n=>`
+          <div style="border:1px solid var(--border);border-radius:16px;padding:15px;margin-bottom:10px">
+            <strong style="display:block;color:var(--navy);font-size:14px">${n.title}</strong>
+            <p style="font-size:12px;color:var(--muted);margin:5px 0">${n.text}</p>
+            <small style="color:#9aa7b7">${n.date}</small>
+          </div>
+        `).join("");
+      }
+
+      renderNotifications();
+        </script>
+
+        <script>
+      function showOrderSuccess(service){
+        addNotification(
+          "Demande envoyée",
+          "Votre demande "+service+" a été reçue et sera traitée manuellement."
+        );
+      }
+
+      const originalAddOrder=addOrder;
+
+      addOrder=function(service,amount,details){
+        originalAddOrder(service,amount,details);
+        showOrderSuccess(service);
+      };
+
+      renderNotifications();
+        </script>
+
+        <script>
+      function setUserData(name,email,phone){
+        localStorage.setItem("monexa_demo_name",name);
+        localStorage.setItem("monexa_demo_email",email);
+        localStorage.setItem("monexa_demo_phone",phone);
+        saveCurrentUser();
+        loadDemoProfile();
+      }
+
+      function getUserEmail(){
+        return localStorage.getItem("monexa_demo_email")||"";
+      }
+
+      function isLoggedIn(){
+        return !!getUserEmail();
+      }
+
+      function requireLogin(){
+        if(!isLoggedIn()){
+          showSection("auth-section");
+          toast("Veuillez vous connecter pour continuer.");
+          return false;
+        }
+        return true;
+      }
+        </script>
+
+        <script>
+      document.querySelectorAll(".service-card").forEach(card=>{
+        card.addEventListener("click",()=>{
+          if(!requireLogin())return;
+        });
+      });
+
+      $("dashboard-deposit-btn")?.addEventListener("click",()=>{
+        if(requireLogin())showSection("deposit-form-section");
+      });
+
+      $("dashboard-services-btn")?.addEventListener("click",()=>{
+        if(!requireLogin())return;
+        $("services")?.scrollIntoView({behavior:"smooth"});
+      });
+
+      document.querySelector(".header-account-btn")?.addEventListener("click",()=>{
+        if(isLoggedIn())showSection("dashboard-section");
+        else showSection("auth-section");
+      });
+
+      document.querySelector(".header-btn")?.addEventListener("click",()=>{
+        $("language-select")?.scrollIntoView({behavior:"smooth"});
+      });
+        </script>
+
+        <script>
+      document.body.style.overflowX="hidden";
+
+      window.addEventListener("error",e=>{
+        console.log("MONEXA CASH:",e.message);
+      });
+
+      window.addEventListener("load",()=>{
+        loadDemoProfile();
+        updateBalanceDisplays();
+        renderOrders();
+        renderTransactions();
+        renderNotifications();
+      });
+        </script>
+
+        <script>
+      const MONEXA_CONFIG={
+        currency:"USD",
+        depositMethod:"Natcash",
+        depositNumber:"+509 40886629",
+        depositName:"JUNIOR AUGUSTE",
+        support:"+509 40886629"
+      };
+
+      localStorage.setItem(
+        "monexa_config",
+        JSON.stringify(MONEXA_CONFIG)
+      );
+        </script>
+
+        <script>
+      function formatMoney(value){
+        return Number(value||0).toFixed(2);
+      }
+
+      function showBalance(){
+        const balance=formatMoney(getBalance());
+
+        [
+          "dashboard-balance",
+          "service-order-balance",
+          "free-fire-balance",
+          "crypto-balance",
+          "binance-balance",
+          "withdraw-balance"
+        ].forEach(id=>{
+          if($(id))$(id).textContent=balance;
+        });
+      }
+
+      showBalance();
+        </script>
+
+        <script>
+      function protectServiceForms(){
+        const forms=[
+          "service-order-form",
+          "free-fire-form",
+          "crypto-form",
+          "binance-form",
+          "withdraw-form",
+          "card-form"
+        ];
+
+        forms.forEach(id=>{
+          const form=$(id);
+          if(!form)return;
+
+          form.addEventListener("submit",e=>{
+            if(!requireLogin()){
+              e.preventDefault();
+              return;
+            }
+          },true);
+        });
+      }
+
+      protectServiceForms();
+        </script>
+
+        <script>
+      function refreshUserInterface(){
+        if(!isLoggedIn()){
+          $("dashboard-name").textContent="Client MONEXA";
+          $("profile-name").textContent="—";
+          $("profile-email").textContent="—";
+          $("profile-phone").textContent="—";
+          updateBalanceDisplays();
+          return;
+        }
+
+        loadDemoProfile();
+        updateBalanceDisplays();
+        renderOrders();
+        renderTransactions();
+        renderNotifications();
+      }
+
+      refreshUserInterface();
+        </script>
+
+        <script>
+      function saveDemoBalance(amount){
+        const current=getBalance();
+        saveBalance(current+Number(amount||0));
+      }
+
+      function addDemoTransaction(service,amount,details){
+        addOrder(service,Number(amount||0),details||"");
+        updateBalanceDisplays();
+        renderOrders();
+        renderTransactions();
+      }
+
+      $("deposit-form").addEventListener("submit",e=>{
+        e.preventDefault();
+
+        const amount=parseFloat($("deposit-amount").value);
+
+        if(!amount||amount<=0){
+          setMessage("deposit-message","Veuillez saisir un montant valide.",true);
+          return;
+        }
+
+        const proof=$("deposit-proof").files[0];
+
+        if(!proof){
+          setMessage("deposit-message","La preuve de paiement est obligatoire.",true);
+          return;
+        }
+
+        setMessage(
+          "deposit-message",
+          "Votre dépôt a été envoyé. Le solde sera crédité après vérification manuelle."
+        );
+
+        toast("Dépôt envoyé pour vérification.");
+      });
+        </script>
+
+        <script>
+      function updateAccountButtons(){
+        const logged=isLoggedIn();
+
+        document.querySelectorAll(".header-account-btn").forEach(btn=>{
+          btn.textContent=logged?"Mon compte":"Se connecter";
+        });
+      }
+
+      updateAccountButtons();
+
+      window.addEventListener("load",updateAccountButtons);
+        </script>
+
+        <script>
+      function openService(service){
+        if(!requireLogin())return;
+
+        if(service==="Free Fire")showSection("free-fire-section");
+        else if(service==="Crypto")showSection("crypto-section");
+        else if(service==="Binance")showSection("binance-section");
+        else if(service==="Retrait")showSection("withdraw-section");
+        else if(service==="Création de carte")showSection("card-section");
+        else showSection("service-order-section");
+
+        updateBalanceDisplays();
+      }
+
+      document.querySelectorAll(".service-card").forEach(card=>{
+        card.onclick=()=>{
+          openService(card.dataset.service);
+        };
+      });
+        </script>
+
+        <script>
+      function goToDashboard(){
+        if(isLoggedIn()){
+          refreshUserInterface();
+          showSection("dashboard-section");
+        }else{
+          showSection("auth-section");
+        }
+      }
+
+      document.querySelector(".header-account-btn")?.addEventListener("click",e=>{
+        e.preventDefault();
+        goToDashboard();
+      });
+
+      $("logout-btn")?.addEventListener("click",()=>{
+        localStorage.removeItem("monexa_demo_user");
+        localStorage.removeItem("monexa_demo_name");
+        localStorage.removeItem("monexa_demo_email");
+        localStorage.removeItem("monexa_demo_phone");
+        localStorage.removeItem("monexa_demo_balance");
+        updateAccountButtons();
+        showSection("auth-section");
+        toast("Vous êtes déconnecté.");
+      });
+        </script>
+
+        <script>
+      function openUserProfile(){
+        if(!requireLogin())return;
+        loadDemoProfile();
+        showSection("profile-section");
+      }
+
+      function openUserOrders(){
+        if(!requireLogin())return;
+        renderOrders();
+        showSection("orders-section");
+      }
+
+      function openUserNotifications(){
+        if(!requireLogin())return;
+        renderNotifications();
+        showSection("notification-section");
+      }
+
+      document.querySelectorAll(".mobile-nav .nav-link").forEach(link=>{
+        link.addEventListener("click",()=>{
+          const text=link.textContent.trim();
+
+          if(text==="Profil")openUserProfile();
+          if(text==="Demandes")openUserOrders();
+        });
+      });
+        </script>
+
+        <script>
+      function prepareSupabase(){
+        if(window.supabase)return true;
+        return false;
+      }
+
+      window.MONEXA_READY=true;
+      window.MONEXA_SUPABASE_READY=prepareSupabase();
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+        <script>
+      const SUPABASE_URL="METE_URL_SUPABASE_LA_ISIT";
+      const SUPABASE_ANON_KEY="METE_ANON_KEY_LA_ISIT";
+
+      const supabaseClient=supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+        </script>
+
+    
+    
+    
   </div>
-</body>
-</html>
+
+  
