@@ -2984,49 +2984,61 @@ document.addEventListener("DOMContentLoaded",async function(){
   </script>
 
   <script>
-(async function(){
+(function(){
 
-  if(!window.monexaSupabase) return;
+  async function monexaShowUserName(){
 
-  const { data } = await monexaSupabase.auth.getUser();
+    if(!window.monexaSupabase) return;
 
-  if(!data || !data.user) return;
+    const result=await monexaSupabase.auth.getUser();
 
-  const user = data.user;
+    if(result.error || !result.data || !result.data.user) return;
 
-  const name =
-    user.user_metadata?.full_name ||
-    user.user_metadata?.name ||
-    user.email?.split("@")[0] ||
-    "Client";
+    const user=result.data.user;
 
-  function updateGreeting(){
+    const name=
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      user.email?.split("@")[0] ||
+      "Client";
 
-    const all = document.querySelectorAll("body *");
+    function findGreeting(){
 
-    all.forEach(function(el){
-
-      if(el.children.length === 0){
-
-        const text = el.textContent.trim();
+      document.querySelectorAll("body *").forEach(function(el){
 
         if(
-          text === "Bonsoir 👋" ||
-          text === "Bonsoir"
+          el.children.length===0 &&
+          el.textContent.trim()==="Bonsoir 👋"
         ){
-          el.textContent = "Bonsoir, " + name + " 👋";
+          el.textContent="Bonsoir, "+name+" 👋";
         }
 
-      }
+      });
 
+    }
+
+    findGreeting();
+
+    const observer=new MutationObserver(function(){
+      findGreeting();
     });
+
+    observer.observe(document.body,{
+      childList:true,
+      subtree:true
+    });
+
+    setTimeout(function(){
+      observer.disconnect();
+    },10000);
 
   }
 
-  updateGreeting();
-
-  setTimeout(updateGreeting,1000);
-  setTimeout(updateGreeting,2000);
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",monexaShowUserName);
+  }else{
+    monexaShowUserName();
+  }
 
 })();
   </script>
