@@ -315,18 +315,21 @@
  <script>
 (function(){
 
-  function initMonexaDashboard(){
-
-    if(!window.monexaSupabase){
-      setTimeout(initMonexaDashboard,300);
-      return;
-    }
+  function start(){
 
     const app=document.getElementById("app");
 
-    if(!app) return;
+    if(!app){
+      setTimeout(start,300);
+      return;
+    }
 
-    function showDashboard(){
+    if(!window.monexaSupabase){
+      setTimeout(start,300);
+      return;
+    }
+
+    function dashboard(){
 
       app.innerHTML=`
         <div class="mx-header">
@@ -377,8 +380,7 @@
 
           <button
             class="mx-action"
-            type="button"
-            onclick="alert('La section Envoyer sera ajoutée prochainement.')">
+            type="button">
 
             <div class="mx-action-icon">↗</div>
             Envoyer
@@ -387,8 +389,7 @@
 
           <button
             class="mx-action"
-            type="button"
-            onclick="alert('La section Retirer sera ajoutée prochainement.')">
+            type="button">
 
             <div class="mx-action-icon">↙</div>
             Retirer
@@ -412,101 +413,41 @@
 
         </div>
 
-        <div id="mx-profile-panel"
-          class="mx-profile-panel"
-          onclick="monexaCloseProfile(event)">
-
-          <div class="mx-profile-box"
-            onclick="event.stopPropagation()">
-
-            <div class="mx-profile-top">
-
-              <h3>Mon profil</h3>
-
-              <button
-                class="mx-close-profile"
-                type="button"
-                onclick="monexaCloseProfile()">
-                ×
-              </button>
-
-            </div>
-
-            <div class="mx-account-info">
-
-              <div class="mx-info-row">
-                <span class="mx-info-label">
-                  Nom complet
-                </span>
-
-                <span class="mx-info-value">
-                  Non connecté
-                </span>
-              </div>
-
-              <div class="mx-info-row">
-                <span class="mx-info-label">
-                  E-mail
-                </span>
-
-                <span class="mx-info-value">
-                  Non connecté
-                </span>
-              </div>
-
-              <div class="mx-info-row">
-                <span class="mx-info-label">
-                  Téléphone
-                </span>
-
-                <span class="mx-info-value">
-                  Non renseigné
-                </span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
       `;
+
     }
 
-    function clearDashboard(){
+    function empty(){
+
       app.innerHTML="";
+
     }
 
-    function checkSession(){
-
-      monexaSupabase.auth.getSession()
+    monexaSupabase.auth.getSession()
       .then(function(result){
 
         if(result.data && result.data.session){
 
-          showDashboard();
+          dashboard();
 
         }else{
 
-          clearDashboard();
+          empty();
 
         }
 
       });
-
-    }
-
-    checkSession();
 
     monexaSupabase.auth.onAuthStateChange(
       function(event,session){
 
         if(session){
 
-          setTimeout(showDashboard,100);
+          setTimeout(dashboard,100);
 
         }else{
 
-          clearDashboard();
+          empty();
 
         }
 
@@ -515,7 +456,7 @@
 
   }
 
-  initMonexaDashboard();
+  start();
 
 })();
 
@@ -544,8 +485,8 @@ function monexaCloseProfile(event){
   }
 
 }
- </script>
-
+</script>
+        
   <style>
   .mx-services-grid{
     display:grid;
