@@ -2630,31 +2630,329 @@ function monexaCloseStartScreen(){
 }
 </script>
 
-  <script>
-function monexaOpenAuth(){
-
-  const auth=document.getElementById("mx-auth-screen");
-
-  if(auth){
-    auth.style.display="flex";
-    return;
+  <style>
+  .mx-auth-panel{
+    position:fixed;
+    inset:0;
+    z-index:100000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+    background:#f6faff;
   }
 
-  alert("Écran de connexion introuvable.");
-}
-
-function monexaOpenRegister(){
-
-  const register=document.getElementById("mx-register-screen");
-
-  if(register){
-    register.style.display="flex";
-    return;
+  .mx-auth-card{
+    width:100%;
+    max-width:430px;
+    background:#fff;
+    border-radius:28px;
+    padding:26px 22px;
+    box-shadow:0 18px 55px rgba(11,31,58,.14);
   }
 
-  alert("Écran de création de compte introuvable.");
-}
-  </script>
+  .mx-auth-back{
+    border:0;
+    background:transparent;
+    font-size:14px;
+    color:#64748b;
+    padding:0;
+    cursor:pointer;
+  }
+
+  .mx-auth-card h2{
+    margin:22px 0 7px;
+    color:#071d38;
+    font-size:25px;
+  }
+
+  .mx-auth-card p{
+    margin:0 0 22px;
+    color:#718096;
+    font-size:14px;
+  }
+
+  .mx-auth-field{
+    width:100%;
+    box-sizing:border-box;
+    padding:14px;
+    margin-bottom:12px;
+    border:1px solid #dbe5ef;
+    border-radius:14px;
+    font-size:15px;
+    outline:none;
+  }
+
+  .mx-auth-submit{
+    width:100%;
+    border:0;
+    border-radius:15px;
+    padding:15px;
+    background:#071d38;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .mx-auth-switch{
+    margin-top:17px;
+    text-align:center;
+    color:#087f79;
+    font-size:14px;
+    cursor:pointer;
+  }
+
+  .mx-auth-status{
+    margin-top:14px;
+    text-align:center;
+    font-size:13px;
+  }
+</style>
+
+<script>
+(function(){
+
+  function createAuthPanels(){
+
+    if(document.getElementById("mx-login-panel")) return;
+
+    const login=document.createElement("div");
+    login.id="mx-login-panel";
+    login.className="mx-auth-panel";
+
+    login.innerHTML=`
+      <div class="mx-auth-card">
+
+        <button class="mx-auth-back"
+          onclick="monexaCloseAuth()">
+          ← Retour
+        </button>
+
+        <h2>Se connecter</h2>
+
+        <p>Accédez à votre espace MONEXA CASH.</p>
+
+        <input id="mx-login-email"
+          class="mx-auth-field"
+          type="email"
+          placeholder="Adresse email">
+
+        <input id="mx-login-password"
+          class="mx-auth-field"
+          type="password"
+          placeholder="Mot de passe">
+
+        <button class="mx-auth-submit"
+          onclick="monexaDoLogin()">
+          Se connecter
+        </button>
+
+        <div class="mx-auth-switch"
+          onclick="monexaOpenRegister()">
+          Créer un compte
+        </div>
+
+        <div id="mx-login-status"
+          class="mx-auth-status"></div>
+
+      </div>
+    `;
+
+    document.body.appendChild(login);
+
+
+    const register=document.createElement("div");
+    register.id="mx-register-panel";
+    register.className="mx-auth-panel";
+
+    register.innerHTML=`
+      <div class="mx-auth-card">
+
+        <button class="mx-auth-back"
+          onclick="monexaCloseRegister()">
+          ← Retour
+        </button>
+
+        <h2>Créer un compte</h2>
+
+        <p>Créez votre compte MONEXA CASH.</p>
+
+        <input id="mx-register-name"
+          class="mx-auth-field"
+          type="text"
+          placeholder="Nom complet">
+
+        <input id="mx-register-email"
+          class="mx-auth-field"
+          type="email"
+          placeholder="Adresse email">
+
+        <input id="mx-register-phone"
+          class="mx-auth-field"
+          type="text"
+          placeholder="Numéro de téléphone">
+
+        <input id="mx-register-password"
+          class="mx-auth-field"
+          type="password"
+          placeholder="Mot de passe">
+
+        <input id="mx-register-confirm"
+          class="mx-auth-field"
+          type="password"
+          placeholder="Confirmer le mot de passe">
+
+        <button class="mx-auth-submit"
+          onclick="monexaDoRegister()">
+          Créer mon compte
+        </button>
+
+        <div class="mx-auth-switch"
+          onclick="monexaOpenAuth()">
+          J'ai déjà un compte
+        </div>
+
+        <div id="mx-register-status"
+          class="mx-auth-status"></div>
+
+      </div>
+    `;
+
+    document.body.appendChild(register);
+  }
+
+
+  window.monexaOpenAuth=function(){
+
+    createAuthPanels();
+
+    const register=document.getElementById("mx-register-panel");
+    const login=document.getElementById("mx-login-panel");
+
+    if(register) register.style.display="none";
+    if(login) login.style.display="flex";
+  };
+
+
+  window.monexaCloseAuth=function(){
+
+    const login=document.getElementById("mx-login-panel");
+
+    if(login) login.style.display="none";
+  };
+
+
+  window.monexaOpenRegister=function(){
+
+    createAuthPanels();
+
+    const login=document.getElementById("mx-login-panel");
+    const register=document.getElementById("mx-register-panel");
+
+    if(login) login.style.display="none";
+    if(register) register.style.display="flex";
+  };
+
+
+  window.monexaCloseRegister=function(){
+
+    const register=document.getElementById("mx-register-panel");
+
+    if(register) register.style.display="none";
+  };
+
+
+  window.monexaDoLogin=async function(){
+
+    const email=document.getElementById("mx-login-email").value.trim();
+    const password=document.getElementById("mx-login-password").value;
+
+    const status=document.getElementById("mx-login-status");
+
+    if(!email || !password){
+      status.textContent="Veuillez remplir tous les champs.";
+      status.style.color="#d33";
+      return;
+    }
+
+    status.textContent="Connexion en cours...";
+    status.style.color="#64748b";
+
+    const {error}=await monexaSupabase.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
+
+    if(error){
+      status.textContent=error.message;
+      status.style.color="#d33";
+      return;
+    }
+
+    status.textContent="Connexion réussie.";
+    status.style.color="#087f79";
+
+    setTimeout(function(){
+
+      const login=document.getElementById("mx-login-panel");
+      const start=document.getElementById("mx-start-screen");
+
+      if(login) login.style.display="none";
+      if(start) start.remove();
+
+    },500);
+  };
+
+
+  window.monexaDoRegister=async function(){
+
+    const name=document.getElementById("mx-register-name").value.trim();
+    const email=document.getElementById("mx-register-email").value.trim();
+    const phone=document.getElementById("mx-register-phone").value.trim();
+    const password=document.getElementById("mx-register-password").value;
+    const confirm=document.getElementById("mx-register-confirm").value;
+
+    const status=document.getElementById("mx-register-status");
+
+    if(!name || !email || !phone || !password || !confirm){
+      status.textContent="Veuillez remplir tous les champs.";
+      status.style.color="#d33";
+      return;
+    }
+
+    if(password !== confirm){
+      status.textContent="Les mots de passe ne correspondent pas.";
+      status.style.color="#d33";
+      return;
+    }
+
+    status.textContent="Création du compte...";
+    status.style.color="#64748b";
+
+    const {error}=await monexaSupabase.auth.signUp({
+      email:email,
+      password:password,
+      options:{
+        data:{
+          full_name:name,
+          phone:phone
+        }
+      }
+    });
+
+    if(error){
+      status.textContent=error.message;
+      status.style.color="#d33";
+      return;
+    }
+
+    status.textContent="Compte créé avec succès.";
+    status.style.color="#087f79";
+  };
+
+})();
+</script>
   
 
 </body>
