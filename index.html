@@ -2984,49 +2984,15 @@ document.addEventListener("DOMContentLoaded",async function(){
   </script>
 
   <script>
-document.addEventListener("DOMContentLoaded",async function(){
+(async function(){
 
   if(!window.monexaSupabase) return;
 
-  const result=await monexaSupabase.auth.getUser();
+  const { data } = await monexaSupabase.auth.getUser();
 
-  if(result.error || !result.data || !result.data.user) return;
+  if(!data || !data.user) return;
 
-  const user=result.data.user;
-
-  const name =
-    user.user_metadata?.full_name ||
-    user.email?.split("@")[0] ||
-    "Client";
-
-  const elements=document.querySelectorAll("body *");
-
-  elements.forEach(function(el){
-
-    if(
-      el.children.length===0 &&
-      el.textContent.includes("Bonsoir")
-    ){
-
-      el.textContent="Bonsoir, "+name+" 👋";
-
-    }
-
-  });
-
-});
-  </script>
-
-  <script>
-setTimeout(async function(){
-
-  if(!window.monexaSupabase) return;
-
-  const result=await monexaSupabase.auth.getUser();
-
-  if(result.error || !result.data || !result.data.user) return;
-
-  const user=result.data.user;
+  const user = data.user;
 
   const name =
     user.user_metadata?.full_name ||
@@ -3034,48 +3000,35 @@ setTimeout(async function(){
     user.email?.split("@")[0] ||
     "Client";
 
-  document.querySelectorAll("body *").forEach(function(el){
+  function updateGreeting(){
 
-    if(el.children.length===0){
+    const all = document.querySelectorAll("body *");
 
-      const text=el.textContent.trim();
+    all.forEach(function(el){
 
-      if(text==="Bonsoir 👋" || text==="Bonsoir"){
-        el.textContent="Bonsoir, "+name+" 👋";
+      if(el.children.length === 0){
+
+        const text = el.textContent.trim();
+
+        if(
+          text === "Bonsoir 👋" ||
+          text === "Bonsoir"
+        ){
+          el.textContent = "Bonsoir, " + name + " 👋";
+        }
+
       }
 
-    }
+    });
 
-  });
-
-  console.log("MONEXA USER:",user);
-  console.log("MONEXA NOM:",name);
-
-},1500);
-  </script>
-
-  <script>
-setTimeout(async function(){
-
-  const result=await monexaSupabase.auth.getUser();
-
-  if(result.error || !result.data.user){
-    alert("Pa gen itilizatè konekte.");
-    return;
   }
 
-  const user=result.data.user;
+  updateGreeting();
 
-  const info=JSON.stringify({
-    email:user.email,
-    full_name:user.user_metadata?.full_name,
-    name:user.user_metadata?.name,
-    phone:user.user_metadata?.phone
-  },null,2);
+  setTimeout(updateGreeting,1000);
+  setTimeout(updateGreeting,2000);
 
-  alert(info);
-
-},1500);
+})();
   </script>
   
 
