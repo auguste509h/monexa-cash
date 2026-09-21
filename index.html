@@ -2957,6 +2957,31 @@ function monexaCloseStartScreen(){
 
 })();
 </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded",async function(){
+
+  if(!window.monexaSupabase) return;
+
+  const {data}=await monexaSupabase.auth.getSession();
+
+  if(!data || !data.session) return;
+
+  const user=data.session.user;
+
+  const name =
+    user.user_metadata?.full_name ||
+    user.email?.split("@")[0] ||
+    "Client";
+
+  const greeting=document.querySelector(".mx-greeting");
+
+  if(greeting){
+    greeting.textContent="Bonsoir, "+name+" 👋";
+  }
+
+});
+  </script>
   
 
 </body>
