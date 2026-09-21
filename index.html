@@ -2514,118 +2514,148 @@
   }
 </script>
 
-  <style>
-  .mx-auth-access{
-    margin:16px 0 4px;
-    padding:14px;
-    border-radius:20px;
-    background:#fff;
-    box-shadow:0 7px 24px rgba(11,31,58,.07);
+<style>
+  #app.mx-locked-dashboard{
+    display:none !important;
+  }
+
+  .mx-start-screen{
+    min-height:100vh;
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:12px;
+    justify-content:center;
+    padding:24px;
+    background:linear-gradient(160deg,#f7fbff 0%,#eef7ff 100%);
   }
 
-  .mx-auth-access-text{
-    min-width:0;
+  .mx-start-box{
+    width:100%;
+    max-width:430px;
+    background:#fff;
+    border:1px solid rgba(16,35,63,.07);
+    border-radius:30px;
+    padding:30px 22px;
+    box-shadow:0 18px 55px rgba(11,31,58,.12);
+    text-align:center;
   }
 
-  .mx-auth-access-title{
+  .mx-start-logo{
+    width:70px;
+    height:70px;
+    margin:0 auto 18px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#071d38;
+    color:#19d3c5;
+    font-size:25px;
+    font-weight:900;
+  }
+
+  .mx-start-box h1{
+    margin:0;
+    color:#071d38;
+    font-size:25px;
+    font-weight:800;
+  }
+
+  .mx-start-box p{
+    margin:10px 0 25px;
+    color:#718096;
     font-size:14px;
-    font-weight:850;
-    color:#10233f;
+    line-height:1.5;
   }
 
-  .mx-auth-access-sub{
-    margin-top:3px;
-    font-size:11px;
-    color:#7a8796;
-  }
-
-  .mx-auth-access-button{
-    flex-shrink:0;
+  .mx-start-btn{
+    width:100%;
     border:0;
-    border-radius:13px;
-    padding:11px 14px;
-    background:#0aaaa5;
-    color:#fff;
-    font-size:12px;
+    border-radius:16px;
+    padding:15px;
+    font-size:15px;
     font-weight:800;
     cursor:pointer;
+    margin-top:10px;
   }
 
-  body.mx-dark .mx-auth-access{
-    background:#102235;
-  }
-
-  body.mx-dark .mx-auth-access-title{
+  .mx-start-login{
+    background:#071d38;
     color:#fff;
+    box-shadow:0 8px 20px rgba(7,29,56,.18);
   }
 
-  body.mx-dark .mx-auth-access-sub{
-    color:#aebdca;
+  .mx-start-register{
+    background:#eef7f7;
+    color:#087f79;
   }
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded",function(){
+document.addEventListener("DOMContentLoaded",function(){
 
-    const app=document.getElementById("app");
+  const app=document.getElementById("app");
+  if(!app) return;
 
-    if(!app){
-      return;
-    }
+  app.classList.add("mx-locked-dashboard");
 
-    if(document.getElementById("mx-auth-access")){
-      return;
-    }
+  if(document.getElementById("mx-start-screen")) return;
 
-    const access=document.createElement("div");
+  const start=document.createElement("div");
+  start.id="mx-start-screen";
+  start.className="mx-start-screen";
 
-    access.id="mx-auth-access";
-    access.className="mx-auth-access";
+  start.innerHTML=`
+    <div class="mx-start-box">
+      <div class="mx-start-logo">MC</div>
 
-    access.innerHTML=`
-      <div class="mx-auth-access-text">
+      <h1>MONEXA CASH</h1>
 
-        <div class="mx-auth-access-title">
-          Votre compte MONEXA CASH
-        </div>
+      <p>
+        Connectez-vous ou créez votre compte
+        pour accéder à votre espace MONEXA CASH.
+      </p>
 
-        <div class="mx-auth-access-sub">
-          Connectez-vous pour accéder à votre espace.
-        </div>
-
-      </div>
-
-      <button
-        type="button"
-        class="mx-auth-access-button"
+      <button class="mx-start-btn mx-start-login"
         onclick="monexaOpenAuth()">
-        Connexion
+        Se connecter
       </button>
-    `;
 
-    const balance=app.querySelector(
-      ".mx-balance-card"
-    );
+      <button class="mx-start-btn mx-start-register"
+        onclick="monexaOpenRegister()">
+        Créer un compte
+      </button>
+    </div>
+  `;
 
-    if(balance){
+  document.body.prepend(start);
+});
 
-      balance.insertAdjacentElement(
-        "afterend",
-        access
-      );
 
-    }else{
+function monexaShowDashboard(){
+  const start=document.getElementById("mx-start-screen");
+  const app=document.getElementById("app");
 
-      app.prepend(access);
+  if(start) start.remove();
 
-    }
+  if(app){
+    app.classList.remove("mx-locked-dashboard");
+  }
+}
 
-  });
+
+function monexaShowStartScreen(){
+  const app=document.getElementById("app");
+
+  if(app){
+    app.classList.add("mx-locked-dashboard");
+  }
+
+  if(!document.getElementById("mx-start-screen")){
+    location.reload();
+  }
+}
 </script>
+  
 
 </body>
 </html>
