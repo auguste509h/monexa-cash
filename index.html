@@ -741,7 +741,319 @@
       "L'historique complet des transactions sera disponible prochainement."
     );
   }
-</script>  
+</script>
+
+  <style>
+  .mx-profile-avatar{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:#0b1f3a;
+    color:#20d9d2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:800;
+    margin:0 auto 14px;
+  }
+
+  .mx-profile-center{
+    text-align:center;
+    margin-bottom:22px;
+  }
+
+  .mx-profile-center h3{
+    color:#10233f;
+    font-size:19px;
+    margin-bottom:5px;
+  }
+
+  .mx-profile-center p{
+    color:#7a8799;
+    font-size:13px;
+  }
+
+  .mx-profile-actions{
+    display:grid;
+    gap:10px;
+  }
+
+  .mx-profile-action{
+    width:100%;
+    border:1px solid #e5eaf1;
+    background:#fff;
+    border-radius:15px;
+    padding:14px;
+    text-align:left;
+    color:#10233f;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  .mx-profile-action span{
+    margin-right:9px;
+  }
+
+  .mx-dark-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+  }
+
+  .mx-switch{
+    position:relative;
+    width:48px;
+    height:27px;
+  }
+
+  .mx-switch input{
+    opacity:0;
+    width:0;
+    height:0;
+  }
+
+  .mx-slider{
+    position:absolute;
+    inset:0;
+    background:#d8dee8;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.2s;
+  }
+
+  .mx-slider:before{
+    content:"";
+    position:absolute;
+    width:21px;
+    height:21px;
+    left:3px;
+    top:3px;
+    background:#fff;
+    border-radius:50%;
+    transition:.2s;
+  }
+
+  .mx-switch input:checked + .mx-slider{
+    background:#20d9d2;
+  }
+
+  .mx-switch input:checked + .mx-slider:before{
+    transform:translateX(21px);
+  }
+
+  .mx-help-box{
+    margin-top:16px;
+    padding:16px;
+    border-radius:17px;
+    background:#e8fbfa;
+    border:1px solid #c9f2ef;
+  }
+
+  .mx-help-box strong{
+    display:block;
+    color:#10233f;
+    margin-bottom:6px;
+  }
+
+  .mx-help-box p{
+    color:#5f6f82;
+    font-size:13px;
+    line-height:1.5;
+    margin-bottom:12px;
+  }
+
+  .mx-whatsapp-link{
+    display:block;
+    text-decoration:none;
+    text-align:center;
+    padding:12px;
+    border-radius:13px;
+    background:#0b1f3a;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+  }
+
+  body.mx-dark{
+    background:#081321;
+    color:#fff;
+  }
+
+  body.mx-dark #app{
+    background:#081321;
+  }
+
+  body.mx-dark .mx-brand-name,
+  body.mx-dark .mx-greeting h2,
+  body.mx-dark .mx-section-title,
+  body.mx-dark .mx-service-card h3,
+  body.mx-dark .mx-profile-center h3,
+  body.mx-dark .mx-profile-action,
+  body.mx-dark .mx-profile-top h3,
+  body.mx-dark .mx-info-value,
+  body.mx-dark .mx-recent-title{
+    color:#fff;
+  }
+
+  body.mx-dark .mx-service-card,
+  body.mx-dark .mx-profile-action,
+  body.mx-dark .mx-close-profile{
+    background:#102033;
+    border-color:#24364b;
+    color:#fff;
+  }
+
+  body.mx-dark .mx-services-card,
+  body.mx-dark .mx-recent-box,
+  body.mx-dark .mx-account-info{
+    background:#102033;
+    border-color:#24364b;
+  }
+
+  body.mx-dark .mx-greeting small,
+  body.mx-dark .mx-profile-center p,
+  body.mx-dark .mx-profile-box p,
+  body.mx-dark .mx-recent-box p{
+    color:#aab7c7;
+  }
+
+  body.mx-dark .mx-help-box{
+    background:#102033;
+    border-color:#24364b;
+  }
+
+  body.mx-dark .mx-help-box strong{
+    color:#fff;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    const profileBox=document.querySelector(".mx-profile-box");
+
+    if(!profileBox || document.getElementById("mx-profile-extra")){
+      return;
+    }
+
+    const extra=document.createElement("div");
+
+    extra.id="mx-profile-extra";
+
+    extra.innerHTML=`
+      <div class="mx-profile-avatar">
+        👤
+      </div>
+
+      <div class="mx-profile-center">
+        <h3>Mon compte</h3>
+        <p>Gérez votre compte MONEXA CASH</p>
+      </div>
+
+      <div class="mx-profile-actions">
+
+        <button
+          type="button"
+          class="mx-profile-action"
+          onclick="monexaProfileTest('Informations personnelles')">
+          <span>👤</span>
+          Informations personnelles
+        </button>
+
+        <button
+          type="button"
+          class="mx-profile-action"
+          onclick="monexaProfileTest('Historique des transactions')">
+          <span>↕</span>
+          Historique des transactions
+        </button>
+
+        <div class="mx-profile-action mx-dark-row">
+
+          <div>
+            <span>🌙</span>
+            Mode sombre
+          </div>
+
+          <label class="mx-switch">
+            <input
+              id="mx-dark-toggle"
+              type="checkbox"
+              onchange="monexaToggleDark(this)">
+            <span class="mx-slider"></span>
+          </label>
+
+        </div>
+
+        <button
+          type="button"
+          class="mx-profile-action"
+          onclick="monexaProfileTest('Assistance')">
+          <span>🆘</span>
+          Assistance
+        </button>
+
+      </div>
+
+      <div class="mx-help-box">
+
+        <strong>Besoin d'aide ?</strong>
+
+        <p>
+          Si l'assistance n'est pas disponible,
+          vous pouvez nous contacter directement sur WhatsApp.
+        </p>
+
+        <a
+          class="mx-whatsapp-link"
+          href="https://wa.me/50940886629"
+          target="_blank"
+          rel="noopener noreferrer">
+          💬 Contacter MONEXA CASH sur WhatsApp
+        </a>
+
+      </div>
+    `;
+
+    profileBox.appendChild(extra);
+
+    const savedTheme=localStorage.getItem("monexa_dark_mode");
+
+    if(savedTheme==="true"){
+
+      document.body.classList.add("mx-dark");
+
+      const toggle=document.getElementById("mx-dark-toggle");
+
+      if(toggle){
+        toggle.checked=true;
+      }
+    }
+  });
+
+  function monexaToggleDark(input){
+
+    const enabled=input.checked;
+
+    document.body.classList.toggle("mx-dark",enabled);
+
+    localStorage.setItem(
+      "monexa_dark_mode",
+      enabled ? "true" : "false"
+    );
+  }
+
+  function monexaProfileTest(section){
+
+    alert(
+      section +
+      "\n\nCette fonction sera connectée au compte client dans une prochaine étape."
+    );
+  }
+</script>
 
 </body>
 </html>
