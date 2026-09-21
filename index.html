@@ -2883,17 +2883,3061 @@
 
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        <script>
-      const SUPABASE_URL="METE_URL_SUPABASE_LA_ISIT";
-      const SUPABASE_ANON_KEY="METE_ANON_KEY_LA_ISIT";
+            <script>
+      const SUPABASE_URL="https://nakaajakjrefzmacqlhv.supabase.co";
+      const SUPABASE_ANON_KEY="sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
 
       const supabaseClient=supabase.createClient(
         SUPABASE_URL,
         SUPABASE_ANON_KEY
       );
+            </script>
+
+            <script>
+      async function testSupabaseConnection(){
+        try{
+          const {data,error}=await supabaseClient
+            .from("service_tariffs")
+            .select("*")
+            .limit(1);
+
+          if(error){
+            console.log("MONEXA CASH Supabase:",error.message);
+            window.MONEXA_SUPABASE_CONNECTED=false;
+            return;
+          }
+
+          console.log("MONEXA CASH Supabase: connexion réussie.");
+          window.MONEXA_SUPABASE_CONNECTED=true;
+        }catch(error){
+          console.log("MONEXA CASH Supabase:",error.message);
+          window.MONEXA_SUPABASE_CONNECTED=false;
+        }
+      }
+
+      testSupabaseConnection();
+            </script>
+
+        <script>
+      $("login-form").onsubmit=async e=>{
+        e.preventDefault();
+        clearMessage("auth-message");
+        loading(true);
+
+        try{
+          const email=$("login-email").value.trim();
+          const password=$("login-password").value;
+
+          const {data,error}=await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if(error)throw error;
+
+          localStorage.setItem("monexa_demo_email",email);
+          $("dashboard-name").textContent=data.user?.user_metadata?.full_name||"Client MONEXA";
+
+          showSection("dashboard-section");
+          toast("Connexion réussie.");
+        }catch(error){
+          setMessage("auth-message",error.message||"Connexion impossible.",true);
+        }finally{
+          loading(false);
+        }
+      };
         </script>
 
+        <script>
+      $("signup-form").onsubmit=async e=>{
+        e.preventDefault();
+        clearMessage("auth-message");
+        loading(true);
+
+        try{
+          const name=$("signup-name").value.trim();
+          const email=$("signup-email").value.trim();
+          const phone=$("signup-phone").value.trim();
+          const password=$("signup-password").value;
+
+          if(password.length<6){
+            setMessage("auth-message","Le mot de passe doit contenir au moins 6 caractères.",true);
+            return;
+          }
+
+          const {data,error}=await supabaseClient.auth.signUp({
+            email,
+            password,
+            options:{
+              data:{
+                full_name:name,
+                phone:phone
+              }
+            }
+          });
+
+          if(error)throw error;
+
+          localStorage.setItem("monexa_demo_name",name);
+          localStorage.setItem("monexa_demo_email",email);
+          localStorage.setItem("monexa_demo_phone",phone);
+
+          setMessage(
+            "auth-message",
+            "Compte créé. Vérifiez votre e-mail si une confirmation est demandée."
+          );
+
+          toast("Compte créé avec succès.");
+        }catch(error){
+          setMessage("auth-message",error.message||"Création du compte impossible.",true);
+        }finally{
+          loading(false);
+        }
+      };
+        </script>
+
+        <script>
+      async function restoreSupabaseSession(){
+        try{
+          const {data,error}=await supabaseClient.auth.getSession();
+
+          if(error)throw error;
+
+          const session=data?.session;
+
+          if(session?.user){
+            const user=session.user;
+            const meta=user.user_metadata||{};
+
+            localStorage.setItem("monexa_demo_email",user.email||"");
+            localStorage.setItem("monexa_demo_name",meta.full_name||"Client MONEXA");
+            localStorage.setItem("monexa_demo_phone",meta.phone||"");
+
+            loadDemoProfile();
+            updateBalanceDisplays();
+            renderOrders();
+            renderTransactions();
+            showSection("dashboard-section");
+          }
+        }catch(error){
+          console.log("Session MONEXA:",error.message);
+        }
+      }
+
+      restoreSupabaseSession();
+        </script>
+
+        <script>
+      $("logout-btn")?.addEventListener("click",async e=>{
+        e.preventDefault();
+
+        try{
+          const {error}=await supabaseClient.auth.signOut();
+
+          if(error)throw error;
+
+          localStorage.removeItem("monexa_demo_user");
+          localStorage.removeItem("monexa_demo_name");
+          localStorage.removeItem("monexa_demo_email");
+          localStorage.removeItem("monexa_demo_phone");
+          localStorage.removeItem("monexa_demo_balance");
+
+          updateAccountButtons();
+          showSection("auth-section");
+          toast("Vous êtes déconnecté.");
+        }catch(error){
+          setMessage("auth-message","Impossible de vous déconnecter.",true);
+        }
+      });
+        </script>
+
+        <script>
+      async function saveSupabaseProfile(userId,name,email,phone){
+        const {error}=await supabaseClient
+          .from("profiles")
+          .upsert({
+            id:userId,
+            full_name:name,
+            email:email,
+            phone:phone
+          });
+
+        if(error)throw error;
+      }
+
+      supabaseClient.auth.onAuthStateChange(async(event,session)=>{
+        if(event==="SIGNED_IN"&&session?.user){
+          const user=session.user;
+          const meta=user.user_metadata||{};
+
+          try{
+            await saveSupabaseProfile(
+              user.id,
+              meta.full_name||"Client MONEXA",
+              user.email||"",
+              meta.phone||""
+            );
+          }catch(error){
+            console.log("Profil MONEXA:",error.message);
+          }
+        }
+      });
+        </script>
+
+        <script>
+      async function checkProfilesTable(){
+        try{
+          const {error}=await supabaseClient
+            .from("profiles")
+            .select("id")
+            .limit(1);
+
+          window.MONEXA_PROFILES_READY=!error;
+
+          if(error){
+            console.log("MONEXA profiles:",error.message);
+          }else{
+            console.log("MONEXA profiles: table disponible.");
+          }
+        }catch(error){
+          window.MONEXA_PROFILES_READY=false;
+          console.log("MONEXA profiles:",error.message);
+        }
+      }
+
+      checkProfilesTable();
+        </script>
+
+        <script>
+      async function loadSupabaseProfile(){
+        const {data:{user}}=await supabaseClient.auth.getUser();
+
+        if(!user)return;
+
+        const meta=user.user_metadata||{};
+
+        $("profile-name").textContent=meta.full_name||"—";
+        $("profile-email").textContent=user.email||"—";
+        $("profile-phone").textContent=meta.phone||"—";
+        $("dashboard-name").textContent=meta.full_name||"Client MONEXA";
+      }
+
+      if(window.MONEXA_SUPABASE_CONNECTED){
+        loadSupabaseProfile();
+      }
+        </script>
+
+        <script>
+      function createLocalOrder(service,amount,details){
+        addOrder(
+          service,
+          Number(amount||0),
+          details||""
+        );
+
+        updateBalanceDisplays();
+        renderOrders();
+        renderTransactions();
+        renderNotifications();
+      }
+
+      window.MONEXA_CREATE_ORDER=createLocalOrder;
+        </script>
+
+        <script>
+      async function saveOrderToSupabase(order){
+        try{
+          const {data,error}=await supabaseClient
+            .from("orders")
+            .insert(order)
+            .select()
+            .single();
+
+          if(error)throw error;
+
+          return data;
+        }catch(error){
+          console.log("MONEXA orders:",error.message);
+          return null;
+        }
+      }
+
+      window.MONEXA_SAVE_ORDER=saveOrderToSupabase;
+        </script>
+
+        <script>
+      async function saveDepositToSupabase(deposit){
+        try{
+          const {data,error}=await supabaseClient
+            .from("deposits")
+            .insert(deposit)
+            .select()
+            .single();
+
+          if(error)throw error;
+
+          return data;
+        }catch(error){
+          console.log("MONEXA deposits:",error.message);
+          return null;
+        }
+      }
+
+      window.MONEXA_SAVE_DEPOSIT=saveDepositToSupabase;
+        </script>
+
+        <script>
+      async function getCurrentSupabaseUser(){
+        try{
+          const {data,error}=await supabaseClient.auth.getUser();
+
+          if(error)throw error;
+
+          return data?.user||null;
+        }catch(error){
+          console.log("MONEXA utilisateur:",error.message);
+          return null;
+        }
+      }
+
+      window.MONEXA_GET_USER=getCurrentSupabaseUser;
+        </script>
+
+        <script>
+      async function syncCurrentUser(){
+        const user=await getCurrentSupabaseUser();
+
+        if(!user)return null;
+
+        const meta=user.user_metadata||{};
+
+        localStorage.setItem("monexa_demo_email",user.email||"");
+        localStorage.setItem("monexa_demo_name",meta.full_name||"Client MONEXA");
+        localStorage.setItem("monexa_demo_phone",meta.phone||"");
+
+        $("dashboard-name").textContent=meta.full_name||"Client MONEXA";
+        $("profile-name").textContent=meta.full_name||"—";
+        $("profile-email").textContent=user.email||"—";
+        $("profile-phone").textContent=meta.phone||"—";
+
+        return user;
+      }
+
+      window.MONEXA_SYNC_USER=syncCurrentUser;
+        </script>
+
+        <script>
+      async function initializeSupabaseSession(){
+        try{
+          const {data,error}=await supabaseClient.auth.getSession();
+
+          if(error)throw error;
+
+          if(data?.session?.user){
+            await syncCurrentUser();
+            updateAccountButtons();
+          }
+        }catch(error){
+          console.log("MONEXA session:",error.message);
+        }
+      }
+
+      initializeSupabaseSession();
+        </script>
+
+        <script>
+      supabaseClient.auth.onAuthStateChange((event,session)=>{
+        if(event==="SIGNED_IN"&&session?.user){
+          syncCurrentUser();
+          updateAccountButtons();
+        }
+
+        if(event==="SIGNED_OUT"){
+          updateAccountButtons();
+          showSection("auth-section");
+        }
+      });
+        </script>
+
+        <script>
+      async function loadSupabaseBalance(){
+        const user=await getCurrentSupabaseUser();
+
+        if(!user)return;
+
+        console.log("MONEXA: utilisateur connecté",user.id);
+      }
+
+      window.MONEXA_LOAD_BALANCE=loadSupabaseBalance;
+        </script>
+
+        <script>
+      async function loadSupabaseOrders(){
+        const user=await getCurrentSupabaseUser();
+
+        if(!user)return[];
+
+        try{
+          const {data,error}=await supabaseClient
+            .from("orders")
+            .select("*")
+            .eq("user_id",user.id)
+            .order("created_at",{ascending:false});
+
+          if(error)throw error;
+
+          return data||[];
+        }catch(error){
+          console.log("MONEXA commandes:",error.message);
+          return[];
+        }
+      }
+
+      window.MONEXA_LOAD_ORDERS=loadSupabaseOrders;
+        </script>
+
+        <script>
+      async function loadSupabaseDeposits(){
+        const user=await getCurrentSupabaseUser();
+
+        if(!user)return[];
+
+        try{
+          const {data,error}=await supabaseClient
+            .from("deposits")
+            .select("*")
+            .eq("user_id",user.id)
+            .order("created_at",{ascending:false});
+
+          if(error)throw error;
+
+          return data||[];
+        }catch(error){
+          console.log("MONEXA dépôts:",error.message);
+          return[];
+        }
+      }
+
+      window.MONEXA_LOAD_DEPOSITS=loadSupabaseDeposits;
+        </script>
+
+        <script>
+      async function loadServiceTariffs(){
+        try{
+          const {data,error}=await supabaseClient
+            .from("service_tariffs")
+            .select("*");
+
+          if(error)throw error;
+
+          window.MONEXA_TARIFFS=data||[];
+          return data||[];
+        }catch(error){
+          console.log("MONEXA tarifs:",error.message);
+          window.MONEXA_TARIFFS=[];
+          return[];
+        }
+      }
+
+      window.MONEXA_LOAD_TARIFFS=loadServiceTariffs;
+      loadServiceTariffs();
+        </script>
+
+        <script>
+      function getTariff(service){
+        const list=window.MONEXA_TARIFFS||[];
+
+        return list.find(t=>
+          String(t.service_type||"").toLowerCase()===
+          String(service||"").toLowerCase()
+        )||null;
+      }
+
+      function getTariffValue(service,field){
+        const tariff=getTariff(service);
+        return tariff?tariff[field]:null;
+      }
+
+      window.MONEXA_GET_TARIFF=getTariff;
+      window.MONEXA_GET_TARIFF_VALUE=getTariffValue;
+        </script>
+
+    <script>
+      async function loadFreeFireTariffs(){
+        try{
+          const {data,error}=await supabaseClient
+            .from("service_tariffs")
+            .select("*")
+            .eq("service_type","Free Fire");
+
+          if(error)throw error;
+
+          window.MONEXA_FREE_FIRE_TARIFFS=data||[];
+          return data||[];
+        }catch(error){
+          console.log("MONEXA Free Fire tarifs:",error.message);
+          window.MONEXA_FREE_FIRE_TARIFFS=[];
+          return[];
+        }
+      }
+
+      window.MONEXA_LOAD_FREE_FIRE_TARIFFS=loadFreeFireTariffs;
+      loadFreeFireTariffs();
+    </script>
+
+    <script>
+      function renderFreeFireTariffs(){
+        const select=$("free-fire-package");
+        if(!select)return;
+
+        const tariffs=window.MONEXA_FREE_FIRE_TARIFFS||[];
+        if(!tariffs.length)return;
+
+        select.innerHTML='<option value="">Sélectionnez un pack</option>';
+
+        tariffs.forEach(t=>{
+          const option=document.createElement("option");
+          option.value=t.item_code||t.id||"";
+          option.textContent=(t.item_name||"Pack")+" — "+(t.price_htg||0)+" HTG";
+          option.dataset.price=t.price_htg||0;
+          select.appendChild(option);
+        });
+      }
+
+      renderFreeFireTariffs();
+    </script>
+
+        <script>
+      async function refreshFreeFirePrices(){
+        await loadFreeFireTariffs();
+        renderFreeFireTariffs();
+        $("free-fire-price").textContent="0 HTG";
+      }
+
+      refreshFreeFirePrices();
+        </script>
+
+        <script>
+      function getMonexaPrice(service,item){
+        const tariffs=window.MONEXA_TARIFFS||[];
+
+        return tariffs.find(t=>{
+          const sameService=String(t.service_type||"").toLowerCase()===
+            String(service||"").toLowerCase();
+
+          const sameItem=!item||
+            String(t.item_code||t.item_name||"").toLowerCase()===
+            String(item||"").toLowerCase();
+
+          return sameService&&sameItem;
+        })||null;
+      }
+
+      window.MONEXA_GET_PRICE=getMonexaPrice;
+        </script>
+
+        <script>
+      const MONEXA_RULES={
+        usdToHtg:145,
+        cryptoRate:143,
+        usdtUsdcEqualUsd:true,
+        cryptoFee:0,
+        services:[
+          "Recharge",
+          "Retrait",
+          "Free Fire",
+          "Crypto",
+          "Binance",
+          "Création de carte"
+        ]
+      };
+
+      window.MONEXA_RULES=MONEXA_RULES;
+        </script>
+
+        <script>
+      const MONEXA_DEPOSIT_RULE={
+        method:"Natcash",
+        number:"+509 40886629",
+        name:"JUNIOR AUGUSTE",
+        proofRequired:true,
+        manualApproval:true,
+        creditAfterApproval:true
+      };
+
+      window.MONEXA_DEPOSIT_RULE=MONEXA_DEPOSIT_RULE;
+        </script>
+
+        <script>
+      const MONEXA_BALANCE_RULE={
+        proofRequiredForDeposit:true,
+        proofRequiredForServices:false,
+        manualApprovalForDeposit:true,
+        useBalanceForServices:true
+      };
+
+      window.MONEXA_BALANCE_RULE=MONEXA_BALANCE_RULE;
+        </script>
+
+        <script>
+      const MONEXA_WITHDRAW_RULE={
+        methods:["Meru","Wise","Morse","USDT","USDC"],
+        usdToHtg:135,
+        cryptoRate:143,
+        proofRequired:false,
+        manualProcessing:true
+      };
+
+      window.MONEXA_WITHDRAW_RULE=MONEXA_WITHDRAW_RULE;
+        </script>
+
+        <script>
+      const MONEXA_WITHDRAW_FEES={
+        standard:2,
+        smallAmount:1,
+        smallAmountMax:10,
+        services:["Meru","Wise","Morse"]
+      };
+
+      window.MONEXA_WITHDRAW_FEES=MONEXA_WITHDRAW_FEES;
+        </script>
+
+        <script>
+      const MONEXA_CRYPTO_RULE={
+        assets:["USDT","USDC"],
+        rateHtg:143,
+        feeUsd:0,
+        networks:[
+          "TRC20",
+          "ERC20",
+          "BEP20",
+          "Polygon",
+          "Solana",
+          "Arbitrum",
+          "Optimism"
+        ]
+      };
+
+      window.MONEXA_CRYPTO_RULE=MONEXA_CRYPTO_RULE;
+        </script>
+
+        <script>
+      const MONEXA_BINANCE_RULE={
+        identifierRequired:true,
+        acceptedIdentifiers:["Binance ID","E-mail"],
+        useBalance:true,
+        proofRequired:false,
+        defaultStatus:"Traitement en cours"
+      };
+
+      window.MONEXA_BINANCE_RULE=MONEXA_BINANCE_RULE;
+        </script>
+
+    <script>
+  const MONEXA_ORDER_STATUS={
+    pending:"Traitement en cours",
+    approved:"Terminé",
+    rejected:"Refusé"
+  };
+
+  window.MONEXA_ORDER_STATUS=MONEXA_ORDER_STATUS;
+    </script>
+
+    <script>
+  function monexaShowStatus(status){
+    const text=MONEXA_ORDER_STATUS[status]||MONEXA_ORDER_STATUS.pending;
+    if(typeof showToast==="function") showToast(text);
+    return text;
+  }
+
+  window.monexaShowStatus=monexaShowStatus;
+    </script>
+
+    <script>
+  function setMonexaOrderStatus(order,status){
+    if(!order) return order;
+    order.status=MONEXA_ORDER_STATUS[status]||status;
+    order.statusKey=status;
+    return order;
+  }
+
+  window.setMonexaOrderStatus=setMonexaOrderStatus;
+    </script>
+
+    <script>
+  function monexaOrderIsPending(order){
+    return order && (
+      order.status==="Traitement en cours" ||
+      order.statusKey==="pending"
+    );
+  }
+
+  window.monexaOrderIsPending=monexaOrderIsPending;
+    </script>
+
+    <script>
+  function monexaOrderStatusText(order){
+    if(!order) return MONEXA_ORDER_STATUS.pending;
+    return order.status || MONEXA_ORDER_STATUS.pending;
+  }
+
+  window.monexaOrderStatusText=monexaOrderStatusText;
+    </script>
+
+    <script>
+  function monexaUpdateOrderStatus(order,status){
+    if(!order) return;
+    order.statusKey=status;
+    order.status=MONEXA_ORDER_STATUS[status]||status;
+
+    if(typeof renderOrders==="function") renderOrders();
+
+    return order;
+  }
+
+  window.monexaUpdateOrderStatus=monexaUpdateOrderStatus;
+    </script>
+
+    <script>
+  function monexaGetOrderStatus(order){
+    return order?.status || MONEXA_ORDER_STATUS.pending;
+  }
+
+  window.monexaGetOrderStatus=monexaGetOrderStatus;
+    </script>
+
+    <script>
+  function monexaNormalizeOrderStatus(order){
+    if(!order) return;
+    if(!order.statusKey){
+      order.statusKey="pending";
+      order.status=MONEXA_ORDER_STATUS.pending;
+    }
+    return order;
+  }
+
+  window.monexaNormalizeOrderStatus=monexaNormalizeOrderStatus;
+    </script>
+
+    <script>
+  function monexaPrepareOrder(order){
+    if(!order) return null;
+
+    monexaNormalizeOrderStatus(order);
+
+    order.updated_at=new Date().toISOString();
+
+    return order;
+  }
+
+  window.monexaPrepareOrder=monexaPrepareOrder;
+    </script>
+
+    <script>
+  function monexaCreatePendingOrder(data={}){
+    const order={
+      ...data,
+      statusKey:"pending",
+      status:MONEXA_ORDER_STATUS.pending,
+      created_at:new Date().toISOString(),
+      updated_at:new Date().toISOString()
+    };
+
+    return order;
+  }
+
+  window.monexaCreatePendingOrder=monexaCreatePendingOrder;
+    </script>
+
+    <script>
+  function monexaGenerateOrderId(){
+    return "MC-"+Date.now()+"-"+Math.random().toString(36).slice(2,8).toUpperCase();
+  }
+
+  window.monexaGenerateOrderId=monexaGenerateOrderId;
+    </script>
+
+    <script>
+  function monexaBuildOrder(data={}){
+    return monexaCreatePendingOrder({
+      ...data,
+      order_id:data.order_id||monexaGenerateOrderId()
+    });
+  }
+
+  window.monexaBuildOrder=monexaBuildOrder;
+    </script>
+
+    <script>
+  function monexaSaveOrderLocal(order){
+    if(!order) return null;
+
+    const orders=JSON.parse(
+      localStorage.getItem("monexa_orders")||"[]"
+    );
+
+    orders.push(order);
+
+    localStorage.setItem(
+      "monexa_orders",
+      JSON.stringify(orders)
+    );
+
+    return order;
+  }
+
+  window.monexaSaveOrderLocal=monexaSaveOrderLocal;
+    </script>
+
+    <script>
+  function monexaCreateOrder(data={}){
+    const order=monexaBuildOrder(data);
+    monexaSaveOrderLocal(order);
+    return order;
+  }
+
+  window.monexaCreateOrder=monexaCreateOrder;
+    </script>
+
+    <script>
+  function monexaAddOrder(data={}){
+    const order=monexaCreateOrder(data);
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+
+    return order;
+  }
+
+  window.monexaAddOrder=monexaAddOrder;
+    </script>
+
+    <script>
+  async function monexaSaveOrder(order){
+    if(!order) return null;
+
+    monexaSaveOrderLocal(order);
+
+    if(typeof saveOrderToSupabase==="function"){
+      try{
+        await saveOrderToSupabase(order);
+      }catch(error){
+        console.log("MONEXA CASH - erreur Supabase:",error.message);
+      }
+    }
+
+    return order;
+  }
+
+  window.monexaSaveOrder=monexaSaveOrder;
+    </script>
+
+    <script>
+  async function monexaGetCurrentUser(){
+    try{
+      const {data,error}=await supabaseClient.auth.getUser();
+
+      if(error){
+        console.log("MONEXA CASH - utilisateur:",error.message);
+        return null;
+      }
+
+      return data?.user||null;
+    }catch(error){
+      console.log("MONEXA CASH - utilisateur:",error.message);
+      return null;
+    }
+  }
+
+  window.monexaGetCurrentUser=monexaGetCurrentUser;
+    </script>
+
+    <script>
+  async function monexaAttachUserToOrder(order){
+    if(!order) return null;
+
+    const user=await monexaGetCurrentUser();
+
+    if(user){
+      order.user_id=user.id;
+      order.email=order.email||user.email||"";
+    }
+
+    return order;
+  }
+
+  window.monexaAttachUserToOrder=monexaAttachUserToOrder;
+    </script>
+
+    <script>
+  async function monexaSubmitOrder(data={}){
+    const order=monexaBuildOrder(data);
+
+    await monexaAttachUserToOrder(order);
+
+    await monexaSaveOrder(order);
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+
+    return order;
+  }
+
+  window.monexaSubmitOrder=monexaSubmitOrder;
+    </script>
+
+    <script>
+  function monexaHasPendingOrder(service,amount){
+    const orders=JSON.parse(
+      localStorage.getItem("monexa_orders")||"[]"
+    );
+
+    return orders.some(order=>
+      order.service===service &&
+      String(order.amount)===String(amount) &&
+      order.statusKey==="pending"
+    );
+  }
+
+  window.monexaHasPendingOrder=monexaHasPendingOrder;
+    </script>
+
+    <script>
+  function monexaHasEnoughBalance(amount){
+    const balance=Number(
+      localStorage.getItem("monexa_balance")||0
+    );
+
+    return balance>=Number(amount);
+  }
+
+  window.monexaHasEnoughBalance=monexaHasEnoughBalance;
+    </script>
+
+    <script>
+  function monexaCalculateNewBalance(amount){
+    const balance=Number(
+      localStorage.getItem("monexa_balance")||0
+    );
+
+    const newBalance=balance-Number(amount);
+
+    return Math.max(0,newBalance);
+  }
+
+  window.monexaCalculateNewBalance=monexaCalculateNewBalance;
+    </script>
+
+    <script>
+  function monexaUpdateLocalBalance(amount){
+    const newBalance=monexaCalculateNewBalance(amount);
+
+    localStorage.setItem(
+      "monexa_balance",
+      String(newBalance)
+    );
+
+    return newBalance;
+  }
+
+  window.monexaUpdateLocalBalance=monexaUpdateLocalBalance;
+    </script>
+
+    <script>
+  function monexaDeductBalance(amount){
+    if(!monexaHasEnoughBalance(amount)){
+      return false;
+    }
+
+    monexaUpdateLocalBalance(amount);
+    return true;
+  }
+
+  window.monexaDeductBalance=monexaDeductBalance;
+    </script>
+
+    <script>
+  function monexaValidateBalanceForOrder(amount){
+    const value=Number(amount);
+
+    if(!Number.isFinite(value)||value<=0){
+      return false;
+    }
+
+    return monexaHasEnoughBalance(value);
+  }
+
+  window.monexaValidateBalanceForOrder=monexaValidateBalanceForOrder;
+    </script>
+
+    <script>
+  function monexaPayWithBalance(amount){
+    const value=Number(amount);
+
+    if(!monexaValidateBalanceForOrder(value)){
+      return {
+        success:false,
+        message:"Solde insuffisant"
+      };
+    }
+
+    return {
+      success:true,
+      amount:value
+    };
+  }
+
+  window.monexaPayWithBalance=monexaPayWithBalance;
+    </script>
+
+    <script>
+  function monexaConfirmBalancePayment(amount){
+    const payment=monexaPayWithBalance(amount);
+
+    if(!payment.success){
+      return payment;
+    }
+
+    const newBalance=monexaDeductBalance(payment.amount);
+
+    return {
+      success:true,
+      amount:payment.amount,
+      newBalance:newBalance
+    };
+  }
+
+  window.monexaConfirmBalancePayment=monexaConfirmBalancePayment;
+    </script>
+
+    <script>
+  function monexaSaveTransaction(data={}){
+    const transactions=JSON.parse(
+      localStorage.getItem("monexa_transactions")||"[]"
+    );
+
+    const transaction={
+      transaction_id:monexaGenerateOrderId(),
+      type:data.type||"Service",
+      amount:Number(data.amount)||0,
+      order_id:data.order_id||"",
+      balance_after:Number(data.balance_after)||0,
+      created_at:new Date().toISOString()
+    };
+
+    transactions.push(transaction);
+
+    localStorage.setItem(
+      "monexa_transactions",
+      JSON.stringify(transactions)
+    );
+
+    return transaction;
+  }
+
+  window.monexaSaveTransaction=monexaSaveTransaction;
+    </script>
+
+    <script>
+  function monexaProcessServicePayment(data={}){
+    const payment=monexaConfirmBalancePayment(data.amount);
+
+    if(!payment.success){
+      return payment;
+    }
+
+    const transaction=monexaSaveTransaction({
+      type:data.type||data.service||"Service",
+      amount:payment.amount,
+      order_id:data.order_id||"",
+      balance_after:payment.newBalance
+    });
+
+    return {
+      success:true,
+      payment,
+      transaction
+    };
+  }
+
+  window.monexaProcessServicePayment=monexaProcessServicePayment;
+    </script>
+
+    <script>
+  async function monexaRequireUser(){
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      if(typeof showToast==="function"){
+        showToast("Veuillez vous connecter.");
+      }
+      return null;
+    }
+
+    return user;
+  }
+
+  window.monexaRequireUser=monexaRequireUser;
+    </script>
+
+    <script>
+  async function monexaProcessService(data={}){
+    const user=await monexaRequireUser();
+
+    if(!user) return {success:false};
+
+    const payment=monexaProcessServicePayment({
+      amount:data.amount,
+      type:data.service,
+      service:data.service
+    });
+
+    if(!payment.success){
+      if(typeof showToast==="function"){
+        showToast(payment.message||"Solde insuffisant");
+      }
+      return payment;
+    }
+
+    const order=await monexaSubmitOrder({
+      service:data.service||"Service",
+      amount:Number(data.amount)||0,
+      details:data.details||{},
+      transaction_id:payment.transaction.transaction_id
+    });
+
+    return {
+      success:true,
+      order,
+      payment
+    };
+  }
+
+  window.monexaProcessService=monexaProcessService;
+    </script>
+
+    <script>
+  async function monexaAttachCustomer(order){
+    if(!order) return null;
+
+    const user=await monexaGetCurrentUser();
+
+    if(!user) return order;
+
+    const meta=user.user_metadata||{};
+
+    order.user_id=user.id;
+    order.email=order.email||user.email||"";
+    order.full_name=order.full_name||meta.full_name||"";
+    order.phone=order.phone||meta.phone||"";
+
+    return order;
+  }
+
+  window.monexaAttachCustomer=monexaAttachCustomer;
+    </script>
+
+    <script>
+  async function monexaPrepareCustomerOrder(data={}){
+    const order=monexaBuildOrder(data);
+
+    await monexaAttachCustomer(order);
+
+    return order;
+  }
+
+  window.monexaPrepareCustomerOrder=monexaPrepareCustomerOrder;
+    </script>
+
+    <script>
+  async function monexaCreateServiceOrder(data={}){
+    const user=await monexaRequireUser();
+
+    if(!user) return null;
+
+    const payment=monexaPayWithBalance(data.amount);
+
+    if(!payment.success){
+      if(typeof showToast==="function"){
+        showToast("Solde insuffisant");
+      }
+      return null;
+    }
+
+    monexaDeductBalance(data.amount);
+
+    const order=await monexaPrepareCustomerOrder({
+      ...data,
+      amount:Number(data.amount)||0
+    });
+
+    await monexaSaveOrder(order);
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+
+    return order;
+  }
+
+  window.monexaCreateServiceOrder=monexaCreateServiceOrder;
+    </script>
+
+    <script>
+  async function monexaCreateRechargeOrder(amount,details={}){
+    return monexaCreateServiceOrder({
+      service:"Recharge",
+      amount:Number(amount)||0,
+      details
+    });
+  }
+
+  window.monexaCreateRechargeOrder=monexaCreateRechargeOrder;
+    </script>
+
+    <script>
+  async function monexaCreateWithdrawOrder(amount,details={}){
+    return monexaCreateServiceOrder({
+      service:"Retrait",
+      amount:Number(amount)||0,
+      details
+    });
+  }
+
+  window.monexaCreateWithdrawOrder=monexaCreateWithdrawOrder;
+    </script>
+
+    <script>
+  async function monexaCreateFreeFireOrder(amount,details={}){
+    return monexaCreateServiceOrder({
+      service:"Free Fire",
+      amount:Number(amount)||0,
+      details
+    });
+  }
+
+  window.monexaCreateFreeFireOrder=monexaCreateFreeFireOrder;
+    </script>
+
+    <script>
+  async function monexaCreateCryptoOrder(amount,details={}){
+    return monexaCreateServiceOrder({
+      service:"Crypto",
+      amount:Number(amount)||0,
+      details
+    });
+  }
+
+  window.monexaCreateCryptoOrder=monexaCreateCryptoOrder;
+    </script>
+
+    <script>
+  async function monexaCreateBinanceOrder(amount,details={}){
+    return monexaCreateServiceOrder({
+      service:"Binance",
+      amount:Number(amount)||0,
+      details
+    });
+  }
+
+  window.monexaCreateBinanceOrder=monexaCreateBinanceOrder;
+    </script>
+
+    <script>
+  const MONEXA_CARD_CREATION_RULE={
+    providers:["Meru","Morse"],
+    priceGds:1500,
+    creditUsd:5
+  };
+
+  function monexaPrepareCardOrder(provider){
+    if(!MONEXA_CARD_CREATION_RULE.providers.includes(provider)){
+      return null;
+    }
+
+    return {
+      service:"Création de carte",
+      provider,
+      price_gds:1500,
+      credit_usd:5,
+      statusKey:"pending",
+      status:"Traitement en cours",
+      created_at:new Date().toISOString()
+    };
+  }
+
+  window.MONEXA_CARD_CREATION_RULE=MONEXA_CARD_CREATION_RULE;
+  window.monexaPrepareCardOrder=monexaPrepareCardOrder;
+    </script>
+
+    <script>
+  async function monexaCreateCardOrder(provider,details={}){
+    const user=await monexaRequireUser();
+
+    if(!user) return null;
+
+    const order=monexaPrepareCardOrder(provider);
+
+    if(!order){
+      if(typeof showToast==="function"){
+        showToast("Service de carte invalide");
+      }
+      return null;
+    }
+
+    Object.assign(order,details);
+    order.user_id=user.id;
+    order.email=user.email||"";
+
+    await monexaSaveOrder(order);
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+
+    return order;
+  }
+
+  window.monexaCreateCardOrder=monexaCreateCardOrder;
+    </script>
+
+    <script>
+  function monexaRechargeDetails(data={}){
+    return {
+      amount:Number(data.amount)||0,
+      account:data.account||"",
+      note:data.note||"",
+      proofRequired:false
+    };
+  }
+
+  window.monexaRechargeDetails=monexaRechargeDetails;
+    </script>
+
+    <script>
+  function monexaWithdrawDetails(data={}){
+    return {
+      method:data.method||"",
+      amount:Number(data.amount)||0,
+      details:data.details||{},
+      proofRequired:false
+    };
+  }
+
+  window.monexaWithdrawDetails=monexaWithdrawDetails;
+    </script>
+
+    <script>
+  function monexaFreeFireDetails(data={}){
+    return {
+      diamonds:data.diamonds||"",
+      account:data.account||"",
+      amount:Number(data.amount)||0,
+      proofRequired:false
+    };
+  }
+
+  window.monexaFreeFireDetails=monexaFreeFireDetails;
+    </script>
+
+    <script>
+  function monexaCryptoDetails(data={}){
+    return {
+      asset:data.asset||"",
+      network:data.network||"",
+      wallet:data.wallet||"",
+      amount:Number(data.amount)||0,
+      proofRequired:false,
+      fee_usd:0
+    };
+  }
+
+  window.monexaCryptoDetails=monexaCryptoDetails;
+    </script>
+
+    <script>
+  function monexaBinanceDetails(data={}){
+    return {
+      identifierType:data.identifierType||"",
+      identifier:data.identifier||"",
+      amount:Number(data.amount)||0,
+      proofRequired:false
+    };
+  }
+
+  window.monexaBinanceDetails=monexaBinanceDetails;
+    </script>
+
+    <script>
+  function monexaValidateServiceOrder(data={}){
+    const services=MONEXA_RULES.services||[];
+
+    if(!services.includes(data.service)){
+      return false;
+    }
+
+    const amount=Number(data.amount);
+
+    if(!Number.isFinite(amount)||amount<=0){
+      return false;
+    }
+
+    return monexaHasEnoughBalance(amount);
+  }
+
+  window.monexaValidateServiceOrder=monexaValidateServiceOrder;
+    </script>
+
+    <script>
+  function monexaAuthorizeServicePayment(data={}){
+    if(!monexaValidateServiceOrder(data)){
+      return {
+        success:false,
+        message:"Commande invalide ou solde insuffisant"
+      };
+    }
+
+    return {
+      success:true,
+      amount:Number(data.amount),
+      service:data.service
+    };
+  }
+
+  window.monexaAuthorizeServicePayment=monexaAuthorizeServicePayment;
+    </script>
+
+    <script>
+  function monexaCreateServiceTransaction(data={}){
+    const authorization=monexaAuthorizeServicePayment(data);
+
+    if(!authorization.success){
+      return authorization;
+    }
+
+    const balanceAfter=monexaCalculateNewBalance(
+      authorization.amount
+    );
+
+    return monexaSaveTransaction({
+      type:authorization.service,
+      amount:authorization.amount,
+      order_id:data.order_id||"",
+      balance_after:balanceAfter
+    });
+  }
+
+  window.monexaCreateServiceTransaction=monexaCreateServiceTransaction;
+    </script>
+
+    <script>
+  function monexaPrepareServiceDetails(service,data={}){
+    if(service==="Recharge"){
+      return monexaRechargeDetails(data);
+    }
+
+    if(service==="Retrait"){
+      return monexaWithdrawDetails(data);
+    }
+
+    if(service==="Free Fire"){
+      return monexaFreeFireDetails(data);
+    }
+
+    if(service==="Crypto"){
+      return monexaCryptoDetails(data);
+    }
+
+    if(service==="Binance"){
+      return monexaBinanceDetails(data);
+    }
+
+    return data;
+  }
+
+  window.monexaPrepareServiceDetails=monexaPrepareServiceDetails;
+    </script>
+
+    <script>
+  async function monexaCreateFullServiceOrder(data={}){
+    const service=data.service||"";
+    const details=monexaPrepareServiceDetails(
+      service,
+      data.details||data
+    );
+
+    return monexaCreateServiceOrder({
+      ...data,
+      service,
+      details
+    });
+  }
+
+  window.monexaCreateFullServiceOrder=monexaCreateFullServiceOrder;
+    </script>
+
+    <script>
+  function monexaCheckService(data={}){
+    const service=data.service||"";
+    const amount=Number(data.amount);
+
+    if(!MONEXA_RULES.services.includes(service)){
+      return {
+        valid:false,
+        message:"Service non disponible"
+      };
+    }
+
+    if(!Number.isFinite(amount)||amount<=0){
+      return {
+        valid:false,
+        message:"Montant invalide"
+      };
+    }
+
+    if(!monexaHasEnoughBalance(amount)){
+      return {
+        valid:false,
+        message:"Solde insuffisant"
+      };
+    }
+
+    return {
+      valid:true,
+      service,
+      amount
+    };
+  }
+
+  window.monexaCheckService=monexaCheckService;
+    </script>
+
+    <script>
+  function monexaOrderSummary(data={}){
+    const check=monexaCheckService(data);
+
+    if(!check.valid){
+      return check;
+    }
+
+    return {
+      service:check.service,
+      amount:check.amount,
+      statusKey:"pending",
+      status:MONEXA_ORDER_STATUS.pending
+    };
+  }
+
+  window.monexaOrderSummary=monexaOrderSummary;
+    </script>
+
+    <script>
+  function monexaConfirmOrderMessage(data={}){
+    const summary=monexaOrderSummary(data);
+
+    if(summary.valid===false){
+      return summary.message;
+    }
+
+    return "Commande "+summary.service+
+      " de "+summary.amount+
+      " HTG — "+summary.status;
+  }
+
+  window.monexaConfirmOrderMessage=monexaConfirmOrderMessage;
+    </script>
+
+    <script>
+  async function monexaFinalizeServiceOrder(data={}){
+    const check=monexaCheckService(data);
+
+    if(!check.valid){
+      if(typeof showToast==="function"){
+        showToast(check.message);
+      }
+      return null;
+    }
+
+    const details=monexaPrepareServiceDetails(
+      check.service,
+      data.details||data
+    );
+
+    const order=await monexaPrepareCustomerOrder({
+      service:check.service,
+      amount:check.amount,
+      details
+    });
+
+    return order;
+  }
+
+  window.monexaFinalizeServiceOrder=monexaFinalizeServiceOrder;
+    </script>
+
+    <script>
+  const MONEXA_SUBMIT_LOCK={};
+
+  function monexaLockService(service){
+    if(MONEXA_SUBMIT_LOCK[service]){
+      return false;
+    }
+
+    MONEXA_SUBMIT_LOCK[service]=true;
+    return true;
+  }
+
+  function monexaUnlockService(service){
+    delete MONEXA_SUBMIT_LOCK[service];
+  }
+
+  window.MONEXA_SUBMIT_LOCK=MONEXA_SUBMIT_LOCK;
+  window.monexaLockService=monexaLockService;
+  window.monexaUnlockService=monexaUnlockService;
+    </script>
+
+    <script>
+  async function monexaSafeSubmitService(data={}){
+    const service=data.service||"";
+
+    if(!monexaLockService(service)){
+      if(typeof showToast==="function"){
+        showToast("Commande déjà en traitement.");
+      }
+      return null;
+    }
+
+    try{
+      return await monexaFinalizeServiceOrder(data);
+    }finally{
+      monexaUnlockService(service);
+    }
+  }
+
+  window.monexaSafeSubmitService=monexaSafeSubmitService;
+    </script>
+
+    <script>
+  function monexaPendingStatus(){
+    return MONEXA_ORDER_STATUS.pending;
+  }
+
+  window.monexaPendingStatus=monexaPendingStatus;
+    </script>
+
+    <script>
+  function monexaSetPendingStatus(order){
+    if(!order) return null;
+
+    order.statusKey="pending";
+    order.status=MONEXA_ORDER_STATUS.pending;
+    order.created_at=order.created_at||new Date().toISOString();
+    order.updated_at=new Date().toISOString();
+
+    return order;
+  }
+
+  window.monexaSetPendingStatus=monexaSetPendingStatus;
+    </script>
+
+    <script>
+  async function monexaPrepareFinalOrder(data={}){
+    const user=await monexaGetCurrentUser();
+
+    if(!user) return null;
+
+    const order={
+      ...data,
+      user_id:user.id,
+      email:data.email||user.email||"",
+      statusKey:"pending",
+      status:MONEXA_ORDER_STATUS.pending,
+      created_at:data.created_at||new Date().toISOString(),
+      updated_at:new Date().toISOString()
+    };
+
+    return order;
+  }
+
+  window.monexaPrepareFinalOrder=monexaPrepareFinalOrder;
+    </script>
+
+    <script>
+  async function monexaValidateFinalOrder(data={}){
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      return {
+        valid:false,
+        message:"Veuillez vous connecter."
+      };
+    }
+
+    const check=monexaCheckService(data);
+
+    if(!check.valid){
+      return {
+        valid:false,
+        message:check.message
+      };
+    }
+
+    return {
+      valid:true,
+      user_id:user.id,
+      service:check.service,
+      amount:check.amount
+    };
+  }
+
+  window.monexaValidateFinalOrder=monexaValidateFinalOrder;
+    </script>
+
+    <script>
+  async function monexaBuildFinalOrder(data={}){
+    const validation=await monexaValidateFinalOrder(data);
+
+    if(!validation.valid){
+      return null;
+    }
+
+    return monexaPrepareFinalOrder({
+      ...data,
+      order_id:data.order_id||monexaGenerateOrderId(),
+      user_id:validation.user_id,
+      service:validation.service,
+      amount:validation.amount
+    });
+  }
+
+  window.monexaBuildFinalOrder=monexaBuildFinalOrder;
+    </script>
+
+    <script>
+  async function monexaCheckFinalPayment(data={}){
+    const order=await monexaBuildFinalOrder(data);
+
+    if(!order){
+      return {
+        valid:false,
+        message:"Commande invalide."
+      };
+    }
+
+    if(!monexaHasEnoughBalance(order.amount)){
+      return {
+        valid:false,
+        message:"Solde insuffisant."
+      };
+    }
+
+    return {
+      valid:true,
+      order
+    };
+  }
+
+  window.monexaCheckFinalPayment=monexaCheckFinalPayment;
+    </script>
+
+    <script>
+  async function monexaCreateFinalOrder(data={}){
+    const payment=await monexaCheckFinalPayment(data);
+
+    if(!payment.valid){
+      if(typeof showToast==="function"){
+        showToast(payment.message);
+      }
+      return null;
+    }
+
+    const order=payment.order;
+
+    monexaSaveOrderLocal(order);
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+
+    return order;
+  }
+
+  window.monexaCreateFinalOrder=monexaCreateFinalOrder;
+    </script>
+
+    <script>
+  async function monexaSendFinalOrder(data={}){
+    const order=await monexaCreateFinalOrder(data);
+
+    if(!order){
+      return null;
+    }
+
+    if(typeof saveOrderToSupabase==="function"){
+      try{
+        await saveOrderToSupabase(order);
+      }catch(error){
+        console.log(
+          "MONEXA CASH - erreur Supabase:",
+          error.message
+        );
+      }
+    }
+
+    return order;
+  }
+
+  window.monexaSendFinalOrder=monexaSendFinalOrder;
+    </script>
+
+    <script>
+  function monexaPreventDuplicateOrder(service,amount){
+    const orders=JSON.parse(
+      localStorage.getItem("monexa_orders")||"[]"
+    );
+
+    return !orders.some(order=>
+      order.service===service &&
+      Number(order.amount)===Number(amount) &&
+      (
+        order.statusKey==="pending" ||
+        order.status==="Traitement en cours"
+      )
+    );
+  }
+
+  window.monexaPreventDuplicateOrder=monexaPreventDuplicateOrder;
+    </script>
+
+    <script>
+  async function monexaFinalOrderCheck(data={}){
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      return {
+        valid:false,
+        message:"Veuillez vous connecter."
+      };
+    }
+
+    if(!monexaPreventDuplicateOrder(
+      data.service,
+      data.amount
+    )){
+      return {
+        valid:false,
+        message:"Cette commande est déjà en traitement."
+      };
+    }
+
+    return monexaCheckFinalPayment(data);
+  }
+
+  window.monexaFinalOrderCheck=monexaFinalOrderCheck;
+    </script>
+
+    <script>
+  async function monexaStartOrder(data={}){
+    const check=await monexaFinalOrderCheck(data);
+
+    if(!check.valid){
+      if(typeof showToast==="function"){
+        showToast(check.message);
+      }
+      return null;
+    }
+
+    return check.order;
+  }
+
+  window.monexaStartOrder=monexaStartOrder;
+    </script>
+
+    <script>
+  async function monexaSubmitFinalOrder(data={}){
+    const order=await monexaStartOrder(data);
+
+    if(!order){
+      return null;
+    }
+
+    order.statusKey="pending";
+    order.status=MONEXA_ORDER_STATUS.pending;
+    order.updated_at=new Date().toISOString();
+
+    if(typeof saveOrderToSupabase==="function"){
+      try{
+        await saveOrderToSupabase(order);
+      }catch(error){
+        console.log(
+          "MONEXA CASH - erreur Supabase:",
+          error.message
+        );
+      }
+    }
+
+    return order;
+  }
+
+  window.monexaSubmitFinalOrder=monexaSubmitFinalOrder;
+    </script>
+
+    <script>
+  async function monexaCompleteOrderSubmit(data={}){
+    const order=await monexaSubmitFinalOrder(data);
+
+    if(!order){
+      return null;
+    }
+
+    const orders=JSON.parse(
+      localStorage.getItem("monexa_orders")||"[]"
+    );
+
+    if(!orders.some(o=>o.order_id===order.order_id)){
+      orders.push(order);
+
+      localStorage.setItem(
+        "monexa_orders",
+        JSON.stringify(orders)
+      );
+    }
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+
+    if(typeof showToast==="function"){
+      showToast("Traitement en cours");
+    }
+
+    return order;
+  }
+
+  window.monexaCompleteOrderSubmit=monexaCompleteOrderSubmit;
+    </script>
+
+    <script>
+  function monexaNotifyNewOrder(order){
+    if(!order) return null;
+
+    const notifications=JSON.parse(
+      localStorage.getItem("monexa_notifications")||"[]"
+    );
+
+    notifications.push({
+      id:Date.now(),
+      title:"Nouvelle commande",
+      message:"Votre commande est en traitement.",
+      order_id:order.order_id||"",
+      status:"unread",
+      created_at:new Date().toISOString()
+    });
+
+    localStorage.setItem(
+      "monexa_notifications",
+      JSON.stringify(notifications)
+    );
+
+    if(typeof renderNotifications==="function"){
+      renderNotifications();
+    }
+
+    return true;
+  }
+
+  window.monexaNotifyNewOrder=monexaNotifyNewOrder;
+    </script>
+
+    <script>
+  async function monexaFinishOrder(data={}){
+    const order=await monexaCompleteOrderSubmit(data);
+
+    if(!order){
+      return null;
+    }
+
+    monexaNotifyNewOrder(order);
+
+    return order;
+  }
+
+  window.monexaFinishOrder=monexaFinishOrder;
+    </script>
+
+    <script>
+  function monexaFinalOrderSummary(order){
+    if(!order) return null;
+
+    return {
+      order_id:order.order_id||"",
+      service:order.service||"",
+      amount:Number(order.amount)||0,
+      status:order.status||MONEXA_ORDER_STATUS.pending,
+      created_at:order.created_at||""
+    };
+  }
+
+  window.monexaFinalOrderSummary=monexaFinalOrderSummary;
+    </script>
+
+    <script>
+  function monexaChangeOrderStatus(order,status){
+    if(!order) return null;
+
+    const allowed=[
+      "pending",
+      "approved",
+      "rejected"
+    ];
+
+    if(!allowed.includes(status)){
+      return order;
+    }
+
+    order.statusKey=status;
+    order.status=MONEXA_ORDER_STATUS[status];
+    order.updated_at=new Date().toISOString();
+
+    return order;
+  }
+
+  window.monexaChangeOrderStatus=monexaChangeOrderStatus;
+    </script>
+
+    <script>
+  function monexaNotifyOrderStatus(order){
+    if(!order) return null;
+
+    const notifications=JSON.parse(
+      localStorage.getItem("monexa_notifications")||"[]"
+    );
+
+    notifications.push({
+      id:Date.now(),
+      title:"Mise à jour de commande",
+      message:"Votre commande est maintenant : "+
+        (order.status||MONEXA_ORDER_STATUS.pending),
+      order_id:order.order_id||"",
+      status:"unread",
+      created_at:new Date().toISOString()
+    });
+
+    localStorage.setItem(
+      "monexa_notifications",
+      JSON.stringify(notifications)
+    );
+
+    if(typeof renderNotifications==="function"){
+      renderNotifications();
+    }
+
+    return true;
+  }
+
+  window.monexaNotifyOrderStatus=monexaNotifyOrderStatus;
+    </script>
+
+    <script>
+  function monexaUpdateLocalOrder(order,status){
+    if(!order) return null;
+
+    const updated=monexaChangeOrderStatus(
+      order,
+      status
+    );
+
+    const orders=JSON.parse(
+      localStorage.getItem("monexa_orders")||"[]"
+    );
+
+    const index=orders.findIndex(
+      o=>o.order_id===updated.order_id
+    );
+
+    if(index!==-1){
+      orders[index]=updated;
+    }
+
+    localStorage.setItem(
+      "monexa_orders",
+      JSON.stringify(orders)
+    );
+
+    monexaNotifyOrderStatus(updated);
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+
+    return updated;
+  }
+
+  window.monexaUpdateLocalOrder=monexaUpdateLocalOrder;
+    </script>
+
+    <script>
+  function monexaFindOrder(orderId){
+    const orders=JSON.parse(
+      localStorage.getItem("monexa_orders")||"[]"
+    );
+
+    return orders.find(
+      order=>order.order_id===orderId
+    )||null;
+  }
+
+  window.monexaFindOrder=monexaFindOrder;
+    </script>
+
+    <script>
+  function monexaTrackOrder(orderId){
+    const order=monexaFindOrder(
+      String(orderId||"").trim()
+    );
+
+    if(!order){
+      return {
+        found:false,
+        message:"Commande introuvable."
+      };
+    }
+
+    return {
+      found:true,
+      order_id:order.order_id||"",
+      service:order.service||"",
+      amount:Number(order.amount)||0,
+      status:order.status||MONEXA_ORDER_STATUS.pending,
+      created_at:order.created_at||""
+    };
+  }
+
+  window.monexaTrackOrder=monexaTrackOrder;
+    </script>
+
+    <script>
+  function monexaDisplayTrackedOrder(orderId){
+    const result=monexaTrackOrder(orderId);
+
+    const box=document.getElementById(
+      "order-tracking-result"
+    );
+
+    if(!box) return result;
+
+    if(!result.found){
+      box.innerHTML="<p>Commande introuvable.</p>";
+      return result;
+    }
+
+    box.innerHTML=
+      "<strong>"+result.order_id+"</strong>"+
+      "<br>Service : "+result.service+
+      "<br>Montant : "+result.amount+" HTG"+
+      "<br>Status : "+result.status;
+
+    return result;
+  }
+
+  window.monexaDisplayTrackedOrder=
+    monexaDisplayTrackedOrder;
+    </script>
+
+    <section id="order-tracking-result"
+  style="margin-top:15px;padding:15px;border-radius:12px;background:#f5f7fa;">
+  <p>Entrez votre numéro de commande pour suivre son statut.</p>
+    </section>
+
+    <div style="display:flex;gap:8px;margin-top:10px;">
+  <input
+    id="tracking-order-id"
+    type="text"
+    placeholder="Numéro de commande"
+    style="flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;"
+  >
+
+  <button
+    type="button"
+    onclick="monexaDisplayTrackedOrder(document.getElementById('tracking-order-id').value)"
+    style="padding:12px 16px;border:0;border-radius:10px;cursor:pointer;"
+  >
+    Suivre
+  </button>
+    </div>
+
+    <script>
+  const trackingInput=document.getElementById(
+    "tracking-order-id"
+  );
+
+  if(trackingInput){
+    trackingInput.addEventListener("keydown",event=>{
+      if(event.key==="Enter"){
+        monexaDisplayTrackedOrder(
+          trackingInput.value
+        );
+      }
+    });
+  }
+    </script>
+
+    <script>
+  function monexaGetCustomerOrders(){
+    const orders=JSON.parse(
+      localStorage.getItem("monexa_orders")||"[]"
+    );
+
+    return orders.sort(
+      (a,b)=>new Date(b.created_at)-new Date(a.created_at)
+    );
+  }
+
+  window.monexaGetCustomerOrders=monexaGetCustomerOrders;
+    </script>
+
+    <script>
+  async function monexaGetMyOrders(){
+    const user=await monexaGetCurrentUser();
+
+    if(!user) return [];
+
+    const orders=monexaGetCustomerOrders();
+
+    return orders.filter(
+      order=>order.user_id===user.id
+    );
+  }
+
+  window.monexaGetMyOrders=monexaGetMyOrders;
+    </script>
+
+    <script>
+  async function monexaRenderMyOrders(){
+    const box=document.getElementById("orders-list");
+
+    if(!box) return;
+
+    const orders=await monexaGetMyOrders();
+
+    if(!orders.length){
+      box.innerHTML="<p>Aucune commande pour le moment.</p>";
+      return;
+    }
+
+    box.innerHTML=orders.map(order=>
+      "<div style=\"padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;\">"+
+      "<strong>"+(order.order_id||"")+"</strong>"+
+      "<br>Service : "+(order.service||"")+
+      "<br>Montant : "+(Number(order.amount)||0)+" HTG"+
+      "<br>Status : "+(order.status||MONEXA_ORDER_STATUS.pending)+
+      "</div>"
+    ).join("");
+  }
+
+  window.monexaRenderMyOrders=monexaRenderMyOrders;
+    </script>
+
+    <script>
+  function monexaRefreshOrders(){
+    if(typeof monexaRenderMyOrders==="function"){
+      monexaRenderMyOrders();
+    }
+
+    if(typeof renderOrders==="function"){
+      renderOrders();
+    }
+  }
+
+  window.monexaRefreshOrders=monexaRefreshOrders;
+    </script>
+
+    <script>
+  window.addEventListener("load",()=>{
+    setTimeout(()=>{
+      if(typeof monexaRenderMyOrders==="function"){
+        monexaRenderMyOrders();
+      }
+    },500);
+  });
+    </script>
+
+    <script>
+  async function monexaSecureOrdersView(){
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      const box=document.getElementById("orders-list");
+
+      if(box){
+        box.innerHTML="<p>Veuillez vous connecter pour voir vos commandes.</p>";
+      }
+
+      return false;
+    }
+
+    await monexaRenderMyOrders();
+    return true;
+  }
+
+  window.monexaSecureOrdersView=monexaSecureOrdersView;
+    </script>
+
+    <button
+  type="button"
+  onclick="monexaSecureOrdersView()"
+  style="margin-top:10px;padding:10px 14px;border:0;border-radius:10px;cursor:pointer;"
+>
+  Actualiser mes commandes
+    </button>
+
+    <script>
+  async function monexaLoadMyOrdersFromSupabase(){
+    const user=await monexaGetCurrentUser();
+
+    if(!user) return [];
+
+    if(typeof loadSupabaseOrders==="function"){
+      try{
+        return await loadSupabaseOrders();
+      }catch(error){
+        console.log(
+          "MONEXA CASH - erreur commandes:",
+          error.message
+        );
+      }
+    }
+
+    return [];
+  }
+
+  window.monexaLoadMyOrdersFromSupabase=
+    monexaLoadMyOrdersFromSupabase;
+    </script>
+
+    <script>
+  async function monexaSyncMyOrders(){
+    const cloudOrders=
+      await monexaLoadMyOrdersFromSupabase();
+
+    if(!cloudOrders.length){
+      return monexaGetMyOrders();
+    }
+
+    const localOrders=monexaGetCustomerOrders();
+    const merged=[...cloudOrders];
+
+    localOrders.forEach(local=>{
+      if(!merged.some(
+        cloud=>cloud.order_id===local.order_id
+      )){
+        merged.push(local);
+      }
+    });
+
+    merged.sort(
+      (a,b)=>new Date(b.created_at)-new Date(a.created_at)
+    );
+
+    return merged;
+  }
+
+  window.monexaSyncMyOrders=monexaSyncMyOrders;
+    </script>
+
+    <script>
+  async function monexaRenderSyncedOrders(){
+    const box=document.getElementById("orders-list");
+
+    if(!box) return;
+
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      box.innerHTML=
+        "<p>Veuillez vous connecter pour voir vos commandes.</p>";
+      return;
+    }
+
+    const orders=await monexaSyncMyOrders();
+
+    if(!orders.length){
+      box.innerHTML=
+        "<p>Aucune commande pour le moment.</p>";
+      return;
+    }
+
+    box.innerHTML=orders.map(order=>
+      "<div style=\"padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;\">"+
+      "<strong>"+(order.order_id||"")+"</strong>"+
+      "<br>Service : "+(order.service||"")+
+      "<br>Montant : "+(Number(order.amount)||0)+" HTG"+
+      "<br>Status : "+(order.status||MONEXA_ORDER_STATUS.pending)+
+      "</div>"
+    ).join("");
+  }
+
+  window.monexaRenderSyncedOrders=
+    monexaRenderSyncedOrders;
+    </script>
+
+    <script>
+  if(typeof supabaseClient!=="undefined"){
+    supabaseClient.auth.onAuthStateChange(
+      async ()=>{
+        setTimeout(()=>{
+          if(typeof monexaRenderSyncedOrders==="function"){
+            monexaRenderSyncedOrders();
+          }
+        },300);
+      }
+    );
+  }
+    </script>
+
+    <script>
+  async function monexaRenderBalance(){
+    const box=document.getElementById("user-balance");
+
+    if(!box) return;
+
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      box.textContent="0 HTG";
+      return;
+    }
+
+    const balance=Number(
+      localStorage.getItem("monexa_balance")||0
+    );
+
+    box.textContent=balance.toFixed(2)+" HTG";
+  }
+
+  window.monexaRenderBalance=monexaRenderBalance;
+    </script>
+
+    <script>
+  window.addEventListener("load",()=>{
+    setTimeout(()=>{
+      if(typeof monexaRenderBalance==="function"){
+        monexaRenderBalance();
+      }
+    },500);
+  });
+    </script>
+
+    <script>
+  function monexaRefreshBalance(){
+    if(typeof monexaRenderBalance==="function"){
+      monexaRenderBalance();
+    }
+
+    return Number(
+      localStorage.getItem("monexa_balance")||0
+    );
+  }
+
+  window.monexaRefreshBalance=
+    monexaRefreshBalance;
+    </script>
+
+    <script>
+  async function monexaRefreshDashboard(){
+    if(typeof monexaRefreshBalance==="function"){
+      monexaRefreshBalance();
+    }
+
+    if(typeof monexaRenderSyncedOrders==="function"){
+      await monexaRenderSyncedOrders();
+    }
+  }
+
+  window.monexaRefreshDashboard=monexaRefreshDashboard;
+    </script>
+
+    <script>
+  window.addEventListener("load",()=>{
+    setTimeout(()=>{
+      if(typeof monexaRefreshDashboard==="function"){
+        monexaRefreshDashboard();
+      }
+    },700);
+  });
+    </script>
+
+    <script>
+  function monexaCreditBalance(amount){
+    const value=Number(amount);
+
+    if(!Number.isFinite(value)||value<=0){
+      return false;
+    }
+
+    const balance=Number(
+      localStorage.getItem("monexa_balance")||0
+    );
+
+    const newBalance=balance+value;
+
+    localStorage.setItem(
+      "monexa_balance",
+      String(newBalance)
+    );
+
+    if(typeof monexaRenderBalance==="function"){
+      monexaRenderBalance();
+    }
+
+    return newBalance;
+  }
+
+  window.monexaCreditBalance=monexaCreditBalance;
+    </script>
+
+    <script>
+  function monexaPrepareDeposit(data={}){
+    return {
+      amount:Number(data.amount)||0,
+      proof:data.proof||"",
+      statusKey:"pending",
+      status:"Traitement en cours",
+      created_at:new Date().toISOString()
+    };
+  }
+
+  window.monexaPrepareDeposit=monexaPrepareDeposit;
+    </script>
+
+    <script>
+  function monexaValidateDeposit(data={}){
+    const amount=Number(data.amount);
+    const proof=data.proof||"";
+
+    if(!Number.isFinite(amount)||amount<=0){
+      return {
+        valid:false,
+        message:"Montant invalide."
+      };
+    }
+
+    if(!proof){
+      return {
+        valid:false,
+        message:"La preuve de paiement est obligatoire."
+      };
+    }
+
+    return {
+      valid:true,
+      amount,
+      proof
+    };
+  }
+
+  window.monexaValidateDeposit=monexaValidateDeposit;
+    </script>
+
+    <script>
+  async function monexaCreateDeposit(data={}){
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      if(typeof showToast==="function"){
+        showToast("Veuillez vous connecter.");
+      }
+      return null;
+    }
+
+    const check=monexaValidateDeposit(data);
+
+    if(!check.valid){
+      if(typeof showToast==="function"){
+        showToast(check.message);
+      }
+      return null;
+    }
+
+    const deposit={
+      user_id:user.id,
+      email:user.email||"",
+      amount:check.amount,
+      proof:check.proof,
+      statusKey:"pending",
+      status:"Traitement en cours",
+      created_at:new Date().toISOString()
+    };
+
+    return deposit;
+  }
+
+  window.monexaCreateDeposit=monexaCreateDeposit;
+    </script>
+
     
+    <script>
+  function monexaSaveDepositLocal(deposit){
+    if(!deposit) return null;
+
+    const deposits=JSON.parse(
+      localStorage.getItem("monexa_deposits")||"[]"
+    );
+
+    deposits.push(deposit);
+
+    localStorage.setItem(
+      "monexa_deposits",
+      JSON.stringify(deposits)
+    );
+
+    return deposit;
+  }
+
+  window.monexaSaveDepositLocal=monexaSaveDepositLocal;
+  </script>
+
+    <script>
+  async function monexaSubmitDeposit(data={}){
+    const deposit=await monexaCreateDeposit(data);
+
+    if(!deposit){
+      return null;
+    }
+
+    monexaSaveDepositLocal(deposit);
+
+    if(typeof showToast==="function"){
+      showToast("Traitement en cours");
+    }
+
+    return deposit;
+  }
+
+  window.monexaSubmitDeposit=monexaSubmitDeposit;
+    </script>
+
+    <script>
+  async function monexaSaveDepositToSupabase(deposit){
+    if(!deposit||typeof supabaseClient==="undefined"){
+      return null;
+    }
+
+    try{
+      const {data,error}=await supabaseClient
+        .from("deposits")
+        .insert([deposit])
+        .select()
+        .single();
+
+      if(error){
+        console.log(
+          "MONEXA CASH - erreur dépôt:",
+          error.message
+        );
+        return null;
+      }
+
+      return data;
+    }catch(error){
+      console.log(
+        "MONEXA CASH - erreur dépôt:",
+        error.message
+      );
+      return null;
+    }
+  }
+
+  window.monexaSaveDepositToSupabase=
+    monexaSaveDepositToSupabase;
+    </script>
+
+    <script>
+  async function monexaSendDeposit(data={}){
+    const deposit=await monexaSubmitDeposit(data);
+
+    if(!deposit){
+      return null;
+    }
+
+    await monexaSaveDepositToSupabase(deposit);
+
+    return deposit;
+  }
+
+  window.monexaSendDeposit=monexaSendDeposit;
+    </script>
+
+    <script>
+  async function monexaRenderMyDeposits(){
+    const box=document.getElementById("deposits-list");
+
+    if(!box) return;
+
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      box.innerHTML=
+        "<p>Veuillez vous connecter pour voir vos dépôts.</p>";
+      return;
+    }
+
+    const deposits=JSON.parse(
+      localStorage.getItem("monexa_deposits")||"[]"
+    ).filter(d=>d.user_id===user.id);
+
+    if(!deposits.length){
+      box.innerHTML="<p>Aucun dépôt pour le moment.</p>";
+      return;
+    }
+
+    box.innerHTML=deposits.map(d=>
+      "<div style=\"padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;\">"+
+      "<strong>"+Number(d.amount||0)+" HTG</strong>"+
+      "<br>Status : "+(d.status||"Traitement en cours")+
+      "<br>Date : "+new Date(d.created_at).toLocaleString("fr-FR")+
+      "</div>"
+    ).join("");
+  }
+
+  window.monexaRenderMyDeposits=monexaRenderMyDeposits;
+    </script>
+
+    <button
+  type="button"
+  onclick="monexaRenderMyDeposits()"
+  style="margin-top:10px;padding:10px 14px;border:0;border-radius:10px;cursor:pointer;"
+>
+  Actualiser mes dépôts
+    </button>
+
+    <script>
+  if(typeof supabaseClient!=="undefined"){
+    supabaseClient.auth.onAuthStateChange(()=>{
+      setTimeout(()=>{
+        if(typeof monexaRenderMyDeposits==="function"){
+          monexaRenderMyDeposits();
+        }
+      },400);
+    });
+  }
+    </script>
+
+    <section
+  id="deposits-list"
+  style="margin-top:15px;padding:15px;border-radius:12px;background:#f5f7fa;"
+>
+  <p>Aucun dépôt pour le moment.</p>
+    </section>
+
+    <script>
+  window.addEventListener("load",()=>{
+    setTimeout(()=>{
+      if(typeof monexaRenderMyDeposits==="function"){
+        monexaRenderMyDeposits();
+      }
+    },700);
+  });
+    </script>
+
+    <script>
+  async function monexaSyncMyDeposits(){
+    const user=await monexaGetCurrentUser();
+
+    if(!user) return [];
+
+    let cloud=[];
+
+    if(typeof loadSupabaseDeposits==="function"){
+      try{
+        cloud=await loadSupabaseDeposits();
+      }catch(error){
+        console.log(
+          "MONEXA CASH - erreur dépôts:",
+          error.message
+        );
+      }
+    }
+
+    const local=JSON.parse(
+      localStorage.getItem("monexa_deposits")||"[]"
+    ).filter(d=>d.user_id===user.id);
+
+    const merged=[...cloud];
+
+    local.forEach(item=>{
+      if(!merged.some(
+        d=>d.created_at===item.created_at &&
+        d.amount===item.amount
+      )){
+        merged.push(item);
+      }
+    });
+
+    return merged.sort(
+      (a,b)=>new Date(b.created_at)-new Date(a.created_at)
+    );
+  }
+
+  window.monexaSyncMyDeposits=monexaSyncMyDeposits;
+    </script>
+
+    <script>
+  async function monexaRenderSyncedDeposits(){
+    const box=document.getElementById("deposits-list");
+
+    if(!box) return;
+
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      box.innerHTML=
+        "<p>Veuillez vous connecter pour voir vos dépôts.</p>";
+      return;
+    }
+
+    const deposits=await monexaSyncMyDeposits();
+
+    if(!deposits.length){
+      box.innerHTML="<p>Aucun dépôt pour le moment.</p>";
+      return;
+    }
+
+    box.innerHTML=deposits.map(d=>
+      "<div style=\"padding:12px;margin-bottom:10px;border:1px solid #ddd;border-radius:10px;\">"+
+      "<strong>"+Number(d.amount||0)+" HTG</strong>"+
+      "<br>Status : "+(d.status||"Traitement en cours")+
+      "<br>Date : "+new Date(d.created_at).toLocaleString("fr-FR")+
+      "</div>"
+    ).join("");
+  }
+
+  window.monexaRenderSyncedDeposits=
+    monexaRenderSyncedDeposits;
+    </script>
+
+    <script>
+  async function monexaRefreshDeposits(){
+    if(typeof monexaRenderSyncedDeposits==="function"){
+      await monexaRenderSyncedDeposits();
+    }
+
+    if(typeof monexaRefreshBalance==="function"){
+      monexaRefreshBalance();
+    }
+  }
+
+  window.monexaRefreshDeposits=monexaRefreshDeposits;
+    </script>
+
+    <script>
+  async function monexaRefreshDepositsAndBalance(){
+    await monexaRefreshDeposits();
+
+    if(typeof monexaRenderBalance==="function"){
+      await monexaRenderBalance();
+    }
+  }
+
+  window.monexaRefreshDepositsAndBalance=
+    monexaRefreshDepositsAndBalance;
+    </script>
+
+    <script>
+  async function monexaRefreshEverything(){
+    await monexaRefreshDepositsAndBalance();
+
+    if(typeof monexaRenderSyncedOrders==="function"){
+      await monexaRenderSyncedOrders();
+    }
+  }
+
+  window.monexaRefreshEverything=
+    monexaRefreshEverything;
+    </script>
+
+    <script>
+  if(typeof supabaseClient!=="undefined"){
+    supabaseClient.auth.onAuthStateChange(()=>{
+      setTimeout(()=>{
+        if(typeof monexaRefreshEverything==="function"){
+          monexaRefreshEverything();
+        }
+      },500);
+    });
+  }
+    </script>
+
+    <script>
+  async function monexaLoadCustomerDashboard(){
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      return false;
+    }
+
+    await monexaRefreshEverything();
+
+    return true;
+  }
+
+  window.monexaLoadCustomerDashboard=
+    monexaLoadCustomerDashboard;
+    </script>
+
+    <script>
+  window.addEventListener("load",()=>{
+    setTimeout(()=>{
+      if(typeof monexaLoadCustomerDashboard==="function"){
+        monexaLoadCustomerDashboard();
+      }
+    },800);
+  });
+    </script>
+
+    <script>
+  async function monexaRenderCustomerInfo(){
+    const nameBox=document.getElementById("user-name");
+    const emailBox=document.getElementById("user-email");
+
+    const user=await monexaGetCurrentUser();
+
+    if(!user){
+      if(nameBox) nameBox.textContent="Invité";
+      if(emailBox) emailBox.textContent="";
+      return;
+    }
+
+    const meta=user.user_metadata||{};
+
+    if(nameBox){
+      nameBox.textContent=
+        meta.full_name||"Client MONEXA CASH";
+    }
+
+    if(emailBox){
+      emailBox.textContent=user.email||"";
+    }
+  }
+
+  window.monexaRenderCustomerInfo=
+    monexaRenderCustomerInfo;
+    </script>
+
+    <div
+  style="margin-top:15px;padding:15px;border-radius:12px;background:#f5f7fa;"
+>
+  <strong id="user-name">Invité</strong>
+    </div>
+
+    <script>
+  if(typeof supabaseClient!=="undefined"){
+    supabaseClient.auth.onAuthStateChange(()=>{
+      setTimeout(()=>{
+        if(typeof monexaRenderCustomerInfo==="function"){
+          monexaRenderCustomerInfo();
+        }
+      },300);
+    });
+  }
+    </script>
+
+    <script>
+  window.addEventListener("load",()=>{
+    setTimeout(()=>{
+      if(typeof monexaRenderCustomerInfo==="function"){
+        monexaRenderCustomerInfo();
+      }
+    },600);
+  });
+    </script>
+
+    <button
+  type="button"
+  onclick="monexaLogout()"
+  style="margin-top:12px;padding:11px 16px;border:0;border-radius:10px;cursor:pointer;"
+>
+  Se déconnecter
+    </button>
+
+    <script>
+  async function monexaLogout(){
+    if(typeof supabaseClient==="undefined"){
+      return;
+    }
+
+    const {error}=await supabaseClient.auth.signOut();
+
+    if(error){
+      if(typeof showToast==="function"){
+        showToast("Erreur de déconnexion.");
+      }
+      return;
+    }
+
+    if(typeof showToast==="function"){
+      showToast("Vous êtes déconnecté.");
+    }
+
+    setTimeout(()=>{
+      location.reload();
+    },500);
+  }
+
+  window.monexaLogout=monexaLogout;
+    </script>
+
+    <script>
+  if(typeof supabaseClient!=="undefined"){
+    supabaseClient.auth.onAuthStateChange((event)=>{
+      if(event==="SIGNED_OUT"){
+        const nameBox=document.getElementById("user-name");
+
+        if(nameBox){
+          nameBox.textContent="Invité";
+        }
+
+        if(typeof monexaRenderBalance==="function"){
+          monexaRenderBalance();
+        }
+
+        if(typeof monexaRenderSyncedOrders==="function"){
+          monexaRenderSyncedOrders();
+        }
+      }
+    });
+  }
+    </script>
+
+    <script>
+  async function monexaRefreshCustomerHeader(){
+    if(typeof monexaRenderCustomerInfo==="function"){
+      await monexaRenderCustomerInfo();
+    }
+
+    if(typeof monexaRenderBalance==="function"){
+      await monexaRenderBalance();
+    }
+  }
+
+  window.monexaRefreshCustomerHeader=
+    monexaRefreshCustomerHeader;
+    </script>
+
+    <script>
+  if(typeof supabaseClient!=="undefined"){
+    supabaseClient.auth.onAuthStateChange(()=>{
+      setTimeout(()=>{
+        if(typeof monexaRefreshCustomerHeader==="function"){
+          monexaRefreshCustomerHeader();
+        }
+      },350);
+    });
+  }
+    </script>
+
     
     
   </div>
