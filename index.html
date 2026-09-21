@@ -1542,6 +1542,102 @@ async function monexaRegister(){
     }
   );
 </script>
+
+  <script>
+async function monexaLoadDashboard(){
+
+  if(!window.monexaSupabase){
+    return;
+  }
+
+  try{
+
+    const {
+      data: { user },
+      error: userError
+    } = await window.monexaSupabase.auth.getUser();
+
+    if(userError || !user){
+      return;
+    }
+
+    const fullName =
+      user.user_metadata?.full_name ||
+      user.email?.split("@")[0] ||
+      "Client";
+
+    const balanceResult =
+      await window.monexaSupabase.rpc("get_my_balance");
+
+    if(balanceResult.error){
+      console.error(
+        "Erreur balance:",
+        balanceResult.error
+      );
+      return;
+    }
+
+    const balance =
+      Number(balanceResult.data || 0);
+
+    const welcome =
+      document.querySelector("body");
+
+    if(welcome){
+
+      const greetingElements =
+        document.querySelectorAll(
+          "#userName, .user-name, .welcome-name"
+        );
+
+      greetingElements.forEach(function(el){
+        el.textContent = fullName;
+      });
+
+      const balanceElements =
+        document.querySelectorAll(
+          "#balance, .balance, .balance-value"
+        );
+
+      balanceElements.forEach(function(el){
+        el.textContent =
+          balance.toLocaleString("fr-FR",{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+          }) + " HTG";
+      });
+    }
+
+  }catch(error){
+
+    console.error(
+      "Erreur MONEXA CASH:",
+      error
+    );
+
+  }
+
+}
+
+if(window.monexaSupabase){
+
+  window.monexaSupabase.auth.onAuthStateChange(
+    function(event, session){
+
+      if(session){
+        setTimeout(
+          monexaLoadDashboard,
+          100
+        );
+      }
+
+    }
+  );
+
+  monexaLoadDashboard();
+
+}
+  </script>
   
 
 </body>
