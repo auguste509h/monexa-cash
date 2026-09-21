@@ -3067,6 +3067,31 @@ document.addEventListener("DOMContentLoaded",async function(){
 
 });
   </script>
+
+  <script>
+setTimeout(async function(){
+
+  if(!window.monexaSupabase) return;
+
+  const result=await monexaSupabase.auth.getSession();
+
+  if(result.error){
+    alert("ERÈ SESSION:\n"+result.error.message);
+    return;
+  }
+
+  if(result.data && result.data.session){
+    alert(
+      "SESSION OK\n\n"+
+      "Email: "+
+      (result.data.session.user.email || "Pa jwenn")
+    );
+  }else{
+    alert("SESSION PA GENYEN APRE REFRESH.");
+  }
+
+},2000);
+  </script>
   
 
 </body>
