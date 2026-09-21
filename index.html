@@ -891,5 +891,32 @@ async function monexaRegister(){
   window.monexaAuthReady = true;
 </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const MONEXA_SUPABASE_URL =
+    "https://nakaajakjrefzmacqlhv.supabase.co";
+
+  const MONEXA_SUPABASE_KEY =
+    "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
+
+  window.monexaSupabase =
+    window.supabase.createClient(
+      MONEXA_SUPABASE_URL,
+      MONEXA_SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storage: window.localStorage,
+          storageKey: "monexa-cash-auth"
+        }
+      }
+    );
+
+  window.monexaAuthReady = true;
+</script>
+
 </body>
 </html>
