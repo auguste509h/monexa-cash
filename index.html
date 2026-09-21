@@ -2514,5 +2514,118 @@
   }
 </script>
 
+  <style>
+  .mx-auth-access{
+    margin:16px 0 4px;
+    padding:14px;
+    border-radius:20px;
+    background:#fff;
+    box-shadow:0 7px 24px rgba(11,31,58,.07);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+
+  .mx-auth-access-text{
+    min-width:0;
+  }
+
+  .mx-auth-access-title{
+    font-size:14px;
+    font-weight:850;
+    color:#10233f;
+  }
+
+  .mx-auth-access-sub{
+    margin-top:3px;
+    font-size:11px;
+    color:#7a8796;
+  }
+
+  .mx-auth-access-button{
+    flex-shrink:0;
+    border:0;
+    border-radius:13px;
+    padding:11px 14px;
+    background:#0aaaa5;
+    color:#fff;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  body.mx-dark .mx-auth-access{
+    background:#102235;
+  }
+
+  body.mx-dark .mx-auth-access-title{
+    color:#fff;
+  }
+
+  body.mx-dark .mx-auth-access-sub{
+    color:#aebdca;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    const app=document.getElementById("app");
+
+    if(!app){
+      return;
+    }
+
+    if(document.getElementById("mx-auth-access")){
+      return;
+    }
+
+    const access=document.createElement("div");
+
+    access.id="mx-auth-access";
+    access.className="mx-auth-access";
+
+    access.innerHTML=`
+      <div class="mx-auth-access-text">
+
+        <div class="mx-auth-access-title">
+          Votre compte MONEXA CASH
+        </div>
+
+        <div class="mx-auth-access-sub">
+          Connectez-vous pour accéder à votre espace.
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="mx-auth-access-button"
+        onclick="monexaOpenAuth()">
+        Connexion
+      </button>
+    `;
+
+    const balance=app.querySelector(
+      ".mx-balance-card"
+    );
+
+    if(balance){
+
+      balance.insertAdjacentElement(
+        "afterend",
+        access
+      );
+
+    }else{
+
+      app.prepend(access);
+
+    }
+
+  });
+</script>
+
 </body>
 </html>
