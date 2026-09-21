@@ -1638,6 +1638,387 @@ if(window.monexaSupabase){
 
 }
   </script>
+
+  <style>
+#depositModal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:9999;
+  padding:12px;
+}
+
+#depositModal.active{
+  display:flex;
+}
+
+.deposit-box{
+  width:100%;
+  max-width:520px;
+  background:#fff;
+  border-radius:24px;
+  padding:22px;
+  max-height:90vh;
+  overflow:auto;
+}
+
+.deposit-title{
+  font-size:21px;
+  font-weight:800;
+  color:#071d38;
+  margin-bottom:6px;
+}
+
+.deposit-info{
+  background:#f1f8f8;
+  border-radius:16px;
+  padding:16px;
+  margin:16px 0;
+}
+
+.deposit-info strong{
+  color:#071d38;
+}
+
+.deposit-field{
+  width:100%;
+  box-sizing:border-box;
+  padding:14px;
+  border:1px solid #d7e1e5;
+  border-radius:12px;
+  font-size:16px;
+  margin-top:7px;
+  margin-bottom:14px;
+}
+
+.deposit-submit{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:15px;
+  background:#071d38;
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+}
+
+.deposit-close{
+  width:100%;
+  border:0;
+  background:transparent;
+  padding:13px;
+  margin-top:5px;
+  color:#64748b;
+  font-size:15px;
+}
+
+#depositStatus{
+  margin-top:12px;
+  font-size:14px;
+  text-align:center;
+}
+</style>
+
+<div id="depositModal">
+
+  <div class="deposit-box">
+
+    <div class="deposit-title">
+      Déposer de l'argent
+    </div>
+
+    <div>
+      Ajoutez de l'argent à votre portefeuille MONEXA CASH.
+    </div>
+
+    <div class="deposit-info">
+
+      <div>
+        <strong>Mode de paiement</strong><br>
+        Natcash
+      </div>
+
+      <br>
+
+      <div>
+        <strong>Nom</strong><br>
+        JUNIOR AUGUSTE
+      </div>
+
+      <br>
+
+      <div>
+        <strong>Numéro</strong><br>
+        509 40886629
+      </div>
+
+    </div>
+
+    <label>
+      Montant envoyé (HTG)
+    </label>
+
+    <input
+      id="depositAmount"
+      class="deposit-field"
+      type="number"
+      min="1"
+      step="0.01"
+      placeholder="Ex. 1000"
+    >
+
+    <label>
+      Preuve de paiement
+    </label>
+
+    <input
+      id="depositProof"
+      class="deposit-field"
+      type="file"
+      accept="image/*"
+    >
+
+    <button
+      type="button"
+      class="deposit-submit"
+      id="depositSubmit"
+    >
+      Soumettre le dépôt
+    </button>
+
+    <div id="depositStatus"></div>
+
+    <button
+      type="button"
+      class="deposit-close"
+      id="depositClose"
+    >
+      Fermer
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  const modal =
+    document.getElementById("depositModal");
+
+  const closeBtn =
+    document.getElementById("depositClose");
+
+  const amountInput =
+    document.getElementById("depositAmount");
+
+  const proofInput =
+    document.getElementById("depositProof");
+
+  const submitBtn =
+    document.getElementById("depositSubmit");
+
+  const status =
+    document.getElementById("depositStatus");
+
+  function openDeposit(){
+
+    modal.classList.add("active");
+
+    status.textContent="";
+    status.style.color="";
+
+  }
+
+  function closeDeposit(){
+
+    modal.classList.remove("active");
+
+  }
+
+  closeBtn.addEventListener(
+    "click",
+    closeDeposit
+  );
+
+  document.addEventListener(
+    "click",
+    function(event){
+
+      const button =
+        event.target.closest(
+          "button"
+        );
+
+      if(!button){
+        return;
+      }
+
+      const text =
+        button.textContent
+          .trim()
+          .toLowerCase();
+
+      if(
+        text.includes("déposer") ||
+        text.includes("deposer")
+      ){
+
+        event.preventDefault();
+
+        openDeposit();
+
+      }
+
+    }
+  );
+
+  submitBtn.addEventListener(
+    "click",
+    async function(){
+
+      const amount =
+        Number(amountInput.value);
+
+      const file =
+        proofInput.files[0];
+
+      if(!amount || amount <= 0){
+
+        status.textContent =
+          "Veuillez entrer un montant valide.";
+
+        status.style.color="#b42318";
+
+        return;
+
+      }
+
+      if(!file){
+
+        status.textContent =
+          "La preuve de paiement est obligatoire.";
+
+        status.style.color="#b42318";
+
+        return;
+
+      }
+
+      if(!window.monexaSupabase){
+
+        status.textContent =
+          "Connexion Supabase indisponible.";
+
+        status.style.color="#b42318";
+
+        return;
+
+      }
+
+      submitBtn.disabled=true;
+      submitBtn.textContent="Envoi...";
+
+      try{
+
+        const {
+          data:{user},
+          error:userError
+        } =
+        await window.monexaSupabase.auth.getUser();
+
+        if(userError || !user){
+
+          throw new Error(
+            "Utilisateur non connecté."
+          );
+
+        }
+
+        const safeName =
+          user.id + "/" +
+          Date.now() + "_" +
+          file.name.replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+          );
+
+        const upload =
+          await window.monexaSupabase
+            .storage
+            .from("deposit-proofs")
+            .upload(
+              safeName,
+              file,
+              {
+                upsert:false
+              }
+            );
+
+        if(upload.error){
+
+          throw upload.error;
+
+        }
+
+        const result =
+          await window.monexaSupabase
+            .rpc(
+              "create_deposit",
+              {
+                p_amount_htg:amount,
+                p_proof_url:safeName
+              }
+            );
+
+        if(result.error){
+
+          await window.monexaSupabase
+            .storage
+            .from("deposit-proofs")
+            .remove([safeName]);
+
+          throw result.error;
+
+        }
+
+        status.textContent =
+          "Dépôt envoyé avec succès. Traitement en cours.";
+
+        status.style.color="#087f79";
+
+        amountInput.value="";
+        proofInput.value="";
+
+      }catch(error){
+
+        console.error(
+          "Erreur dépôt:",
+          error
+        );
+
+        status.textContent =
+          error.message ||
+          "Une erreur est survenue.";
+
+        status.style.color="#b42318";
+
+      }finally{
+
+        submitBtn.disabled=false;
+        submitBtn.textContent=
+          "Soumettre le dépôt";
+
+      }
+
+    }
+  );
+
+})();
+</script>
   
 
 </body>
