@@ -3136,6 +3136,18 @@ setTimeout(async function(){
 
 },2000);
   </script>
+
+  <script>
+setTimeout(async function(){
+
+  if(!window.monexaSupabase) return;
+
+  await monexaSupabase.auth.signOut();
+
+  location.reload();
+
+},3000);
+  </script>
   
 
 </body>
