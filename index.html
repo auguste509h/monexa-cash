@@ -2595,48 +2595,90 @@
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded",function(){
+(function(){
 
-  if(document.getElementById("mx-start-screen")) return;
+  function startMonexa(){
 
-  const start=document.createElement("div");
+    if(!window.monexaSupabase){
 
-  start.id="mx-start-screen";
-  start.className="mx-start-screen";
+      setTimeout(startMonexa,300);
 
-  start.innerHTML=`
-    <div class="mx-start-box">
+      return;
+    }
 
-      <div class="mx-start-logo">MC</div>
+    monexaSupabase.auth.getSession().then(function(result){
 
-      <h1>MONEXA CASH</h1>
+      if(result.data && result.data.session){
 
-      <p>
-        Connectez-vous ou créez votre compte
-        pour accéder à votre espace MONEXA CASH.
-      </p>
+        const start=document.getElementById("mx-start-screen");
 
-      <button class="mx-start-btn mx-start-login"
-        onclick="monexaOpenAuth()">
-        Se connecter
-      </button>
+        if(start){
+          start.remove();
+        }
 
-      <button class="mx-start-btn mx-start-register"
-        onclick="monexaOpenRegister()">
-        Créer un compte
-      </button>
+        return;
+      }
 
-    </div>
-  `;
+      createStartScreen();
 
-  document.body.appendChild(start);
+    });
 
-});
+  }
 
-function monexaCloseStartScreen(){
-  const start=document.getElementById("mx-start-screen");
-  if(start) start.remove();
-}
+
+  function createStartScreen(){
+
+    if(document.getElementById("mx-start-screen")) return;
+
+    const start=document.createElement("div");
+
+    start.id="mx-start-screen";
+    start.className="mx-start-screen";
+
+    start.innerHTML=`
+      <div class="mx-start-box">
+
+        <div class="mx-start-logo">MC</div>
+
+        <h1>MONEXA CASH</h1>
+
+        <p>
+          Connectez-vous ou créez votre compte
+          pour accéder à votre espace MONEXA CASH.
+        </p>
+
+        <button class="mx-start-btn mx-start-login"
+          onclick="monexaOpenAuth()">
+          Se connecter
+        </button>
+
+        <button class="mx-start-btn mx-start-register"
+          onclick="monexaOpenRegister()">
+          Créer un compte
+        </button>
+
+      </div>
+    `;
+
+    document.body.appendChild(start);
+
+  }
+
+
+  if(document.readyState==="loading"){
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      startMonexa
+    );
+
+  }else{
+
+    startMonexa();
+
+  }
+
+})();
 </script>
 
   <style>
