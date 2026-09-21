@@ -1224,5 +1224,219 @@
   }
 </script>
 
+  <style>
+  .mx-screen{
+    position:fixed;
+    inset:0;
+    background:#f6f9fc;
+    z-index:10000;
+    overflow-y:auto;
+    padding:22px 18px 110px;
+    display:none;
+  }
+
+  .mx-screen.show{
+    display:block;
+  }
+
+  .mx-screen-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:24px;
+  }
+
+  .mx-back{
+    width:42px;
+    height:42px;
+    border:0;
+    border-radius:14px;
+    background:#fff;
+    box-shadow:0 5px 18px rgba(11,31,58,.08);
+    font-size:22px;
+    cursor:pointer;
+  }
+
+  .mx-screen-title{
+    font-size:22px;
+    font-weight:800;
+    color:#10233f;
+  }
+
+  .mx-deposit-card{
+    background:linear-gradient(135deg,#10233f,#0b5260);
+    color:#fff;
+    border-radius:24px;
+    padding:22px;
+    box-shadow:0 15px 35px rgba(11,31,58,.18);
+  }
+
+  .mx-deposit-label{
+    font-size:13px;
+    opacity:.78;
+    margin-bottom:7px;
+  }
+
+  .mx-deposit-name{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:4px;
+  }
+
+  .mx-deposit-number{
+    font-size:17px;
+    font-weight:700;
+    color:#5ff1e8;
+  }
+
+  .mx-deposit-info{
+    margin-top:18px;
+    padding:14px;
+    border-radius:15px;
+    background:rgba(255,255,255,.10);
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .mx-deposit-test{
+    margin-top:18px;
+    width:100%;
+    height:54px;
+    border:0;
+    border-radius:17px;
+    background:#0aaaa5;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  body.mx-dark .mx-screen{
+    background:#081522;
+  }
+
+  body.mx-dark .mx-back{
+    background:#102235;
+    color:#fff;
+  }
+
+  body.mx-dark .mx-screen-title{
+    color:#fff;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    const screen=document.createElement("section");
+
+    screen.id="mx-deposit-screen";
+    screen.className="mx-screen";
+
+    screen.innerHTML=`
+      <div class="mx-screen-head">
+
+        <button
+          type="button"
+          class="mx-back"
+          onclick="monexaCloseDeposit()">
+          ‹
+        </button>
+
+        <div class="mx-screen-title">
+          Déposer
+        </div>
+
+      </div>
+
+      <div class="mx-deposit-card">
+
+        <div class="mx-deposit-label">
+          Envoyez votre paiement à
+        </div>
+
+        <div class="mx-deposit-name">
+          JUNIOR AUGUSTE
+        </div>
+
+        <div class="mx-deposit-number">
+          509 40886629
+        </div>
+
+        <div class="mx-deposit-info">
+          Après votre paiement, vous devrez envoyer
+          le montant envoyé ainsi que votre preuve de paiement.
+          Votre solde sera crédité après vérification.
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="mx-deposit-test"
+        onclick="monexaDepositTest()">
+        Continuer
+      </button>
+    `;
+
+    document.body.appendChild(screen);
+
+    const depositButtons=document.querySelectorAll(
+      'button'
+    );
+
+    depositButtons.forEach(function(button){
+
+      if(
+        button.textContent.trim()==="Déposer" &&
+        !button.dataset.depositReady
+      ){
+
+        button.dataset.depositReady="1";
+
+        button.onclick=function(){
+          monexaOpenDeposit();
+        };
+
+      }
+
+    });
+
+  });
+
+  function monexaOpenDeposit(){
+
+    const screen=document.getElementById(
+      "mx-deposit-screen"
+    );
+
+    if(screen){
+      screen.classList.add("show");
+    }
+
+  }
+
+  function monexaCloseDeposit(){
+
+    const screen=document.getElementById(
+      "mx-deposit-screen"
+    );
+
+    if(screen){
+      screen.classList.remove("show");
+    }
+
+  }
+
+  function monexaDepositTest(){
+
+    alert(
+      "Étape suivante :\n\n" +
+      "Montant envoyé + preuve de paiement."
+    );
+
+  }
+</script>
+
 </body>
 </html>
