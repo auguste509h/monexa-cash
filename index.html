@@ -1779,5 +1779,23 @@
   }
 </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const MONEXA_SUPABASE_URL =
+    "https://nakaajakjrefzmacqlhv.supabase.co";
+
+  const MONEXA_SUPABASE_KEY =
+    "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
+
+  const monexaSupabase =
+    window.supabase.createClient(
+      MONEXA_SUPABASE_URL,
+      MONEXA_SUPABASE_KEY
+    );
+
+  console.log("MONEXA CASH — Supabase connecté");
+</script>
+
 </body>
 </html>
