@@ -433,7 +433,440 @@
       Transactions
     </button>
 
-  </nav>
+   </nav>
+
+  <style>
+  .auth-overlay{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:#f5f8fc;
+  }
+
+  .auth-card{
+    width:100%;
+    max-width:430px;
+    background:#fff;
+    border-radius:28px;
+    padding:28px 22px;
+    box-shadow:0 18px 55px rgba(7,29,56,.14);
+  }
+
+  .auth-logo{
+    width:58px;
+    height:58px;
+    margin-bottom:18px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#071d38;
+    color:#19d3c5;
+    font-weight:900;
+    font-size:20px;
+  }
+
+  .auth-card h2{
+    margin-bottom:7px;
+    font-size:25px;
+    color:#071d38;
+  }
+
+  .auth-card p{
+    margin-bottom:22px;
+    color:#718096;
+    font-size:14px;
+    line-height:1.5;
+  }
+
+  .auth-field{
+    width:100%;
+    padding:14px;
+    margin-bottom:12px;
+    border:1px solid #dbe5ef;
+    border-radius:14px;
+    outline:none;
+    font-size:15px;
+    background:#fff;
+  }
+
+  .auth-field:focus{
+    border-color:#19d3c5;
+  }
+
+  .auth-btn{
+    width:100%;
+    border:0;
+    border-radius:15px;
+    padding:15px;
+    background:#071d38;
+    color:#fff;
+    font-weight:800;
+    font-size:15px;
+  }
+
+  .auth-switch{
+    margin-top:18px;
+    text-align:center;
+    color:#087f79;
+    font-size:14px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .auth-back{
+    border:0;
+    background:transparent;
+    color:#718096;
+    font-size:14px;
+    padding:0;
+    margin-bottom:20px;
+  }
+
+  .auth-status{
+    min-height:20px;
+    margin-top:14px;
+    text-align:center;
+    font-size:13px;
+  }
+</style>
+
+
+<div id="monexa-login" class="auth-overlay">
+
+  <div class="auth-card">
+
+    <button
+      class="auth-back"
+      type="button"
+      onclick="monexaCloseAuth()">
+      ← Retour
+    </button>
+
+    <div class="auth-logo">MC</div>
+
+    <h2>Se connecter</h2>
+
+    <p>
+      Accédez à votre espace MONEXA CASH.
+    </p>
+
+    <input
+      id="login-email"
+      class="auth-field"
+      type="email"
+      placeholder="Adresse email"
+      autocomplete="email">
+
+    <input
+      id="login-password"
+      class="auth-field"
+      type="password"
+      placeholder="Mot de passe"
+      autocomplete="current-password">
+
+    <button
+      class="auth-btn"
+      type="button"
+      onclick="monexaLogin()">
+      Se connecter
+    </button>
+
+    <div
+      id="login-status"
+      class="auth-status">
+    </div>
+
+    <div
+      class="auth-switch"
+      onclick="monexaOpenRegister()">
+      Créer un compte
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id="monexa-register" class="auth-overlay">
+
+  <div class="auth-card">
+
+    <button
+      class="auth-back"
+      type="button"
+      onclick="monexaCloseRegister()">
+      ← Retour
+    </button>
+
+    <div class="auth-logo">MC</div>
+
+    <h2>Créer un compte</h2>
+
+    <p>
+      Créez votre compte MONEXA CASH.
+    </p>
+
+    <input
+      id="register-name"
+      class="auth-field"
+      type="text"
+      placeholder="Nom complet"
+      autocomplete="name">
+
+    <input
+      id="register-email"
+      class="auth-field"
+      type="email"
+      placeholder="Adresse email"
+      autocomplete="email">
+
+    <input
+      id="register-phone"
+      class="auth-field"
+      type="tel"
+      placeholder="Numéro de téléphone"
+      autocomplete="tel">
+
+    <input
+      id="register-password"
+      class="auth-field"
+      type="password"
+      placeholder="Mot de passe"
+      autocomplete="new-password">
+
+    <input
+      id="register-confirm"
+      class="auth-field"
+      type="password"
+      placeholder="Confirmer le mot de passe"
+      autocomplete="new-password">
+
+    <button
+      class="auth-btn"
+      type="button"
+      onclick="monexaRegister()">
+      Créer mon compte
+    </button>
+
+    <div
+      id="register-status"
+      class="auth-status">
+    </div>
+
+    <div
+      class="auth-switch"
+      onclick="monexaOpenAuth()">
+      J'ai déjà un compte
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+(function(){
+
+  function waitForSupabase(){
+
+    if(window.monexaSupabase){
+      return;
+    }
+
+    setTimeout(waitForSupabase,300);
+
+  }
+
+  waitForSupabase();
+
+})();
+
+
+function monexaOpenAuth(){
+
+  const login=document.getElementById("monexa-login");
+  const register=document.getElementById("monexa-register");
+
+  if(login){
+    login.style.display="flex";
+  }
+
+  if(register){
+    register.style.display="none";
+  }
+
+}
+
+
+function monexaCloseAuth(){
+
+  const login=document.getElementById("monexa-login");
+
+  if(login){
+    login.style.display="none";
+  }
+
+}
+
+
+function monexaOpenRegister(){
+
+  const login=document.getElementById("monexa-login");
+  const register=document.getElementById("monexa-register");
+
+  if(login){
+    login.style.display="none";
+  }
+
+  if(register){
+    register.style.display="flex";
+  }
+
+}
+
+
+function monexaCloseRegister(){
+
+  const register=document.getElementById("monexa-register");
+
+  if(register){
+    register.style.display="none";
+  }
+
+}
+
+
+async function monexaLogin(){
+
+  const email=document.getElementById("login-email").value.trim();
+  const password=document.getElementById("login-password").value;
+  const status=document.getElementById("login-status");
+
+  if(!email || !password){
+
+    status.textContent="Veuillez remplir tous les champs.";
+    status.style.color="#d33";
+
+    return;
+  }
+
+  if(!window.monexaSupabase){
+
+    status.textContent="Connexion au serveur...";
+    status.style.color="#718096";
+
+    return;
+  }
+
+  status.textContent="Connexion en cours...";
+  status.style.color="#718096";
+
+  const result=
+    await monexaSupabase.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
+
+  if(result.error){
+
+    status.textContent="Email ou mot de passe incorrect.";
+    status.style.color="#d33";
+
+    return;
+  }
+
+  status.textContent="Connexion réussie.";
+  status.style.color="#087f79";
+
+  setTimeout(function(){
+
+    monexaCloseAuth();
+
+  },500);
+
+}
+
+
+async function monexaRegister(){
+
+  const name=document.getElementById("register-name").value.trim();
+  const email=document.getElementById("register-email").value.trim();
+  const phone=document.getElementById("register-phone").value.trim();
+  const password=document.getElementById("register-password").value;
+  const confirm=document.getElementById("register-confirm").value;
+
+  const status=document.getElementById("register-status");
+
+  if(!name || !email || !phone || !password || !confirm){
+
+    status.textContent="Veuillez remplir tous les champs.";
+    status.style.color="#d33";
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    status.textContent="Le mot de passe doit contenir au moins 6 caractères.";
+    status.style.color="#d33";
+
+    return;
+  }
+
+  if(password !== confirm){
+
+    status.textContent="Les mots de passe ne correspondent pas.";
+    status.style.color="#d33";
+
+    return;
+  }
+
+  if(!window.monexaSupabase){
+
+    status.textContent="Connexion au serveur...";
+    status.style.color="#718096";
+
+    return;
+  }
+
+  status.textContent="Création du compte...";
+  status.style.color="#718096";
+
+  const result=
+    await monexaSupabase.auth.signUp({
+
+      email:email,
+      password:password,
+
+      options:{
+        data:{
+          full_name:name,
+          phone:phone
+        }
+      }
+
+    });
+
+  if(result.error){
+
+    status.textContent=result.error.message;
+    status.style.color="#d33";
+
+    return;
+  }
+
+  status.textContent=
+    "Compte créé avec succès.";
+
+  status.style.color="#087f79";
+
+}
+</script>
 
 </body>
 </html>
