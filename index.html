@@ -1254,7 +1254,6 @@
     background:#fff;
     box-shadow:0 5px 18px rgba(11,31,58,.08);
     font-size:22px;
-    cursor:pointer;
   }
 
   .mx-screen-title{
@@ -1308,7 +1307,6 @@
     color:#fff;
     font-size:15px;
     font-weight:800;
-    cursor:pointer;
   }
 
   body.mx-dark .mx-screen{
@@ -1381,26 +1379,26 @@
 
     document.body.appendChild(screen);
 
-    const depositButtons=document.querySelectorAll(
-      'button'
-    );
+    document.addEventListener("click",function(event){
 
-    depositButtons.forEach(function(button){
+      const button=event.target.closest("button");
 
-      if(
-        button.textContent.trim()==="Déposer" &&
-        !button.dataset.depositReady
-      ){
+      if(!button){
+        return;
+      }
 
-        button.dataset.depositReady="1";
+      const text=button.textContent.trim();
 
-        button.onclick=function(){
-          monexaOpenDeposit();
-        };
+      if(text.includes("Déposer")){
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        monexaOpenDeposit();
 
       }
 
-    });
+    },true);
 
   });
 
