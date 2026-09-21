@@ -1797,5 +1797,320 @@
   console.log("MONEXA CASH — Supabase connecté");
 </script>
 
+  <style>
+  .mx-auth-screen{
+    position:fixed;
+    inset:0;
+    z-index:11000;
+    background:#f6f9fc;
+    display:none;
+    overflow-y:auto;
+    padding:28px 18px;
+  }
+
+  .mx-auth-screen.show{
+    display:block;
+  }
+
+  .mx-auth-box{
+    width:100%;
+    max-width:430px;
+    margin:35px auto;
+  }
+
+  .mx-auth-brand{
+    text-align:center;
+    margin-bottom:28px;
+  }
+
+  .mx-auth-logo{
+    width:58px;
+    height:58px;
+    margin:0 auto 12px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#10233f,#0aaaa5);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    font-weight:900;
+    box-shadow:0 12px 28px rgba(11,31,58,.16);
+  }
+
+  .mx-auth-name{
+    font-size:22px;
+    font-weight:900;
+    color:#10233f;
+  }
+
+  .mx-auth-card{
+    background:#fff;
+    border-radius:26px;
+    padding:22px;
+    box-shadow:0 12px 35px rgba(11,31,58,.08);
+  }
+
+  .mx-auth-title{
+    font-size:20px;
+    font-weight:850;
+    color:#10233f;
+    margin-bottom:6px;
+  }
+
+  .mx-auth-subtitle{
+    color:#7a8796;
+    font-size:13px;
+    margin-bottom:22px;
+  }
+
+  .mx-auth-label{
+    display:block;
+    font-size:13px;
+    font-weight:800;
+    color:#10233f;
+    margin-bottom:8px;
+  }
+
+  .mx-auth-input{
+    width:100%;
+    height:52px;
+    box-sizing:border-box;
+    border:1px solid #dce5ed;
+    border-radius:15px;
+    padding:0 15px;
+    font-size:15px;
+    outline:none;
+    margin-bottom:17px;
+  }
+
+  .mx-auth-input:focus{
+    border-color:#0aaaa5;
+  }
+
+  .mx-auth-button{
+    width:100%;
+    height:54px;
+    border:0;
+    border-radius:17px;
+    background:#0aaaa5;
+    color:#fff;
+    font-size:15px;
+    font-weight:850;
+    cursor:pointer;
+  }
+
+  .mx-auth-message{
+    margin-top:15px;
+    padding:12px;
+    border-radius:13px;
+    font-size:13px;
+    line-height:1.45;
+    display:none;
+  }
+
+  .mx-auth-message.show{
+    display:block;
+  }
+
+  .mx-auth-message.error{
+    background:#fff0f0;
+    color:#b42318;
+  }
+
+  .mx-auth-message.success{
+    background:#eafaf7;
+    color:#087f70;
+  }
+
+  body.mx-dark .mx-auth-screen{
+    background:#081522;
+  }
+
+  body.mx-dark .mx-auth-card{
+    background:#102235;
+  }
+
+  body.mx-dark .mx-auth-name,
+  body.mx-dark .mx-auth-title,
+  body.mx-dark .mx-auth-label{
+    color:#fff;
+  }
+
+  body.mx-dark .mx-auth-subtitle{
+    color:#aebdca;
+  }
+
+  body.mx-dark .mx-auth-input{
+    background:#0b1b2b;
+    border-color:#294055;
+    color:#fff;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    if(document.getElementById("mx-auth-screen")){
+      return;
+    }
+
+    const screen=document.createElement("section");
+
+    screen.id="mx-auth-screen";
+    screen.className="mx-auth-screen";
+
+    screen.innerHTML=`
+      <div class="mx-auth-box">
+
+        <div class="mx-auth-brand">
+          <div class="mx-auth-logo">MC</div>
+          <div class="mx-auth-name">
+            MONEXA CASH
+          </div>
+        </div>
+
+        <div class="mx-auth-card">
+
+          <div class="mx-auth-title">
+            Connexion
+          </div>
+
+          <div class="mx-auth-subtitle">
+            Connectez-vous à votre compte MONEXA CASH.
+          </div>
+
+          <label class="mx-auth-label">
+            Adresse email
+          </label>
+
+          <input
+            id="mx-auth-email"
+            class="mx-auth-input"
+            type="email"
+            autocomplete="email"
+            placeholder="exemple@email.com">
+
+          <label class="mx-auth-label">
+            Mot de passe
+          </label>
+
+          <input
+            id="mx-auth-password"
+            class="mx-auth-input"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Votre mot de passe">
+
+          <button
+            type="button"
+            class="mx-auth-button"
+            onclick="monexaLoginTest()">
+            Se connecter
+          </button>
+
+          <div
+            id="mx-auth-message"
+            class="mx-auth-message">
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(screen);
+
+  });
+
+  async function monexaLoginTest(){
+
+    const email=document.getElementById(
+      "mx-auth-email"
+    ).value.trim();
+
+    const password=document.getElementById(
+      "mx-auth-password"
+    ).value;
+
+    const message=document.getElementById(
+      "mx-auth-message"
+    );
+
+    if(!email || !password){
+
+      monexaAuthMessage(
+        "Veuillez remplir tous les champs.",
+        "error"
+      );
+
+      return;
+    }
+
+    monexaAuthMessage(
+      "Connexion en cours...",
+      "success"
+    );
+
+    const result=
+      await monexaSupabase.auth.signInWithPassword({
+        email:email,
+        password:password
+      });
+
+    if(result.error){
+
+      monexaAuthMessage(
+        result.error.message,
+        "error"
+      );
+
+      return;
+    }
+
+    monexaAuthMessage(
+      "Connexion réussie.",
+      "success"
+    );
+
+    setTimeout(function(){
+
+      document
+        .getElementById("mx-auth-screen")
+        .classList.remove("show");
+
+    },700);
+
+  }
+
+  function monexaAuthMessage(text,type){
+
+    const message=document.getElementById(
+      "mx-auth-message"
+    );
+
+    if(!message){
+      return;
+    }
+
+    message.textContent=text;
+    message.className=
+      "mx-auth-message show " + type;
+
+  }
+
+  function monexaOpenAuth(){
+
+    const screen=document.getElementById(
+      "mx-auth-screen"
+    );
+
+    if(screen){
+      screen.classList.add("show");
+    }
+
+  }
+</script>
+
 </body>
 </html>
