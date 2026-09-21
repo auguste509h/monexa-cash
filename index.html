@@ -918,5 +918,401 @@ async function monexaRegister(){
   window.monexaAuthReady = true;
 </script>
 
+  <style>
+  .auth-screen{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:#f5f8fc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+  }
+
+  .auth-box{
+    width:100%;
+    max-width:420px;
+  }
+
+  .auth-logo{
+    width:58px;
+    height:58px;
+    margin:0 auto 18px;
+    border-radius:18px;
+    background:#071d38;
+    color:#19d3c5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    font-size:20px;
+  }
+
+  .auth-title{
+    text-align:center;
+    font-size:25px;
+    font-weight:900;
+    color:#071d38;
+    margin-bottom:7px;
+  }
+
+  .auth-subtitle{
+    text-align:center;
+    color:#718096;
+    font-size:13px;
+    margin-bottom:24px;
+  }
+
+  .auth-card{
+    background:#fff;
+    border-radius:25px;
+    padding:22px;
+    box-shadow:0 12px 35px rgba(7,29,56,.08);
+  }
+
+  .auth-tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    padding:5px;
+    background:#f1f5f9;
+    border-radius:15px;
+    margin-bottom:20px;
+  }
+
+  .auth-tab{
+    border:0;
+    border-radius:11px;
+    padding:11px 6px;
+    background:transparent;
+    color:#718096;
+    font-size:13px;
+    font-weight:800;
+  }
+
+  .auth-tab.active{
+    background:#fff;
+    color:#071d38;
+    box-shadow:0 3px 10px rgba(7,29,56,.06);
+  }
+
+  .auth-field{
+    margin-bottom:14px;
+  }
+
+  .auth-field label{
+    display:block;
+    margin-bottom:7px;
+    font-size:12px;
+    font-weight:800;
+    color:#071d38;
+  }
+
+  .auth-field input{
+    width:100%;
+    padding:14px;
+    border:1px solid #dce5ee;
+    border-radius:14px;
+    outline:none;
+    color:#071d38;
+    background:#fff;
+  }
+
+  .auth-field input:focus{
+    border-color:#19d3c5;
+  }
+
+  .auth-submit{
+    width:100%;
+    border:0;
+    border-radius:15px;
+    padding:15px;
+    background:#071d38;
+    color:#fff;
+    font-weight:900;
+    margin-top:5px;
+  }
+
+  .auth-status{
+    min-height:20px;
+    margin-top:14px;
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+  }
+</style>
+
+<div class="auth-screen" id="authScreen">
+
+  <div class="auth-box">
+
+    <div class="auth-logo">MC</div>
+
+    <div class="auth-title">MONEXA CASH</div>
+
+    <div class="auth-subtitle">
+      Votre portefeuille numérique
+    </div>
+
+    <div class="auth-card">
+
+      <div class="auth-tabs">
+
+        <button
+          class="auth-tab active"
+          id="loginTab"
+          type="button">
+          Se connecter
+        </button>
+
+        <button
+          class="auth-tab"
+          id="registerTab"
+          type="button">
+          Créer un compte
+        </button>
+
+      </div>
+
+      <form id="authForm">
+
+        <div
+          class="auth-field"
+          id="nameField"
+          style="display:none;">
+
+          <label>Nom complet</label>
+
+          <input
+            id="fullName"
+            type="text"
+            autocomplete="name"
+            placeholder="Votre nom complet">
+
+        </div>
+
+        <div class="auth-field">
+
+          <label>Email</label>
+
+          <input
+            id="authEmail"
+            type="email"
+            autocomplete="email"
+            placeholder="Votre adresse email"
+            required>
+
+        </div>
+
+        <div class="auth-field">
+
+          <label>Mot de passe</label>
+
+          <input
+            id="authPassword"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Votre mot de passe"
+            minlength="6"
+            required>
+
+        </div>
+
+        <button
+          class="auth-submit"
+          id="authSubmit"
+          type="submit">
+          Se connecter
+        </button>
+
+      </form>
+
+      <div
+        class="auth-status"
+        id="authStatus">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const authScreen =
+    document.getElementById("authScreen");
+
+  const loginTab =
+    document.getElementById("loginTab");
+
+  const registerTab =
+    document.getElementById("registerTab");
+
+  const nameField =
+    document.getElementById("nameField");
+
+  const fullName =
+    document.getElementById("fullName");
+
+  const authForm =
+    document.getElementById("authForm");
+
+  const authSubmit =
+    document.getElementById("authSubmit");
+
+  const authStatus =
+    document.getElementById("authStatus");
+
+  let authMode = "login";
+
+  function setAuthMode(mode){
+
+    authMode = mode;
+
+    const register =
+      mode === "register";
+
+    loginTab.classList.toggle(
+      "active",
+      !register
+    );
+
+    registerTab.classList.toggle(
+      "active",
+      register
+    );
+
+    nameField.style.display =
+      register ? "block" : "none";
+
+    fullName.required = register;
+
+    authSubmit.textContent =
+      register
+        ? "Créer mon compte"
+        : "Se connecter";
+
+    authStatus.textContent = "";
+  }
+
+  loginTab.addEventListener(
+    "click",
+    () => setAuthMode("login")
+  );
+
+  registerTab.addEventListener(
+    "click",
+    () => setAuthMode("register")
+  );
+
+  authForm.addEventListener(
+    "submit",
+    async function(event){
+
+      event.preventDefault();
+
+      authStatus.textContent =
+        "Veuillez patienter...";
+
+      authStatus.style.color =
+        "#718096";
+
+      const email =
+        document.getElementById("authEmail")
+          .value
+          .trim();
+
+      const password =
+        document.getElementById("authPassword")
+          .value;
+
+      if(!window.monexaSupabase){
+
+        authStatus.textContent =
+          "Connexion sécurisée indisponible.";
+
+        authStatus.style.color =
+          "#c53030";
+
+        return;
+      }
+
+      try{
+
+        if(authMode === "register"){
+
+          const name =
+            fullName.value.trim();
+
+          const { data, error } =
+            await window.monexaSupabase.auth.signUp({
+              email: email,
+              password: password,
+              options: {
+                data: {
+                  full_name: name
+                }
+              }
+            });
+
+          if(error) throw error;
+
+          if(data.session){
+
+            authStatus.textContent =
+              "Compte créé avec succès.";
+
+            authStatus.style.color =
+              "#087f79";
+
+            authScreen.style.display =
+              "none";
+
+          }else{
+
+            authStatus.textContent =
+              "Compte créé. Vérifiez votre email.";
+
+            authStatus.style.color =
+              "#087f79";
+          }
+
+        }else{
+
+          const { error } =
+            await window.monexaSupabase.auth
+              .signInWithPassword({
+                email: email,
+                password: password
+              });
+
+          if(error) throw error;
+
+          authStatus.textContent =
+            "Connexion réussie.";
+
+          authStatus.style.color =
+            "#087f79";
+
+          authScreen.style.display =
+            "none";
+        }
+
+      }catch(error){
+
+        authStatus.textContent =
+          error.message ||
+          "Une erreur est survenue.";
+
+        authStatus.style.color =
+          "#c53030";
+      }
+
+    }
+  );
+</script>
+  
+
 </body>
 </html>
