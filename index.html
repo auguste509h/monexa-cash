@@ -1436,5 +1436,198 @@
   }
 </script>
 
+  <style>
+  .mx-deposit-form{
+    margin-top:20px;
+    background:#fff;
+    border-radius:22px;
+    padding:20px;
+    box-shadow:0 8px 25px rgba(11,31,58,.08);
+  }
+
+  .mx-form-label{
+    display:block;
+    margin-bottom:8px;
+    font-size:13px;
+    font-weight:800;
+    color:#10233f;
+  }
+
+  .mx-form-input{
+    width:100%;
+    height:52px;
+    border:1px solid #dce5ed;
+    border-radius:15px;
+    padding:0 15px;
+    font-size:15px;
+    outline:none;
+    box-sizing:border-box;
+    margin-bottom:18px;
+  }
+
+  .mx-form-input:focus{
+    border-color:#0aaaa5;
+  }
+
+  .mx-proof{
+    width:100%;
+    padding:14px;
+    border:1px dashed #b9c8d6;
+    border-radius:15px;
+    background:#f8fafc;
+    box-sizing:border-box;
+    margin-bottom:18px;
+  }
+
+  .mx-form-note{
+    padding:13px;
+    border-radius:14px;
+    background:#eefafa;
+    color:#31545d;
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:18px;
+  }
+
+  .mx-submit-deposit{
+    width:100%;
+    height:54px;
+    border:0;
+    border-radius:17px;
+    background:#0aaaa5;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  body.mx-dark .mx-deposit-form{
+    background:#102235;
+  }
+
+  body.mx-dark .mx-form-label{
+    color:#fff;
+  }
+
+  body.mx-dark .mx-form-input{
+    background:#0b1b2b;
+    border-color:#294055;
+    color:#fff;
+  }
+
+  body.mx-dark .mx-proof{
+    background:#0b1b2b;
+    border-color:#385166;
+    color:#fff;
+  }
+
+  body.mx-dark .mx-form-note{
+    background:rgba(32,217,210,.10);
+    color:#b8eeee;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    const continueButton=document.querySelector(
+      ".mx-deposit-test"
+    );
+
+    if(!continueButton){
+      return;
+    }
+
+    continueButton.onclick=function(){
+
+      const card=document.querySelector(
+        ".mx-deposit-card"
+      );
+
+      const form=document.createElement("div");
+
+      form.className="mx-deposit-form";
+
+      form.innerHTML=`
+        <label class="mx-form-label">
+          Montant envoyé
+        </label>
+
+        <input
+          id="mx-deposit-amount"
+          class="mx-form-input"
+          type="number"
+          min="1"
+          step="0.01"
+          placeholder="Ex : 1 000 HTG">
+
+        <label class="mx-form-label">
+          Preuve de paiement
+        </label>
+
+        <input
+          id="mx-deposit-proof"
+          class="mx-proof"
+          type="file"
+          accept="image/*,.pdf">
+
+        <div class="mx-form-note">
+          Votre preuve de paiement est obligatoire.
+          Après l'envoi, votre demande sera vérifiée
+          manuellement avant que le montant soit ajouté
+          à votre solde MONEXA CASH.
+        </div>
+
+        <button
+          type="button"
+          class="mx-submit-deposit"
+          onclick="monexaSubmitDepositTest()">
+          Envoyer la demande
+        </button>
+      `;
+
+      card.insertAdjacentElement(
+        "afterend",
+        form
+      );
+
+      continueButton.style.display="none";
+    };
+
+  });
+
+  function monexaSubmitDepositTest(){
+
+    const amount=document.getElementById(
+      "mx-deposit-amount"
+    );
+
+    const proof=document.getElementById(
+      "mx-deposit-proof"
+    );
+
+    if(!amount || !amount.value){
+
+      alert("Veuillez entrer le montant envoyé.");
+
+      return;
+    }
+
+    if(!proof || !proof.files.length){
+
+      alert("Veuillez ajouter votre preuve de paiement.");
+
+      return;
+    }
+
+    alert(
+      "Demande prête à être envoyée.\n\n" +
+      "Dans la prochaine étape, cette demande sera " +
+      "enregistrée dans MONEXA CASH et envoyée à l'administration."
+    );
+
+  }
+</script>
+
 </body>
 </html>
