@@ -333,152 +333,150 @@
   }
 </style>
 
-<script>
-document.addEventListener("DOMContentLoaded",async function(){
+ <script>
+(function(){
 
-  const app=document.getElementById("app");
+  function loadDashboard(){
 
-  if(!app) return;
+    if(!window.monexaSupabase){
+      setTimeout(loadDashboard,300);
+      return;
+    }
 
-  if(!window.monexaSupabase){
-    app.innerHTML="";
-    return;
-  }
+    const app=document.getElementById("app");
 
-  const result=await monexaSupabase.auth.getSession();
+    if(!app) return;
 
-  if(!result.data || !result.data.session){
+    monexaSupabase.auth.getSession().then(function(result){
 
-    app.innerHTML="";
-    return;
+      if(!result.data || !result.data.session){
 
-  }
+        app.innerHTML="";
+        return;
 
-  app.innerHTML=`
-    <div class="mx-header">
+      }
 
-      <div class="mx-brand">
-        <div class="mx-logo">MC</div>
-        <div class="mx-brand-name">MONEXA CASH</div>
-      </div>
+      app.innerHTML=`
+        <div class="mx-header">
 
-      <button
-        class="mx-profile-btn"
-        type="button"
-        onclick="monexaOpenProfile()"
-        aria-label="Profil">
-        👤
-      </button>
-
-    </div>
-
-    <div class="mx-greeting">
-      <small id="mx-user-greeting">Bonsoir 👋</small>
-      <h2>Bienvenue sur MONEXA CASH</h2>
-    </div>
-
-    <div class="mx-balance">
-
-      <div class="mx-balance-label">
-        Solde disponible
-      </div>
-
-      <div class="mx-balance-value">
-        0.00
-        <span class="mx-balance-currency">HTG</span>
-      </div>
-
-    </div>
-
-    <div class="mx-actions">
-
-      <button
-        class="mx-action"
-        type="button"
-        onclick="alert('La section Déposer sera ajoutée dans la prochaine étape.')">
-
-        <div class="mx-action-icon">＋</div>
-        Déposer
-      </button>
-
-      <button
-        class="mx-action"
-        type="button"
-        onclick="alert('La section Envoyer sera ajoutée dans la prochaine étape.')">
-
-        <div class="mx-action-icon">↗</div>
-        Envoyer
-      </button>
-
-      <button
-        class="mx-action"
-        type="button"
-        onclick="alert('La section Retirer sera ajoutée dans la prochaine étape.')">
-
-        <div class="mx-action-icon">↙</div>
-        Retirer
-      </button>
-
-    </div>
-
-    <div class="mx-section-title">
-      Services
-    </div>
-
-    <div class="mx-services-card">
-      <h3>MONEXA CASH</h3>
-      <p>
-        Votre portefeuille numérique simple, rapide et sécurisé.
-      </p>
-    </div>
-
-    <div
-      id="mx-profile-panel"
-      class="mx-profile-panel"
-      onclick="monexaCloseProfile(event)">
-
-      <div
-        class="mx-profile-box"
-        onclick="event.stopPropagation()">
-
-        <div class="mx-profile-top">
-
-          <h3>Mon profil</h3>
+          <div class="mx-brand">
+            <div class="mx-logo">MC</div>
+            <div class="mx-brand-name">MONEXA CASH</div>
+          </div>
 
           <button
-            class="mx-close-profile"
+            class="mx-profile-btn"
             type="button"
-            onclick="monexaCloseProfile()">
-            ×
+            onclick="monexaOpenProfile()"
+            aria-label="Profil">
+            👤
           </button>
 
         </div>
 
-        <div class="mx-account-info">
+        <div class="mx-greeting">
+          <small id="mx-user-greeting">Bonsoir 👋</small>
+          <h2>Bienvenue sur MONEXA CASH</h2>
+        </div>
 
-          <div class="mx-info-row">
-            <span class="mx-info-label">Nom complet</span>
-            <span class="mx-info-value">Non connecté</span>
+        <div class="mx-balance">
+
+          <div class="mx-balance-label">
+            Solde disponible
           </div>
 
-          <div class="mx-info-row">
-            <span class="mx-info-label">E-mail</span>
-            <span class="mx-info-value">Non connecté</span>
-          </div>
-
-          <div class="mx-info-row">
-            <span class="mx-info-label">Téléphone</span>
-            <span class="mx-info-value">Non renseigné</span>
+          <div class="mx-balance-value">
+            0.00
+            <span class="mx-balance-currency">HTG</span>
           </div>
 
         </div>
 
-      </div>
+        <div class="mx-actions">
 
-    </div>
-  `;
+          <button class="mx-action" type="button"
+            onclick="alert('La section Déposer sera ajoutée dans la prochaine étape.')">
+            <div class="mx-action-icon">＋</div>
+            Déposer
+          </button>
 
-});
+          <button class="mx-action" type="button"
+            onclick="alert('La section Envoyer sera ajoutée dans la prochaine étape.')">
+            <div class="mx-action-icon">↗</div>
+            Envoyer
+          </button>
+
+          <button class="mx-action" type="button"
+            onclick="alert('La section Retirer sera ajoutée dans la prochaine étape.')">
+            <div class="mx-action-icon">↙</div>
+            Retirer
+          </button>
+
+        </div>
+
+        <div class="mx-section-title">
+          Services
+        </div>
+
+        <div class="mx-services-card">
+          <h3>MONEXA CASH</h3>
+          <p>
+            Votre portefeuille numérique simple, rapide et sécurisé.
+          </p>
+        </div>
+
+        <div id="mx-profile-panel"
+          class="mx-profile-panel"
+          onclick="monexaCloseProfile(event)">
+
+          <div class="mx-profile-box"
+            onclick="event.stopPropagation()">
+
+            <div class="mx-profile-top">
+              <h3>Mon profil</h3>
+
+              <button class="mx-close-profile"
+                type="button"
+                onclick="monexaCloseProfile()">
+                ×
+              </button>
+            </div>
+
+            <div class="mx-account-info">
+
+              <div class="mx-info-row">
+                <span class="mx-info-label">Nom complet</span>
+                <span class="mx-info-value">Non connecté</span>
+              </div>
+
+              <div class="mx-info-row">
+                <span class="mx-info-label">E-mail</span>
+                <span class="mx-info-value">Non connecté</span>
+              </div>
+
+              <div class="mx-info-row">
+                <span class="mx-info-label">Téléphone</span>
+                <span class="mx-info-value">Non renseigné</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+    });
+
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",loadDashboard);
+  }else{
+    loadDashboard();
+  }
+
+})();
 
 
 function monexaOpenProfile(){
@@ -505,7 +503,7 @@ function monexaCloseProfile(event){
   }
 
 }
-</script>
+ </script>
 
   <style>
   .mx-services-grid{
