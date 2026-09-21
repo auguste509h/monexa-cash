@@ -2629,6 +2629,32 @@ function monexaCloseStartScreen(){
   if(start) start.remove();
 }
 </script>
+
+  <script>
+function monexaOpenAuth(){
+
+  const auth=document.getElementById("mx-auth-screen");
+
+  if(auth){
+    auth.style.display="flex";
+    return;
+  }
+
+  alert("Écran de connexion introuvable.");
+}
+
+function monexaOpenRegister(){
+
+  const register=document.getElementById("mx-register-screen");
+
+  if(register){
+    register.style.display="flex";
+    return;
+  }
+
+  alert("Écran de création de compte introuvable.");
+}
+  </script>
   
 
 </body>
