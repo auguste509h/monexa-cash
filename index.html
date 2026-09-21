@@ -1789,10 +1789,17 @@
     "sb_publishable_KVnwapImIKdKXMFZh5e9IA_7UflvhaN";
 
   const monexaSupabase =
-    window.supabase.createClient(
-      MONEXA_SUPABASE_URL,
-      MONEXA_SUPABASE_KEY
-    );
+  window.supabase.createClient(
+    MONEXA_SUPABASE_URL,
+    MONEXA_SUPABASE_KEY,
+    {
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
+    }
+  );
 
   console.log("MONEXA CASH — Supabase connecté");
 </script>
