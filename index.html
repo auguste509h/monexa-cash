@@ -1055,70 +1055,90 @@
   }
 </script>
 
-  <style>
+<style>
   .mx-bottom-nav{
     position:fixed;
     left:50%;
-    bottom:0;
+    bottom:14px;
     transform:translateX(-50%);
-    width:100%;
-    max-width:480px;
-    height:72px;
-    background:rgba(255,255,255,.97);
-    border-top:1px solid #e5eaf1;
+    width:calc(100% - 24px);
+    max-width:456px;
+    height:68px;
+    padding:7px;
     display:grid;
     grid-template-columns:repeat(4,1fr);
+    gap:4px;
+    background:rgba(255,255,255,.96);
+    border:1px solid rgba(16,35,63,.08);
+    border-radius:24px;
+    box-shadow:0 12px 35px rgba(11,31,58,.14);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
     z-index:9000;
-    padding:8px 5px calc(8px + env(safe-area-inset-bottom));
   }
 
   .mx-nav-item{
+    position:relative;
     border:0;
     background:transparent;
-    color:#7a8799;
-    font-size:11px;
-    font-weight:700;
+    color:#8491a3;
+    border-radius:18px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:4px;
+    gap:3px;
     cursor:pointer;
+    transition:.2s ease;
   }
 
   .mx-nav-icon{
     width:34px;
-    height:30px;
-    border-radius:11px;
+    height:32px;
     display:flex;
     align-items:center;
     justify-content:center;
+    border-radius:12px;
     font-size:18px;
+    transition:.2s ease;
+  }
+
+  .mx-nav-label{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.1px;
   }
 
   .mx-nav-item.active{
     color:#0aaaa5;
+    background:#e9fbfa;
   }
 
   .mx-nav-item.active .mx-nav-icon{
-    background:#e8fbfa;
+    transform:translateY(-1px);
+  }
+
+  .mx-nav-item:active{
+    transform:scale(.94);
   }
 
   #app{
-    padding-bottom:95px !important;
+    padding-bottom:110px !important;
   }
 
   body.mx-dark .mx-bottom-nav{
-    background:#0d1b2b;
-    border-color:#24364b;
+    background:rgba(13,27,43,.96);
+    border-color:rgba(255,255,255,.08);
+    box-shadow:0 12px 35px rgba(0,0,0,.35);
   }
 
   body.mx-dark .mx-nav-item{
-    color:#9aaabd;
+    color:#8e9bad;
   }
 
   body.mx-dark .mx-nav-item.active{
     color:#20d9d2;
+    background:rgba(32,217,210,.12);
   }
 </style>
 
@@ -1138,44 +1158,40 @@
       <button
         type="button"
         class="mx-nav-item active"
-        data-page="Accueil"
         onclick="monexaNavTest(this,'Accueil')">
 
         <div class="mx-nav-icon">⌂</div>
-        <span>Accueil</span>
+        <div class="mx-nav-label">Accueil</div>
 
       </button>
 
       <button
         type="button"
         class="mx-nav-item"
-        data-page="Services"
         onclick="monexaNavTest(this,'Services')">
 
         <div class="mx-nav-icon">▦</div>
-        <span>Services</span>
+        <div class="mx-nav-label">Services</div>
 
       </button>
 
       <button
         type="button"
         class="mx-nav-item"
-        data-page="Transactions"
         onclick="monexaNavTest(this,'Transactions')">
 
         <div class="mx-nav-icon">↕</div>
-        <span>Transactions</span>
+        <div class="mx-nav-label">Transactions</div>
 
       </button>
 
       <button
         type="button"
         class="mx-nav-item"
-        data-page="Profil"
         onclick="monexaNavTest(this,'Profil')">
 
-        <div class="mx-nav-icon">👤</div>
-        <span>Profil</span>
+        <div class="mx-nav-icon">◉</div>
+        <div class="mx-nav-label">Profil</div>
 
       </button>
     `;
@@ -1194,6 +1210,7 @@
     button.classList.add("active");
 
     if(page==="Profil"){
+
       if(typeof monexaOpenProfile==="function"){
         monexaOpenProfile();
         return;
@@ -1202,7 +1219,7 @@
 
     alert(
       page +
-      "\n\nLa navigation de cette section sera connectée dans une prochaine étape."
+      "\n\nCette section sera connectée dans une prochaine étape."
     );
   }
 </script>
