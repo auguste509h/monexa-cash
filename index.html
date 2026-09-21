@@ -1629,5 +1629,155 @@
   }
 </script>
 
+  <style>
+  .mx-deposit-success{
+    margin-top:20px;
+    background:#fff;
+    border-radius:24px;
+    padding:24px 20px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(11,31,58,.09);
+  }
+
+  .mx-success-icon{
+    width:62px;
+    height:62px;
+    margin:0 auto 15px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#e8faf8;
+    color:#0aaaa5;
+    font-size:30px;
+    font-weight:900;
+  }
+
+  .mx-success-title{
+    font-size:20px;
+    font-weight:850;
+    color:#10233f;
+    margin-bottom:8px;
+  }
+
+  .mx-success-status{
+    display:inline-flex;
+    padding:8px 13px;
+    border-radius:30px;
+    background:#fff4dc;
+    color:#a66b00;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:15px;
+  }
+
+  .mx-success-amount{
+    font-size:25px;
+    font-weight:900;
+    color:#10233f;
+    margin-bottom:10px;
+  }
+
+  .mx-success-text{
+    color:#718096;
+    font-size:13px;
+    line-height:1.55;
+  }
+
+  body.mx-dark .mx-deposit-success{
+    background:#102235;
+  }
+
+  body.mx-dark .mx-success-title,
+  body.mx-dark .mx-success-amount{
+    color:#fff;
+  }
+
+  body.mx-dark .mx-success-text{
+    color:#aebdca;
+  }
+</style>
+
+<script>
+  function monexaSubmitDepositTest(){
+
+    const amount=document.getElementById(
+      "mx-deposit-amount"
+    );
+
+    const proof=document.getElementById(
+      "mx-deposit-proof"
+    );
+
+    if(!amount || !amount.value){
+
+      alert("Veuillez entrer le montant envoyé.");
+
+      return;
+    }
+
+    if(!proof || !proof.files.length){
+
+      alert("Veuillez ajouter votre preuve de paiement.");
+
+      return;
+    }
+
+    const form=document.querySelector(
+      ".mx-deposit-form"
+    );
+
+    if(form){
+      form.style.display="none";
+    }
+
+    const oldSuccess=document.querySelector(
+      ".mx-deposit-success"
+    );
+
+    if(oldSuccess){
+      oldSuccess.remove();
+    }
+
+    const success=document.createElement("div");
+
+    success.className="mx-deposit-success";
+
+    success.innerHTML=`
+      <div class="mx-success-icon">
+        ✓
+      </div>
+
+      <div class="mx-success-title">
+        Demande envoyée
+      </div>
+
+      <div class="mx-success-status">
+        Traitement en cours
+      </div>
+
+      <div class="mx-success-amount">
+        ${Number(amount.value).toLocaleString("fr-FR")}
+        HTG
+      </div>
+
+      <div class="mx-success-text">
+        Votre preuve de paiement a été reçue.
+        Notre équipe va vérifier votre dépôt manuellement.
+        Votre solde sera crédité après validation.
+      </div>
+    `;
+
+    const screen=document.getElementById(
+      "mx-deposit-screen"
+    );
+
+    if(screen){
+      screen.appendChild(success);
+    }
+
+  }
+</script>
+
 </body>
 </html>
