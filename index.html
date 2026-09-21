@@ -2515,28 +2515,25 @@
 </script>
 
 <style>
-  #app.mx-locked-dashboard{
-    display:none !important;
-  }
-
   .mx-start-screen{
-    min-height:100vh;
+    position:fixed;
+    inset:0;
+    z-index:99999;
     display:flex;
     align-items:center;
     justify-content:center;
     padding:24px;
-    background:linear-gradient(160deg,#f7fbff 0%,#eef7ff 100%);
+    background:linear-gradient(160deg,#f7fbff,#eef7ff);
   }
 
   .mx-start-box{
     width:100%;
     max-width:430px;
-    background:#fff;
-    border:1px solid rgba(16,35,63,.07);
-    border-radius:30px;
     padding:30px 22px;
-    box-shadow:0 18px 55px rgba(11,31,58,.12);
     text-align:center;
+    background:#fff;
+    border-radius:30px;
+    box-shadow:0 18px 55px rgba(11,31,58,.12);
   }
 
   .mx-start-logo{
@@ -2557,7 +2554,6 @@
     margin:0;
     color:#071d38;
     font-size:25px;
-    font-weight:800;
   }
 
   .mx-start-box p{
@@ -2569,13 +2565,13 @@
 
   .mx-start-btn{
     width:100%;
+    padding:15px;
+    margin-top:10px;
     border:0;
     border-radius:16px;
-    padding:15px;
     font-size:15px;
     font-weight:800;
     cursor:pointer;
-    margin-top:10px;
   }
 
   .mx-start-login{
@@ -2590,78 +2586,49 @@
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded",async function(){
+document.addEventListener("DOMContentLoaded",function(){
 
-  const app=document.getElementById("app");
-  if(!app || !window.monexaSupabase) return;
+  if(document.getElementById("mx-start-screen")) return;
 
-  app.classList.add("mx-locked-dashboard");
+  const start=document.createElement("div");
 
-  function showStartScreen(){
-    app.classList.add("mx-locked-dashboard");
+  start.id="mx-start-screen";
+  start.className="mx-start-screen";
 
-    if(document.getElementById("mx-start-screen")) return;
+  start.innerHTML=`
+    <div class="mx-start-box">
 
-    const start=document.createElement("div");
-    start.id="mx-start-screen";
-    start.className="mx-start-screen";
+      <div class="mx-start-logo">MC</div>
 
-    start.innerHTML=`
-      <div class="mx-start-box">
-        <div class="mx-start-logo">MC</div>
+      <h1>MONEXA CASH</h1>
 
-        <h1>MONEXA CASH</h1>
+      <p>
+        Connectez-vous ou créez votre compte
+        pour accéder à votre espace MONEXA CASH.
+      </p>
 
-        <p>
-          Connectez-vous ou créez votre compte
-          pour accéder à votre espace MONEXA CASH.
-        </p>
+      <button class="mx-start-btn mx-start-login"
+        onclick="monexaOpenAuth()">
+        Se connecter
+      </button>
 
-        <button class="mx-start-btn mx-start-login"
-          onclick="monexaOpenAuth()">
-          Se connecter
-        </button>
+      <button class="mx-start-btn mx-start-register"
+        onclick="monexaOpenRegister()">
+        Créer un compte
+      </button>
 
-        <button class="mx-start-btn mx-start-register"
-          onclick="monexaOpenRegister()">
-          Créer un compte
-        </button>
-      </div>
-    `;
+    </div>
+  `;
 
-    document.body.prepend(start);
-  }
-
-  function showDashboard(){
-    const start=document.getElementById("mx-start-screen");
-    if(start) start.remove();
-
-    app.classList.remove("mx-locked-dashboard");
-  }
-
-  window.monexaShowDashboard=showDashboard;
-
-  const {data:{session}} =
-    await monexaSupabase.auth.getSession();
-
-  if(session){
-    showDashboard();
-  }else{
-    showStartScreen();
-  }
-
-  monexaSupabase.auth.onAuthStateChange(function(event,session){
-
-    if(session){
-      showDashboard();
-    }else{
-      showStartScreen();
-    }
-
-  });
+  document.body.appendChild(start);
 
 });
-    </script>
+
+function monexaCloseStartScreen(){
+  const start=document.getElementById("mx-start-screen");
+  if(start) start.remove();
+}
+</script>
   
 
 </body>
