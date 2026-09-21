@@ -336,27 +336,27 @@
  <script>
 (function(){
 
-  function loadDashboard(){
+  let ready=false;
+
+  function init(){
+
+    if(ready) return;
 
     if(!window.monexaSupabase){
-      setTimeout(loadDashboard,300);
+      setTimeout(init,300);
       return;
     }
 
-    const app=document.getElementById("app");
+    ready=true;
 
-    if(!app) return;
+    window.monexaRenderDashboard=function(){
 
-    monexaSupabase.auth.getSession().then(function(result){
+      const app=document.getElementById("app");
 
-      if(!result.data || !result.data.session){
-
-        app.innerHTML="";
-        return;
-
-      }
+      if(!app) return;
 
       app.innerHTML=`
+
         <div class="mx-header">
 
           <div class="mx-brand">
@@ -367,8 +367,7 @@
           <button
             class="mx-profile-btn"
             type="button"
-            onclick="monexaOpenProfile()"
-            aria-label="Profil">
+            onclick="monexaOpenProfile()">
             👤
           </button>
 
@@ -394,22 +393,34 @@
 
         <div class="mx-actions">
 
-          <button class="mx-action" type="button"
-            onclick="alert('La section Déposer sera ajoutée dans la prochaine étape.')">
+          <button
+            class="mx-action"
+            type="button"
+            onclick="monexaOpenDeposit()">
+
             <div class="mx-action-icon">＋</div>
             Déposer
+
           </button>
 
-          <button class="mx-action" type="button"
-            onclick="alert('La section Envoyer sera ajoutée dans la prochaine étape.')">
+          <button
+            class="mx-action"
+            type="button"
+            onclick="alert('La section Envoyer sera ajoutée prochainement.')">
+
             <div class="mx-action-icon">↗</div>
             Envoyer
+
           </button>
 
-          <button class="mx-action" type="button"
-            onclick="alert('La section Retirer sera ajoutée dans la prochaine étape.')">
+          <button
+            class="mx-action"
+            type="button"
+            onclick="alert('La section Retirer sera ajoutée prochainement.')">
+
             <div class="mx-action-icon">↙</div>
             Retirer
+
           </button>
 
         </div>
@@ -419,10 +430,14 @@
         </div>
 
         <div class="mx-services-card">
+
           <h3>MONEXA CASH</h3>
+
           <p>
-            Votre portefeuille numérique simple, rapide et sécurisé.
+            Votre portefeuille numérique simple,
+            rapide et sécurisé.
           </p>
+
         </div>
 
         <div id="mx-profile-panel"
@@ -433,30 +448,45 @@
             onclick="event.stopPropagation()">
 
             <div class="mx-profile-top">
+
               <h3>Mon profil</h3>
 
-              <button class="mx-close-profile"
+              <button
+                class="mx-close-profile"
                 type="button"
                 onclick="monexaCloseProfile()">
                 ×
               </button>
+
             </div>
 
             <div class="mx-account-info">
 
               <div class="mx-info-row">
-                <span class="mx-info-label">Nom complet</span>
-                <span class="mx-info-value">Non connecté</span>
+                <span class="mx-info-label">
+                  Nom complet
+                </span>
+                <span class="mx-info-value">
+                  Non connecté
+                </span>
               </div>
 
               <div class="mx-info-row">
-                <span class="mx-info-label">E-mail</span>
-                <span class="mx-info-value">Non connecté</span>
+                <span class="mx-info-label">
+                  E-mail
+                </span>
+                <span class="mx-info-value">
+                  Non connecté
+                </span>
               </div>
 
               <div class="mx-info-row">
-                <span class="mx-info-label">Téléphone</span>
-                <span class="mx-info-value">Non renseigné</span>
+                <span class="mx-info-label">
+                  Téléphone
+                </span>
+                <span class="mx-info-value">
+                  Non renseigné
+                </span>
               </div>
 
             </div>
@@ -466,15 +496,65 @@
         </div>
       `;
 
-    });
+    };
+
+
+    window.monexaClearDashboard=function(){
+
+      const app=document.getElementById("app");
+
+      if(app){
+        app.innerHTML="";
+      }
+
+    };
+
+
+    function checkSession(){
+
+      monexaSupabase.auth.getSession()
+      .then(function(result){
+
+        if(result.data && result.data.session){
+
+          monexaRenderDashboard();
+
+        }else{
+
+          monexaClearDashboard();
+
+        }
+
+      });
+
+    }
+
+
+    checkSession();
+
+
+    monexaSupabase.auth.onAuthStateChange(
+      function(event,session){
+
+        if(session){
+
+          setTimeout(function(){
+            monexaRenderDashboard();
+          },100);
+
+        }else{
+
+          monexaClearDashboard();
+
+        }
+
+      }
+    );
 
   }
 
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",loadDashboard);
-  }else{
-    loadDashboard();
-  }
+
+  init();
 
 })();
 
