@@ -3053,6 +3053,30 @@ setTimeout(async function(){
 
 },1500);
   </script>
+
+  <script>
+setTimeout(async function(){
+
+  const result=await monexaSupabase.auth.getUser();
+
+  if(result.error || !result.data.user){
+    alert("Pa gen itilizatè konekte.");
+    return;
+  }
+
+  const user=result.data.user;
+
+  const info=JSON.stringify({
+    email:user.email,
+    full_name:user.user_metadata?.full_name,
+    name:user.user_metadata?.name,
+    phone:user.user_metadata?.phone
+  },null,2);
+
+  alert(info);
+
+},1500);
+  </script>
   
 
 </body>
