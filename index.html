@@ -2982,6 +2982,36 @@ document.addEventListener("DOMContentLoaded",async function(){
 
 });
   </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded",async function(){
+
+  if(!window.monexaSupabase) return;
+
+  const {data}=await monexaSupabase.auth.getSession();
+
+  if(!data || !data.session) return;
+
+  const user=data.session.user;
+
+  const name =
+    user.user_metadata?.full_name ||
+    user.email?.split("@")[0] ||
+    "Client";
+
+  document.querySelectorAll("body *").forEach(function(el){
+
+    if(
+      el.children.length===0 &&
+      el.textContent.trim()==="Bonsoir 👋"
+    ){
+      el.textContent="Bonsoir, "+name+" 👋";
+    }
+
+  });
+
+});
+  </script>
   
 
 </body>
