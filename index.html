@@ -2581,7 +2581,6 @@
   .mx-start-login{
     background:#071d38;
     color:#fff;
-    box-shadow:0 8px 20px rgba(7,29,56,.18);
   }
 
   .mx-start-register{
@@ -2591,70 +2590,78 @@
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded",function(){
+document.addEventListener("DOMContentLoaded",async function(){
 
   const app=document.getElementById("app");
-  if(!app) return;
+  if(!app || !window.monexaSupabase) return;
 
   app.classList.add("mx-locked-dashboard");
 
-  if(document.getElementById("mx-start-screen")) return;
+  function showStartScreen(){
+    app.classList.add("mx-locked-dashboard");
 
-  const start=document.createElement("div");
-  start.id="mx-start-screen";
-  start.className="mx-start-screen";
+    if(document.getElementById("mx-start-screen")) return;
 
-  start.innerHTML=`
-    <div class="mx-start-box">
-      <div class="mx-start-logo">MC</div>
+    const start=document.createElement("div");
+    start.id="mx-start-screen";
+    start.className="mx-start-screen";
 
-      <h1>MONEXA CASH</h1>
+    start.innerHTML=`
+      <div class="mx-start-box">
+        <div class="mx-start-logo">MC</div>
 
-      <p>
-        Connectez-vous ou créez votre compte
-        pour accéder à votre espace MONEXA CASH.
-      </p>
+        <h1>MONEXA CASH</h1>
 
-      <button class="mx-start-btn mx-start-login"
-        onclick="monexaOpenAuth()">
-        Se connecter
-      </button>
+        <p>
+          Connectez-vous ou créez votre compte
+          pour accéder à votre espace MONEXA CASH.
+        </p>
 
-      <button class="mx-start-btn mx-start-register"
-        onclick="monexaOpenRegister()">
-        Créer un compte
-      </button>
-    </div>
-  `;
+        <button class="mx-start-btn mx-start-login"
+          onclick="monexaOpenAuth()">
+          Se connecter
+        </button>
 
-  document.body.prepend(start);
-});
+        <button class="mx-start-btn mx-start-register"
+          onclick="monexaOpenRegister()">
+          Créer un compte
+        </button>
+      </div>
+    `;
 
+    document.body.prepend(start);
+  }
 
-function monexaShowDashboard(){
-  const start=document.getElementById("mx-start-screen");
-  const app=document.getElementById("app");
+  function showDashboard(){
+    const start=document.getElementById("mx-start-screen");
+    if(start) start.remove();
 
-  if(start) start.remove();
-
-  if(app){
     app.classList.remove("mx-locked-dashboard");
   }
-}
 
+  window.monexaShowDashboard=showDashboard;
 
-function monexaShowStartScreen(){
-  const app=document.getElementById("app");
+  const {data:{session}} =
+    await monexaSupabase.auth.getSession();
 
-  if(app){
-    app.classList.add("mx-locked-dashboard");
+  if(session){
+    showDashboard();
+  }else{
+    showStartScreen();
   }
 
-  if(!document.getElementById("mx-start-screen")){
-    location.reload();
-  }
-}
-</script>
+  monexaSupabase.auth.onAuthStateChange(function(event,session){
+
+    if(session){
+      showDashboard();
+    }else{
+      showStartScreen();
+    }
+
+  });
+
+});
+    </script>
   
 
 </body>
