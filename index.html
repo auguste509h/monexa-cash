@@ -3136,6 +3136,75 @@ setTimeout(async function(){
 
 },2000);
   </script>
+
+  <script>
+(function(){
+
+  function monexaProtectDashboard(){
+
+    if(!window.monexaSupabase) return;
+
+    const app=document.getElementById("app");
+
+    if(!app) return;
+
+    monexaSupabase.auth.getSession().then(function(result){
+
+      if(result.data && result.data.session){
+
+        app.style.display="";
+
+        const start=document.getElementById("mx-start-screen");
+
+        if(start){
+          start.remove();
+        }
+
+      }else{
+
+        app.style.display="none";
+
+      }
+
+    });
+
+    monexaSupabase.auth.onAuthStateChange(function(event,session){
+
+      if(session){
+
+        app.style.display="";
+
+        const start=document.getElementById("mx-start-screen");
+
+        if(start){
+          start.remove();
+        }
+
+      }else{
+
+        app.style.display="none";
+
+      }
+
+    });
+
+  }
+
+  if(document.readyState==="loading"){
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      monexaProtectDashboard
+    );
+
+  }else{
+
+    monexaProtectDashboard();
+
+  }
+
+})();
+  </script>
   
 
 </body>
