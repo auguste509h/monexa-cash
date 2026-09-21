@@ -2863,48 +2863,6 @@ function monexaCloseStartScreen(){
   };
 
 
-  window.monexaDoLogin=async function(){
-
-    const email=document.getElementById("mx-login-email").value.trim();
-    const password=document.getElementById("mx-login-password").value;
-
-    const status=document.getElementById("mx-login-status");
-
-    if(!email || !password){
-      status.textContent="Veuillez remplir tous les champs.";
-      status.style.color="#d33";
-      return;
-    }
-
-    status.textContent="Connexion en cours...";
-    status.style.color="#64748b";
-
-    const {error}=await monexaSupabase.auth.signInWithPassword({
-      email:email,
-      password:password
-    });
-
-    if(error){
-      status.textContent=error.message;
-      status.style.color="#d33";
-      return;
-    }
-
-    status.textContent="Connexion réussie.";
-    status.style.color="#087f79";
-
-    setTimeout(function(){
-
-      const login=document.getElementById("mx-login-panel");
-      const start=document.getElementById("mx-start-screen");
-
-      if(login) login.style.display="none";
-      if(start) start.remove();
-
-    },500);
-  };
-
-
   window.monexaDoRegister=async function(){
 
     const name=document.getElementById("mx-register-name").value.trim();
