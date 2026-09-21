@@ -1312,6 +1312,50 @@ async function monexaRegister(){
     }
   );
 </script>
+
+  <script>
+  async function monexaCheckSession(){
+
+    if(!window.monexaSupabase){
+      return;
+    }
+
+    const {
+      data: { session }
+    } = await window.monexaSupabase.auth.getSession();
+
+    if(session){
+
+      document.getElementById("authScreen")
+        .style.display = "none";
+
+    }else{
+
+      document.getElementById("authScreen")
+        .style.display = "flex";
+
+    }
+  }
+
+  window.monexaSupabase.auth.onAuthStateChange(
+    function(event, session){
+
+      if(session){
+
+        document.getElementById("authScreen")
+          .style.display = "none";
+
+      }else{
+
+        document.getElementById("authScreen")
+          .style.display = "flex";
+
+      }
+    }
+  );
+
+  monexaCheckSession();
+  </script>
   
 
 </body>
