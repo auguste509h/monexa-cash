@@ -619,5 +619,129 @@
   }
 </script>
 
+<style>
+  .mx-recent{
+    margin-top:8px;
+    margin-bottom:30px;
+  }
+
+  .mx-recent-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:13px;
+  }
+
+  .mx-recent-title{
+    font-size:18px;
+    font-weight:800;
+    color:#10233f;
+  }
+
+  .mx-recent-link{
+    border:0;
+    background:transparent;
+    color:#0aaaa5;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  .mx-recent-box{
+    background:#f8fafc;
+    border:1px solid #e7edf4;
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+  }
+
+  .mx-recent-icon{
+    width:48px;
+    height:48px;
+    border-radius:16px;
+    background:#e8fbfa;
+    color:#0aaaa5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 12px;
+    font-size:22px;
+  }
+
+  .mx-recent-box h4{
+    color:#10233f;
+    font-size:15px;
+    margin-bottom:6px;
+  }
+
+  .mx-recent-box p{
+    color:#7a8799;
+    font-size:13px;
+    line-height:1.5;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    const app=document.getElementById("app");
+
+    if(!app || document.getElementById("mx-recent-transactions")){
+      return;
+    }
+
+    const recent=document.createElement("section");
+
+    recent.id="mx-recent-transactions";
+    recent.className="mx-recent";
+
+    recent.innerHTML=`
+      <div class="mx-recent-head">
+
+        <div class="mx-recent-title">
+          Transactions récentes
+        </div>
+
+        <button
+          type="button"
+          class="mx-recent-link"
+          onclick="monexaRecentTest()">
+          Voir tout
+        </button>
+
+      </div>
+
+      <div class="mx-recent-box">
+
+        <div class="mx-recent-icon">
+          ↕
+        </div>
+
+        <h4>Aucune transaction</h4>
+
+        <p>
+          Vos transactions récentes apparaîtront ici.
+        </p>
+
+      </div>
+    `;
+
+    const serviceGrid=document.querySelector(".mx-services-grid");
+
+    if(serviceGrid){
+      serviceGrid.insertAdjacentElement("afterend",recent);
+    }else{
+      app.appendChild(recent);
+    }
+
+  });
+
+  function monexaRecentTest(){
+    alert(
+      "L'historique complet des transactions sera disponible prochainement."
+    );
+  }
+</script>  
+
 </body>
 </html>
