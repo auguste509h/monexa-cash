@@ -3016,6 +3016,43 @@ document.addEventListener("DOMContentLoaded",async function(){
 
 });
   </script>
+
+  <script>
+setTimeout(async function(){
+
+  if(!window.monexaSupabase) return;
+
+  const result=await monexaSupabase.auth.getUser();
+
+  if(result.error || !result.data || !result.data.user) return;
+
+  const user=result.data.user;
+
+  const name =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.email?.split("@")[0] ||
+    "Client";
+
+  document.querySelectorAll("body *").forEach(function(el){
+
+    if(el.children.length===0){
+
+      const text=el.textContent.trim();
+
+      if(text==="Bonsoir 👋" || text==="Bonsoir"){
+        el.textContent="Bonsoir, "+name+" 👋";
+      }
+
+    }
+
+  });
+
+  console.log("MONEXA USER:",user);
+  console.log("MONEXA NOM:",name);
+
+},1500);
+  </script>
   
 
 </body>
