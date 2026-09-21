@@ -2988,24 +2988,28 @@ document.addEventListener("DOMContentLoaded",async function(){
 
   if(!window.monexaSupabase) return;
 
-  const {data}=await monexaSupabase.auth.getSession();
+  const result=await monexaSupabase.auth.getUser();
 
-  if(!data || !data.session) return;
+  if(result.error || !result.data || !result.data.user) return;
 
-  const user=data.session.user;
+  const user=result.data.user;
 
   const name =
     user.user_metadata?.full_name ||
     user.email?.split("@")[0] ||
     "Client";
 
-  document.querySelectorAll("body *").forEach(function(el){
+  const elements=document.querySelectorAll("body *");
+
+  elements.forEach(function(el){
 
     if(
       el.children.length===0 &&
-      el.textContent.trim()==="Bonsoir 👋"
+      el.textContent.includes("Bonsoir")
     ){
+
       el.textContent="Bonsoir, "+name+" 👋";
+
     }
 
   });
