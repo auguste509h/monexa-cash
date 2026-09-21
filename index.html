@@ -2178,6 +2178,76 @@ if(window.monexaSupabase){
 
 }
   </script>
+
+  <script>
+async function monexaLoadServices(){
+
+  if(!window.monexaSupabase){
+    return;
+  }
+
+  try{
+
+    const result =
+      await window.monexaSupabase
+        .from("service_tariffs")
+        .select(
+          "id,service_type,service_name,price_htg,rate_htg,fee_usd,is_active,settings"
+        )
+        .eq("is_active",true)
+        .order("service_type")
+        .order("service_name");
+
+    if(result.error){
+
+      console.error(
+        "Erreur services:",
+        result.error
+      );
+
+      return;
+    }
+
+    const services =
+      result.data || [];
+
+    console.log(
+      "Services MONEXA CASH:",
+      services
+    );
+
+  }catch(error){
+
+    console.error(
+      "Erreur chargement services:",
+      error
+    );
+
+  }
+
+}
+
+if(window.monexaSupabase){
+
+  window.monexaSupabase.auth.onAuthStateChange(
+    function(event,session){
+
+      if(session){
+
+        setTimeout(
+          monexaLoadServices,
+          200
+        );
+
+      }
+
+    }
+  );
+
+  monexaLoadServices();
+
+}
+  </script>
   
 
 </body>
