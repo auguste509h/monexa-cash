@@ -488,5 +488,136 @@
   }
 </script>
 
+  <style>
+  .mx-services-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:24px;
+  }
+
+  .mx-service-card{
+    border:1px solid #e5eaf1;
+    background:#fff;
+    border-radius:20px;
+    padding:18px 15px;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s;
+  }
+
+  .mx-service-card:active{
+    transform:scale(.98);
+  }
+
+  .mx-service-icon{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    background:#e8fbfa;
+    color:#0aaaa5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    margin-bottom:12px;
+  }
+
+  .mx-service-card h3{
+    color:#10233f;
+    font-size:15px;
+    margin-bottom:5px;
+  }
+
+  .mx-service-card p{
+    color:#7a8799;
+    font-size:12px;
+    line-height:1.4;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    const servicesTitle=document.querySelector(".mx-section-title");
+    const servicesCard=document.querySelector(".mx-services-card");
+
+    if(!servicesTitle || !servicesCard) return;
+
+    servicesCard.outerHTML=`
+      <div class="mx-services-grid">
+
+        <button
+          type="button"
+          class="mx-service-card"
+          onclick="monexaServiceTest('Recharge')">
+
+          <div class="mx-service-icon">↻</div>
+
+          <h3>Recharge</h3>
+
+          <p>
+            Rechargez votre compte facilement.
+          </p>
+
+        </button>
+
+        <button
+          type="button"
+          class="mx-service-card"
+          onclick="monexaServiceTest('Retrait')">
+
+          <div class="mx-service-icon">↙</div>
+
+          <h3>Retrait</h3>
+
+          <p>
+            Retirez votre argent simplement.
+          </p>
+
+        </button>
+
+        <button
+          type="button"
+          class="mx-service-card"
+          onclick="monexaServiceTest('Free Fire')">
+
+          <div class="mx-service-icon">◆</div>
+
+          <h3>Free Fire</h3>
+
+          <p>
+            Achetez vos diamants Free Fire.
+          </p>
+
+        </button>
+
+        <button
+          type="button"
+          class="mx-service-card"
+          onclick="monexaServiceTest('Binance')">
+
+          <div class="mx-service-icon">₿</div>
+
+          <h3>Binance</h3>
+
+          <p>
+            Effectuez vos opérations Binance.
+          </p>
+
+        </button>
+
+      </div>
+    `;
+  });
+
+  function monexaServiceTest(service){
+    alert(
+      "Service sélectionné : " + service +
+      "\\n\\nLa page de ce service sera ajoutée dans la prochaine étape."
+    );
+  }
+</script>
+
 </body>
 </html>
