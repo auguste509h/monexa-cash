@@ -3042,6 +3042,24 @@ document.addEventListener("DOMContentLoaded",async function(){
 
 })();
   </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded",async function(){
+
+  if(!window.monexaSupabase) return;
+
+  const {data,error}=await monexaSupabase.auth.getSession();
+
+  if(error || !data || !data.session) return;
+
+  const start=document.getElementById("mx-start-screen");
+
+  if(start){
+    start.remove();
+  }
+
+});
+  </script>
   
 
 </body>
