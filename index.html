@@ -1055,5 +1055,157 @@
   }
 </script>
 
+  <style>
+  .mx-bottom-nav{
+    position:fixed;
+    left:50%;
+    bottom:0;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:480px;
+    height:72px;
+    background:rgba(255,255,255,.97);
+    border-top:1px solid #e5eaf1;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    z-index:9000;
+    padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .mx-nav-item{
+    border:0;
+    background:transparent;
+    color:#7a8799;
+    font-size:11px;
+    font-weight:700;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    cursor:pointer;
+  }
+
+  .mx-nav-icon{
+    width:34px;
+    height:30px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+  }
+
+  .mx-nav-item.active{
+    color:#0aaaa5;
+  }
+
+  .mx-nav-item.active .mx-nav-icon{
+    background:#e8fbfa;
+  }
+
+  #app{
+    padding-bottom:95px !important;
+  }
+
+  body.mx-dark .mx-bottom-nav{
+    background:#0d1b2b;
+    border-color:#24364b;
+  }
+
+  body.mx-dark .mx-nav-item{
+    color:#9aaabd;
+  }
+
+  body.mx-dark .mx-nav-item.active{
+    color:#20d9d2;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded",function(){
+
+    if(document.getElementById("mx-bottom-nav")){
+      return;
+    }
+
+    const nav=document.createElement("nav");
+
+    nav.id="mx-bottom-nav";
+    nav.className="mx-bottom-nav";
+
+    nav.innerHTML=`
+      <button
+        type="button"
+        class="mx-nav-item active"
+        data-page="Accueil"
+        onclick="monexaNavTest(this,'Accueil')">
+
+        <div class="mx-nav-icon">⌂</div>
+        <span>Accueil</span>
+
+      </button>
+
+      <button
+        type="button"
+        class="mx-nav-item"
+        data-page="Services"
+        onclick="monexaNavTest(this,'Services')">
+
+        <div class="mx-nav-icon">▦</div>
+        <span>Services</span>
+
+      </button>
+
+      <button
+        type="button"
+        class="mx-nav-item"
+        data-page="Transactions"
+        onclick="monexaNavTest(this,'Transactions')">
+
+        <div class="mx-nav-icon">↕</div>
+        <span>Transactions</span>
+
+      </button>
+
+      <button
+        type="button"
+        class="mx-nav-item"
+        data-page="Profil"
+        onclick="monexaNavTest(this,'Profil')">
+
+        <div class="mx-nav-icon">👤</div>
+        <span>Profil</span>
+
+      </button>
+    `;
+
+    document.body.appendChild(nav);
+  });
+
+  function monexaNavTest(button,page){
+
+    document
+      .querySelectorAll(".mx-nav-item")
+      .forEach(function(item){
+        item.classList.remove("active");
+      });
+
+    button.classList.add("active");
+
+    if(page==="Profil"){
+      if(typeof monexaOpenProfile==="function"){
+        monexaOpenProfile();
+        return;
+      }
+    }
+
+    alert(
+      page +
+      "\n\nLa navigation de cette section sera connectée dans une prochaine étape."
+    );
+  }
+</script>
+
 </body>
 </html>
