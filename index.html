@@ -7840,6 +7840,728 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  if (!window.monexaSupabase) {
+    return;
+  }
+
+  let isAdmin = false;
+
+  async function checkAdmin() {
+
+    try {
+
+      const {
+        data: {
+          user
+        }
+      } =
+        await window.monexaSupabase.auth.getUser();
+
+      if (!user) {
+        return false;
+      }
+
+      const result =
+        await window.monexaSupabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .maybeSingle();
+
+      if (result.error) {
+        console.error(
+          "Erreur vérification admin:",
+          result.error
+        );
+
+        return false;
+      }
+
+      isAdmin =
+        result.data?.role === "admin";
+
+      return isAdmin;
+
+    } catch (error) {
+
+      console.error(
+        "Erreur admin:",
+        error
+      );
+
+      return false;
+    }
+  }
+
+
+  function createAdminButton() {
+
+    if (!isAdmin) {
+      return;
+    }
+
+    if (
+      document.getElementById(
+        "mcAdminButton"
+      )
+    ) {
+      return;
+    }
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+    button.id =
+      "mcAdminButton";
+
+    button.textContent =
+      "Administration";
+
+    button.style.cssText = `
+      width:100%;
+      margin-top:12px;
+      padding:14px;
+      border:0;
+      border-radius:14px;
+      background:#071d38;
+      color:#fff;
+      font-weight:800;
+      font-size:15px;
+    `;
+
+    const profile =
+      document.getElementById(
+        "profilePanel"
+      );
+
+    const profileContent =
+      document.querySelector(
+        "#profilePanel .profile-content"
+      );
+
+    if (profileContent) {
+      profileContent.appendChild(
+        button
+      );
+    } else if (profile) {
+      profile.appendChild(
+        button
+      );
+    } else {
+      document.body.appendChild(
+        button
+      );
+    }
+
+    button.addEventListener(
+      "click",
+      openAdminPanel
+    );
+  }
+
+
+  function createAdminPanel() {
+
+    if (
+      document.getElementById(
+        "monexaAdminPanel"
+      )
+    ) {
+      return;
+    }
+
+    const panel =
+      document.createElement("div");
+
+    panel.id =
+      "monexaAdminPanel";
+
+    panel.style.cssText = `
+      position:fixed;
+      inset:0;
+      z-index:10000120;
+      display:none;
+      background:#f5f8fb;
+      color:#071d38;
+      overflow-y:auto;
+    `;
+
+    panel.innerHTML = `
+      <div style="
+        max-width:520px;
+        margin:0 auto;
+        padding:20px;
+        box-sizing:border-box;
+      ">
+
+        <div style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:12px;
+          margin-bottom:20px;
+        ">
+
+          <div>
+            <div style="
+              font-size:12px;
+              color:#64748b;
+              font-weight:700;
+            ">
+              MONEXA CASH
+            </div>
+
+            <h2 style="
+              margin:3px 0 0;
+              font-size:24px;
+            ">
+              Administration
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            id="mcAdminClose"
+            style="
+              width:44px;
+              height:44px;
+              border:0;
+              border-radius:13px;
+              background:#e8eef4;
+              color:#071d38;
+              font-size:22px;
+              font-weight:700;
+            "
+          >
+            ×
+          </button>
+
+        </div>
+
+        <div id="mcAdminStats" style="
+          display:grid;
+          grid-template-columns:repeat(2,1fr);
+          gap:10px;
+          margin-bottom:18px;
+        "></div>
+
+        <div style="
+          display:grid;
+          gap:10px;
+        ">
+
+          <button
+            type="button"
+            class="mc-admin-section"
+            data-section="deposits"
+          >
+            💰 Dépôts
+          </button>
+
+          <button
+            type="button"
+            class="mc-admin-section"
+            data-section="wallet_withdrawals"
+          >
+            💸 Retraits wallet
+          </button>
+
+          <button
+            type="button"
+            class="mc-admin-section"
+            data-section="withdrawals"
+          >
+            💳 Retraits Wise / Meru / Morse
+          </button>
+
+          <button
+            type="button"
+            class="mc-admin-section"
+            data-section="orders"
+          >
+            🧾 Commandes de services
+          </button>
+
+          <button
+            type="button"
+            class="mc-admin-section"
+            data-section="customers"
+          >
+            👥 Clients
+          </button>
+
+        </div>
+
+        <div
+          id="mcAdminContent"
+          style="
+            margin-top:18px;
+          "
+        ></div>
+
+      </div>
+    `;
+
+    document.body.appendChild(
+      panel
+    );
+
+    document
+      .querySelectorAll(
+        ".mc-admin-section"
+      )
+      .forEach(
+        function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              loadAdminSection(
+                button.dataset.section
+              );
+
+            }
+          );
+
+        }
+      );
+
+    document
+      .getElementById(
+        "mcAdminClose"
+      )
+      .addEventListener(
+        "click",
+        function () {
+
+          panel.style.display =
+            "none";
+
+          document.body.style.overflow =
+            "";
+
+        }
+      );
+  }
+
+
+  async function openAdminPanel() {
+
+    if (!isAdmin) {
+      return;
+    }
+
+    createAdminPanel();
+
+    const panel =
+      document.getElementById(
+        "monexaAdminPanel"
+      );
+
+    panel.style.display =
+      "block";
+
+    document.body.style.overflow =
+      "hidden";
+
+    await loadAdminStats();
+  }
+
+
+  async function loadAdminStats() {
+
+    const stats =
+      document.getElementById(
+        "mcAdminStats"
+      );
+
+    if (!stats) {
+      return;
+    }
+
+    stats.innerHTML = `
+      <div style="
+        padding:16px;
+        background:#fff;
+        border-radius:16px;
+      ">
+        <div style="
+          color:#64748b;
+          font-size:12px;
+        ">
+          Dépôts en attente
+        </div>
+        <strong id="mcStatDeposits">
+          —
+        </strong>
+      </div>
+
+      <div style="
+        padding:16px;
+        background:#fff;
+        border-radius:16px;
+      ">
+        <div style="
+          color:#64748b;
+          font-size:12px;
+        ">
+          Commandes en attente
+        </div>
+        <strong id="mcStatOrders">
+          —
+        </strong>
+      </div>
+
+      <div style="
+        padding:16px;
+        background:#fff;
+        border-radius:16px;
+      ">
+        <div style="
+          color:#64748b;
+          font-size:12px;
+        ">
+          Retraits wallet
+        </div>
+        <strong id="mcStatWallet">
+          —
+        </strong>
+      </div>
+
+      <div style="
+        padding:16px;
+        background:#fff;
+        border-radius:16px;
+      ">
+        <div style="
+          color:#64748b;
+          font-size:12px;
+        ">
+          Retraits services
+        </div>
+        <strong id="mcStatWithdrawals">
+          —
+        </strong>
+      </div>
+    `;
+
+    const deposits =
+      await window.monexaSupabase
+        .from("deposits")
+        .select("id", {
+          count:"exact",
+          head:true
+        })
+        .eq(
+          "status",
+          "pending"
+        );
+
+    const orders =
+      await window.monexaSupabase
+        .from("service_orders")
+        .select("id", {
+          count:"exact",
+          head:true
+        })
+        .eq(
+          "status",
+          "pending"
+        );
+
+    const wallet =
+      await window.monexaSupabase
+        .from("wallet_withdrawals")
+        .select("id", {
+          count:"exact",
+          head:true
+        })
+        .eq(
+          "status",
+          "pending"
+        );
+
+    const withdrawals =
+      await window.monexaSupabase
+        .from("withdrawal_requests")
+        .select("id", {
+          count:"exact",
+          head:true
+        })
+        .eq(
+          "status",
+          "pending"
+        );
+
+    document.getElementById(
+      "mcStatDeposits"
+    ).textContent =
+      deposits.count ?? 0;
+
+    document.getElementById(
+      "mcStatOrders"
+    ).textContent =
+      orders.count ?? 0;
+
+    document.getElementById(
+      "mcStatWallet"
+    ).textContent =
+      wallet.count ?? 0;
+
+    document.getElementById(
+      "mcStatWithdrawals"
+    ).textContent =
+      withdrawals.count ?? 0;
+  }
+
+
+  async function loadAdminSection(
+    section
+  ) {
+
+    const content =
+      document.getElementById(
+        "mcAdminContent"
+      );
+
+    if (!content) {
+      return;
+    }
+
+    content.innerHTML = `
+      <div style="
+        background:#fff;
+        border-radius:16px;
+        padding:18px;
+        text-align:center;
+        color:#64748b;
+      ">
+        Chargement...
+      </div>
+    `;
+
+    let table = "";
+    let columns = "";
+
+    if (
+      section ===
+      "deposits"
+    ) {
+
+      table =
+        "deposits";
+
+      columns =
+        "id,user_id,amount_htg,payment_method,status,created_at";
+
+    } else if (
+      section ===
+      "wallet_withdrawals"
+    ) {
+
+      table =
+        "wallet_withdrawals";
+
+      columns =
+        "id,user_id,amount_htg,natcash_number,natcash_name,status,created_at";
+
+    } else if (
+      section ===
+      "withdrawals"
+    ) {
+
+      table =
+        "withdrawal_requests";
+
+      columns =
+        "id,user_id,service_type,payment_email,amount_usd,amount_htg,status,created_at";
+
+    } else if (
+      section ===
+      "orders"
+    ) {
+
+      table =
+        "service_orders";
+
+      columns =
+        "id,user_id,service_type,amount_htg,status,details,created_at";
+
+    } else if (
+      section ===
+      "customers"
+    ) {
+
+      table =
+        "profiles";
+
+      columns =
+        "id,full_name,phone,role,created_at";
+    }
+
+    if (!table) {
+      return;
+    }
+
+    const result =
+      await window.monexaSupabase
+        .from(table)
+        .select(columns)
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        )
+        .limit(50);
+
+    if (result.error) {
+
+      content.innerHTML = `
+        <div style="
+          background:#fef2f2;
+          color:#b91c1c;
+          border-radius:16px;
+          padding:16px;
+        ">
+          Impossible de charger les données.
+        </div>
+      `;
+
+      console.error(
+        "Erreur admin:",
+        result.error
+      );
+
+      return;
+    }
+
+    if (
+      !result.data ||
+      result.data.length === 0
+    ) {
+
+      content.innerHTML = `
+        <div style="
+          background:#fff;
+          border-radius:16px;
+          padding:18px;
+          text-align:center;
+          color:#64748b;
+        ">
+          Aucune donnée disponible.
+        </div>
+      `;
+
+      return;
+    }
+
+    content.innerHTML =
+      result.data
+        .map(
+          function (item) {
+
+            const safe =
+              JSON.stringify(item)
+                .replace(
+                  /</g,
+                  "&lt;"
+                );
+
+            return `
+              <div style="
+                background:#fff;
+                border-radius:16px;
+                padding:15px;
+                margin-bottom:10px;
+                overflow:hidden;
+              ">
+
+                <div style="
+                  font-size:12px;
+                  color:#64748b;
+                  margin-bottom:8px;
+                ">
+                  ${item.created_at
+                    ? new Date(
+                        item.created_at
+                      ).toLocaleString(
+                        "fr-FR"
+                      )
+                    : ""}
+                </div>
+
+                <pre style="
+                  white-space:pre-wrap;
+                  word-break:break-word;
+                  margin:0;
+                  font-family:inherit;
+                  font-size:13px;
+                  color:#071d38;
+                ">${safe}</pre>
+
+              </div>
+            `;
+          }
+        )
+        .join("");
+  }
+
+
+  async function initializeAdmin() {
+
+    const result =
+      await checkAdmin();
+
+    if (!result) {
+      return;
+    }
+
+    createAdminButton();
+    createAdminPanel();
+  }
+
+
+  window.monexaInitializeAdmin =
+    initializeAdmin;
+
+  if (
+    window.monexaSupabase
+  ) {
+
+    window.monexaSupabase.auth.onAuthStateChange(
+      function (
+        event,
+        session
+      ) {
+
+        if (session) {
+
+          setTimeout(
+            initializeAdmin,
+            500
+          );
+
+        }
+
+      }
+    );
+
+    setTimeout(
+      initializeAdmin,
+      800
+    );
+  }
+
+})();
+  </script>
   
 
 </body>
