@@ -5040,34 +5040,37 @@ if (
           error
         );
 
-        if (
-          error.message &&
-          error.message
-            .toLowerCase()
-            .includes(
-              "solde insuffisant"
-            )
-        ) {
-          alert(
-            "Solde insuffisant pour cette recharge."
-          );
-        } else {
-          alert(
-            "Impossible d'envoyer la recharge. Veuillez réessayer."
-          );
-        }
-
-        button.disabled =
-          false;
-
-        button.textContent =
-          "Confirmer la recharge";
-      }
-
-    }
+        const messageElement =
+  document.getElementById(
+    "mcRechargeFinalMessage"
   );
 
-})();
+if (
+  error.message &&
+  error.message
+    .toLowerCase()
+    .includes(
+      "solde insuffisant"
+    )
+) {
+  if (messageElement) {
+    messageElement.textContent =
+      "Solde insuffisant pour cette recharge.";
+    messageElement.style.display =
+      "block";
+    messageElement.style.color =
+      "#ef4444";
+  }
+} else {
+  if (messageElement) {
+    messageElement.textContent =
+      "Impossible d'envoyer la recharge. Veuillez réessayer.";
+    messageElement.style.display =
+      "block";
+    messageElement.style.color =
+      "#ef4444";
+  }
+}
               </script>
 
   <script>
