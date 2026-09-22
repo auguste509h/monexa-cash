@@ -9190,6 +9190,71 @@ binanceConfirmButton.onclick = async function (event) {
     setTimeout(monexaLoadNotifications,1000);
   }
 })();
+  </script><script>
+(function(){
+  "use strict";
+
+  function monexaCreateNotificationUI(){
+    if(document.getElementById("monexaNotificationButton"))return;
+
+    const button=document.createElement("button");
+    button.type="button";
+    button.id="monexaNotificationButton";
+    button.setAttribute("aria-label","Notifications");
+    button.style.cssText="position:relative;border:0;background:transparent;color:inherit;font-size:22px;width:44px;height:44px;border-radius:12px;cursor:pointer;";
+
+    button.innerHTML="🔔<span id='monexaNotificationCount' style='display:none;position:absolute;top:2px;right:2px;min-width:18px;height:18px;padding:0 4px;border-radius:20px;background:#06b6d4;color:#fff;font-size:10px;font-weight:700;align-items:center;justify-content:center;'></span>";
+
+    const header=document.querySelector("header");
+
+    if(header){
+      header.appendChild(button);
+    }else{
+      document.body.insertBefore(button,document.body.firstChild);
+    }
+
+    const panel=document.createElement("div");
+    panel.id="monexaNotificationPanel";
+    panel.style.cssText="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000001;padding:20px;align-items:flex-start;justify-content:center;";
+
+    panel.innerHTML=`
+      <div style="width:100%;max-width:520px;margin-top:70px;background:var(--viz-panel,#fff);color:var(--viz-text,#111);border-radius:18px;padding:18px;max-height:75vh;overflow:auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;">
+          <strong style="font-size:18px;">Notifications</strong>
+          <button type="button" id="monexaNotificationClose" style="border:0;background:transparent;color:inherit;font-size:22px;width:44px;height:44px;">×</button>
+        </div>
+        <div id="monexaNotificationsList"></div>
+      </div>
+    `;
+
+    document.body.appendChild(panel);
+
+    button.addEventListener("click",function(){
+      panel.style.display="flex";
+      if(typeof window.monexaLoadNotifications==="function"){
+        window.monexaLoadNotifications();
+      }
+    });
+
+    document.getElementById("monexaNotificationClose").addEventListener("click",function(){
+      panel.style.display="none";
+    });
+
+    panel.addEventListener("click",function(event){
+      if(event.target===panel){
+        panel.style.display="none";
+      }
+    });
+  }
+
+  window.monexaCreateNotificationUI=monexaCreateNotificationUI;
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",monexaCreateNotificationUI,{once:true});
+  }else{
+    monexaCreateNotificationUI();
+  }
+})();
   </script>
   
 
