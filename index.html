@@ -2322,19 +2322,40 @@ if(window.monexaSupabase){
 (function () {
 
   function getServiceFromButton(button) {
-    if (!button) return null;
-
-    const text = (button.innerText || button.textContent || "")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-
-    if (text.includes("recharge")) return "Recharge";
-    if (text.includes("retrait")) return "Retrait";
-    if (text.includes("free fire")) return "Free Fire";
-    if (text.includes("binance")) return "Binance";
-
+  if (!button) {
     return null;
+  }
+
+  const text = (
+    button.innerText ||
+    button.textContent ||
+    ""
+  )
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+  if (text.includes("confirmer")) {
+    return null;
+  }
+
+  if (text.includes("recharge")) {
+    return "Recharge";
+  }
+
+  if (text.includes("retrait")) {
+    return "Retrait";
+  }
+
+  if (text.includes("free fire")) {
+    return "Free Fire";
+  }
+
+  if (text.includes("binance")) {
+    return "Binance";
+  }
+
+  return null;
   }
 
   function openMonexaService(service) {
