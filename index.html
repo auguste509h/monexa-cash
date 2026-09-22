@@ -2318,326 +2318,158 @@ if(window.monexaSupabase){
 }
   </script>
 
-  <script>
-(function(){
-
-  function monexaOpenService(service){
-
-    document.dispatchEvent(
-      new CustomEvent(
-        "monexa:open-service",
-        {
-          detail:{
-            service:service
-          }
-        }
-      )
-    );
-
+  <style>
+  #monexaServiceModal {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:rgba(0,0,0,.55);
+    padding:18px;
+    align-items:flex-end;
+    justify-content:center;
   }
 
-  document.addEventListener(
-    "click",
-    function(event){
+  #monexaServiceModal.active {
+    display:flex;
+  }
 
-      const button =
-        event.target.closest("button");
+  .monexa-service-box {
+    width:100%;
+    max-width:520px;
+    background:#fff;
+    border-radius:22px 22px 0 0;
+    padding:22px;
+    box-sizing:border-box;
+    max-height:90vh;
+    overflow-y:auto;
+  }
 
-      if(!button){
-        return;
-      }
+  .monexa-service-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+  }
 
-      const text =
-        button.textContent
-          .trim()
-          .toLowerCase();
+  .monexa-service-head h2 {
+    margin:0;
+    color:#071d38;
+    font-size:21px;
+  }
 
-      if(text.includes("recharge")){
+  .monexa-close {
+    border:0;
+    background:#eef3f7;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    font-size:22px;
+    cursor:pointer;
+  }
 
-        monexaOpenService("Recharge");
+  .monexa-field {
+    margin-bottom:15px;
+  }
 
-      }else if(text.includes("retrait")){
+  .monexa-field label {
+    display:block;
+    margin-bottom:7px;
+    font-size:14px;
+    font-weight:600;
+    color:#26384d;
+  }
 
-        monexaOpenService("Retrait");
+  .monexa-field input,
+  .monexa-field select {
+    width:100%;
+    box-sizing:border-box;
+    padding:13px 14px;
+    border:1px solid #d7e0e8;
+    border-radius:12px;
+    font-size:16px;
+    background:#fff;
+  }
 
-      }else if(text.includes("free fire")){
+  .monexa-calc {
+    margin-top:18px;
+    padding:16px;
+    border-radius:16px;
+    background:#f3f8fb;
+    border:1px solid #dce8ee;
+  }
 
-        monexaOpenService("Free Fire");
+  .monexa-calc-row {
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    margin:8px 0;
+    color:#526273;
+    font-size:14px;
+  }
 
-      }else if(text.includes("binance")){
+  .monexa-calc-row strong {
+    color:#071d38;
+  }
 
-        monexaOpenService("Binance");
+  .monexa-total {
+    border-top:1px solid #d7e0e8;
+    margin-top:12px;
+    padding-top:12px;
+    font-size:17px;
+    font-weight:800;
+    color:#071d38;
+  }
 
-      }
+  .monexa-submit {
+    width:100%;
+    border:0;
+    margin-top:18px;
+    padding:15px;
+    border-radius:14px;
+    background:#19d3c5;
+    color:#071d38;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+  }
 
-    }
-  );
-
-  document.addEventListener(
-    "monexa:open-service",
-    function(event){
-
-      console.log(
-        "Service sélectionné:",
-        event.detail.service
-      );
-
-    }
-  );
-
-})();
-  </script>
-
-  <style>
-#serviceModal{
-  position:fixed;
-  inset:0;
-  z-index:10000;
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-  background:rgba(0,0,0,.55);
-  padding:12px;
-}
-
-#serviceModal.active{
-  display:flex;
-}
-
-.service-box{
-  width:100%;
-  max-width:520px;
-  max-height:90vh;
-  overflow:auto;
-  background:#fff;
-  border-radius:24px;
-  padding:22px;
-  box-sizing:border-box;
-}
-
-.service-title{
-  font-size:22px;
-  font-weight:800;
-  color:#071d38;
-  margin-bottom:6px;
-}
-
-.service-subtitle{
-  color:#64748b;
-  font-size:14px;
-  margin-bottom:18px;
-}
-
-.service-select,
-.service-input{
-  width:100%;
-  box-sizing:border-box;
-  padding:14px;
-  margin-top:7px;
-  margin-bottom:14px;
-  border:1px solid #d7e1e5;
-  border-radius:12px;
-  font-size:16px;
-  background:#fff;
-}
-
-.service-submit{
-  width:100%;
-  border:0;
-  border-radius:13px;
-  padding:15px;
-  background:#071d38;
-  color:#fff;
-  font-size:16px;
-  font-weight:700;
-}
-
-.service-close{
-  width:100%;
-  border:0;
-  background:transparent;
-  padding:13px;
-  color:#64748b;
-  font-size:15px;
-}
-
-.service-note{
-  background:#f1f8f8;
-  border-radius:14px;
-  padding:13px;
-  margin-bottom:15px;
-  font-size:14px;
-  color:#334155;
-}
-
-#serviceStatus{
-  text-align:center;
-  font-size:14px;
-  margin-top:12px;
-}
+  .monexa-status {
+    margin-top:12px;
+    text-align:center;
+    font-size:14px;
+  }
 </style>
 
-<div id="serviceModal">
+<div id="monexaServiceModal">
+  <div class="monexa-service-box">
 
-  <div class="service-box">
-
-    <div class="service-title">
-      Recharge
+    <div class="monexa-service-head">
+      <h2 id="monexaServiceTitle">Recharge</h2>
+      <button type="button" class="monexa-close" id="monexaCloseService">×</button>
     </div>
 
-    <div class="service-subtitle">
-      Choisissez le service que vous souhaitez recharger.
-    </div>
+    <div id="monexaRechargeFields">
 
-    <label>
-      Service
-    </label>
+      <div class="monexa-field">
+        <label>Service</label>
+        <select id="monexaRechargeService">
+          <option value="Wise">Wise</option>
+          <option value="Meru">Meru</option>
+          <option value="Morse">Morse</option>
+          <option value="USDT">USDT</option>
+          <option value="USDC">USDC</option>
+        </select>
+      </div>
 
-    <select
-      id="rechargeService"
-      class="service-select"
-    >
-      <option value="Wise">Wise</option>
-      <option value="Meru">Meru</option>
-      <option value="Morse">Morse</option>
-      <option value="USDT">USDT</option>
-      <option value="USDC">USDC</option>
-    </select>
+      <div class="monexa-field" id="monexaIdentifierField">
+        <label id="monexaIdentifierLabel">Email du compte</label>
+        <input id="monexaIdentifier" type="text" placeholder="Entrez les informations">
+      </div>
 
-    <div
-      id="rechargeInfo"
-      class="service-note"
-    ></div>
-
-    <div id="rechargeDynamicFields"></div>
-
-    <button
-      type="button"
-      id="rechargeSubmit"
-      class="service-submit"
-    >
-      Continuer
-    </button>
-
-    <div id="serviceStatus"></div>
-
-    <button
-      type="button"
-      id="serviceClose"
-      class="service-close"
-    >
-      Fermer
-    </button>
-
-  </div>
-
-</div>
-
-<script>
-(function(){
-
-  const modal =
-    document.getElementById("serviceModal");
-
-  const service =
-    document.getElementById("rechargeService");
-
-  const info =
-    document.getElementById("rechargeInfo");
-
-  const fields =
-    document.getElementById("rechargeDynamicFields");
-
-  const submit =
-    document.getElementById("rechargeSubmit");
-
-  const status =
-    document.getElementById("serviceStatus");
-
-  const close =
-    document.getElementById("serviceClose");
-
-  function render(){
-
-    const value =
-      service.value;
-
-    status.textContent="";
-
-    if(
-      value==="Wise" ||
-      value==="Meru" ||
-      value==="Morse"
-    ){
-
-      info.innerHTML =
-        "Taux: <strong>145 HTG / USD</strong> · Frais selon le montant.";
-
-      fields.innerHTML = `
-        <label>Email du compte</label>
-        <input
-          id="rechargeIdentifier"
-          class="service-input"
-          type="email"
-          placeholder="Email utilisé pour le compte"
-        >
-
-        <label>Montant en USD</label>
-        <input
-          id="rechargeAmount"
-          class="service-input"
-          type="number"
-          min="1"
-          step="0.01"
-          placeholder="Ex. 10"
-        >
-      `;
-
-      if(value==="Morse"){
-
-        fields.innerHTML = `
-          <label>Nom d'utilisateur Morse</label>
-          <input
-            id="rechargeIdentifier"
-            class="service-input"
-            type="text"
-            placeholder="Votre username Morse"
-          >
-
-          <label>Montant en USD</label>
-          <input
-            id="rechargeAmount"
-            class="service-input"
-            type="number"
-            min="1"
-            step="0.01"
-            placeholder="Ex. 10"
-          >
-        `;
-
-      }
-
-    }else{
-
-      info.innerHTML =
-        "Taux: <strong>143 HTG / USDT/USDC</strong> · Frais: <strong>0</strong>.";
-
-      fields.innerHTML = `
-        <label>Montant</label>
-        <input
-          id="rechargeAmount"
-          class="service-input"
-          type="number"
-          min="0.01"
-          step="0.01"
-          placeholder="Ex. 10"
-        >
-
+      <div class="monexa-field" id="monexaNetworkField" style="display:none;">
         <label>Réseau</label>
-        <select
-          id="rechargeNetwork"
-          class="service-select"
-        >
+        <select id="monexaNetwork">
           <option value="TRC20">TRC20</option>
           <option value="ERC20">ERC20</option>
           <option value="BEP20">BEP20</option>
@@ -2646,247 +2478,693 @@ if(window.monexaSupabase){
           <option value="Arbitrum">Arbitrum</option>
           <option value="Optimism">Optimism</option>
         </select>
-      `;
+      </div>
 
+      <div class="monexa-field">
+        <label id="monexaAmountLabel">Montant en USD</label>
+        <input id="monexaAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+      </div>
+
+    </div>
+
+    <div id="monexaBinanceFields" style="display:none;">
+
+      <div class="monexa-field">
+        <label>Type d'identifiant</label>
+        <select id="monexaBinanceIdentifierType">
+          <option value="Binance ID">Binance ID</option>
+          <option value="Email">Email</option>
+        </select>
+      </div>
+
+      <div class="monexa-field">
+        <label>Binance ID ou Email</label>
+        <input id="monexaBinanceIdentifier" type="text" placeholder="Entrez votre identifiant">
+      </div>
+
+      <div class="monexa-field">
+        <label>Montant en USDT</label>
+        <input id="monexaBinanceAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+      </div>
+
+    </div>
+
+    <div class="monexa-calc">
+
+      <div class="monexa-calc-row">
+        <span>Montant demandé</span>
+        <strong id="monexaCalcAmount">0.00</strong>
+      </div>
+
+      <div class="monexa-calc-row">
+        <span>Frais de service</span>
+        <strong id="monexaCalcFee">$0.00</strong>
+      </div>
+
+      <div class="monexa-calc-row">
+        <span>Taux</span>
+        <strong id="monexaCalcRate">0 HTG</strong>
+      </div>
+
+      <div class="monexa-calc-row monexa-total">
+        <span>Total à payer</span>
+        <strong id="monexaCalcTotal">0.00 HTG</strong>
+      </div>
+
+    </div>
+
+    <button type="button" class="monexa-submit" id="monexaSubmitService">
+      Confirmer la commande
+    </button>
+
+    <div id="monexaServiceStatus" class="monexa-status"></div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+
+  window.monexaServices = window.monexaServices || [];
+
+  const modal = document.getElementById("monexaServiceModal");
+  const title = document.getElementById("monexaServiceTitle");
+
+  const rechargeFields = document.getElementById("monexaRechargeFields");
+  const binanceFields = document.getElementById("monexaBinanceFields");
+
+  const rechargeService = document.getElementById("monexaRechargeService");
+  const identifier = document.getElementById("monexaIdentifier");
+  const identifierLabel = document.getElementById("monexaIdentifierLabel");
+  const networkField = document.getElementById("monexaNetworkField");
+  const network = document.getElementById("monexaNetwork");
+  const amount = document.getElementById("monexaAmount");
+
+  const binanceType =
+    document.getElementById("monexaBinanceIdentifierType");
+
+  const binanceIdentifier =
+    document.getElementById("monexaBinanceIdentifier");
+
+  const binanceAmount =
+    document.getElementById("monexaBinanceAmount");
+
+  const calcAmount =
+    document.getElementById("monexaCalcAmount");
+
+  const calcFee =
+    document.getElementById("monexaCalcFee");
+
+  const calcRate =
+    document.getElementById("monexaCalcRate");
+
+  const calcTotal =
+    document.getElementById("monexaCalcTotal");
+
+  const status =
+    document.getElementById("monexaServiceStatus");
+
+  let currentService = "Recharge";
+
+  async function loadTariffs(){
+
+    if(!window.monexaSupabase){
+      return;
     }
+
+    const result =
+      await window.monexaSupabase
+        .from("service_tariffs")
+        .select(
+          "id,service_type,service_name,price_htg,rate_htg,fee_usd,settings,is_active"
+        )
+        .eq("is_active",true);
+
+    if(result.error){
+      console.error("Erreur tarifs:",result.error);
+      return;
+    }
+
+    window.monexaServices = result.data || [];
 
   }
 
-  function open(){
+  function getTariff(name){
+
+    return window.monexaServices.find(function(item){
+
+      return item.service_name === name &&
+             item.is_active === true;
+
+    }) || null;
+
+  }
+
+  function openService(service){
+
+    currentService = service;
+
+    status.textContent = "";
+    status.style.color = "";
 
     modal.classList.add("active");
 
-    render();
+    if(service === "Binance"){
+
+      title.textContent = "Binance";
+
+      rechargeFields.style.display = "none";
+      binanceFields.style.display = "block";
+
+      resetCalculation();
+
+      calculateBinance();
+
+      return;
+    }
+
+    if(service === "Recharge"){
+
+      title.textContent = "Recharge";
+
+      rechargeFields.style.display = "block";
+      binanceFields.style.display = "none";
+
+      updateRechargeFields();
+
+      calculateRecharge();
+
+      return;
+    }
 
   }
 
-  function closeModal(){
+  function closeService(){
 
     modal.classList.remove("active");
 
+    status.textContent = "";
+
   }
 
-  service.addEventListener(
-    "change",
-    render
-  );
+  function resetCalculation(){
 
-  close.addEventListener(
-    "click",
-    closeModal
-  );
+    calcAmount.textContent = "0.00";
+    calcFee.textContent = "$0.00";
+    calcRate.textContent = "0 HTG";
+    calcTotal.textContent = "0.00 HTG";
 
-  document.addEventListener(
-    "monexa:open-service",
-    function(event){
+  }
 
-      if(
-        event.detail.service==="Recharge"
-      ){
+  function updateRechargeFields(){
 
-        open();
+    const service = rechargeService.value;
+
+    if(service === "Wise" || service === "Meru"){
+
+      identifierLabel.textContent = "Email du compte";
+
+      identifier.placeholder = "Email utilisé pour le compte";
+
+      networkField.style.display = "none";
+
+      document.getElementById("monexaAmountLabel").textContent =
+        "Montant en USD";
+
+    }
+
+    else if(service === "Morse"){
+
+      identifierLabel.textContent = "Nom d'utilisateur Morse";
+
+      identifier.placeholder = "Nom d'utilisateur";
+
+      networkField.style.display = "none";
+
+      document.getElementById("monexaAmountLabel").textContent =
+        "Montant en USD";
+
+    }
+
+    else if(service === "USDT" || service === "USDC"){
+
+      identifierLabel.textContent =
+        "Adresse du portefeuille";
+
+      identifier.placeholder =
+        "Adresse du portefeuille crypto";
+
+      networkField.style.display = "block";
+
+      document.getElementById("monexaAmountLabel").textContent =
+        "Montant en " + service;
+
+    }
+
+    calculateRecharge();
+
+  }
+
+  function calculateRecharge(){
+
+    const service = rechargeService.value;
+
+    const value = Number(amount.value || 0);
+
+    if(value <= 0){
+
+      resetCalculation();
+      return;
+
+    }
+
+    const tariff = getTariff(service);
+
+    let rate = 0;
+    let fee = 0;
+
+    if(tariff && Number(tariff.rate_htg) > 0){
+
+      rate = Number(tariff.rate_htg);
+
+    }else{
+
+      rate =
+        (service === "Wise" ||
+         service === "Meru" ||
+         service === "Morse")
+          ? 145
+          : 143;
+
+    }
+
+    if(service === "Wise" ||
+       service === "Meru" ||
+       service === "Morse"){
+
+      const settings =
+        tariff && tariff.settings
+          ? tariff.settings
+          : {};
+
+      const fee1 =
+        Number(settings.min_fee_usd || 1);
+
+      const fee2 =
+        Number(settings.fee_over_10_usd || 2);
+
+      const fee3 =
+        Number(settings.fee_over_100_usd || 3);
+
+      if(value <= 10){
+
+        fee = fee1;
+
+      }else if(value <= 100){
+
+        fee = fee2;
+
+      }else{
+
+        fee = fee3;
 
       }
 
+    }else{
+
+      fee = 0;
+
     }
-  );
 
-  submit.addEventListener(
-    "click",
-    async function(){
+    const totalUsd = value + fee;
+    const totalHtg = totalUsd * rate;
 
-      const amountInput =
-        document.getElementById(
-          "rechargeAmount"
-        );
+    calcAmount.textContent =
+      value.toFixed(2) +
+      (service === "USDT" || service === "USDC"
+        ? " " + service
+        : " USD");
 
-      const amount =
-        Number(
-          amountInput?.value || 0
-        );
+    calcFee.textContent =
+      "$" + fee.toFixed(2);
 
-      if(!amount || amount<=0){
+    calcRate.textContent =
+      rate.toFixed(2) + " HTG";
+
+    calcTotal.textContent =
+      totalHtg.toLocaleString("fr-FR",{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }) + " HTG";
+
+  }
+
+  function calculateBinance(){
+
+    const value =
+      Number(binanceAmount.value || 0);
+
+    if(value <= 0){
+
+      resetCalculation();
+      return;
+
+    }
+
+    const tariff = getTariff("Binance");
+
+    const rate =
+      tariff && Number(tariff.rate_htg) > 0
+        ? Number(tariff.rate_htg)
+        : 143;
+
+    const fee = 0;
+
+    const totalHtg = value * rate;
+
+    calcAmount.textContent =
+      value.toFixed(2) + " USDT";
+
+    calcFee.textContent =
+      "$0.00";
+
+    calcRate.textContent =
+      rate.toFixed(2) + " HTG";
+
+    calcTotal.textContent =
+      totalHtg.toLocaleString("fr-FR",{
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }) + " HTG";
+
+  }
+
+  async function submitService(){
+
+    if(!window.monexaSupabase){
+
+      status.textContent =
+        "Connexion au service indisponible.";
+
+      status.style.color = "#b42318";
+
+      return;
+
+    }
+
+    status.textContent = "Traitement...";
+
+    status.style.color = "#526273";
+
+    let serviceType = currentService;
+    let serviceName = "";
+    let value = 0;
+    let fee = 0;
+    let rate = 0;
+    let totalHtg = 0;
+    let details = {};
+
+    if(currentService === "Recharge"){
+
+      serviceName = rechargeService.value;
+      value = Number(amount.value || 0);
+
+      if(value <= 0){
 
         status.textContent =
           "Veuillez entrer un montant valide.";
 
-        status.style.color="#b42318";
+        status.style.color = "#b42318";
 
         return;
 
       }
 
-      let details={
-        service:service.value,
-        amount_usd:amount
-      };
-
-      const identifier =
-        document.getElementById(
-          "rechargeIdentifier"
-        );
-
-      if(identifier){
-
-        if(!identifier.value.trim()){
-
-          status.textContent =
-            "Veuillez entrer les informations du compte.";
-
-          status.style.color="#b42318";
-
-          return;
-
-        }
-
-        details.identifier =
-          identifier.value.trim();
-
-      }
-
-      const network =
-        document.getElementById(
-          "rechargeNetwork"
-        );
-
-      if(network){
-
-        details.network =
-          network.value;
-
-      }
-
-      const tariff =
-        (window.monexaServices || [])
-          .find(function(item){
-
-            return item.service_name ===
-              service.value;
-
-          });
-
-      let rate=0;
-
-      if(tariff){
-
-        rate =
-          Number(
-            tariff.rate_htg || 0
-          );
-
-      }
-
-      const feeUsd =
-        amount<=10 ? 1 :
-        amount<=100 ? 2 : 3;
-
-      let totalHtg=0;
-
-      if(
-        service.value==="USDT" ||
-        service.value==="USDC"
-      ){
-
-        totalHtg =
-          amount *
-          (rate || 143);
-
-      }else{
-
-        totalHtg =
-          (amount + feeUsd) *
-          (rate || 145);
-
-      }
-
-      const formatted =
-        totalHtg.toLocaleString(
-          "fr-FR",
-          {
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-          }
-        );
-
-      const confirmed =
-        confirm(
-          "Total à débiter: " +
-          formatted +
-          " HTG.\n\nConfirmer la commande ?"
-        );
-
-      if(!confirmed){
-        return;
-      }
-
-      if(!window.monexaSupabase){
+      if(!identifier.value.trim()){
 
         status.textContent =
-          "Connexion indisponible.";
+          "Veuillez entrer les informations demandées.";
 
-        status.style.color="#b42318";
+        status.style.color = "#b42318";
 
         return;
 
       }
 
-      submit.disabled=true;
-      submit.textContent="Traitement...";
+      const tariff = getTariff(serviceName);
 
-      try{
-
-        const result =
-          await window.monexaSupabase
-            .rpc(
-              "create_service_order",
-              {
-                p_service_type:
-                  "Recharge",
-                p_amount_htg:
-                  totalHtg,
-                p_details:
-                  details
-              }
+      rate =
+        tariff && Number(tariff.rate_htg) > 0
+          ? Number(tariff.rate_htg)
+          : (
+              serviceName === "Wise" ||
+              serviceName === "Meru" ||
+              serviceName === "Morse"
+                ? 145
+                : 143
             );
 
-        if(result.error){
+      if(serviceName === "Wise" ||
+         serviceName === "Meru" ||
+         serviceName === "Morse"){
 
-          throw result.error;
+        const settings =
+          tariff && tariff.settings
+            ? tariff.settings
+            : {};
 
+        const fee1 =
+          Number(settings.min_fee_usd || 1);
+
+        const fee2 =
+          Number(settings.fee_over_10_usd || 2);
+
+        const fee3 =
+          Number(settings.fee_over_100_usd || 3);
+
+        fee =
+          value <= 10
+            ? fee1
+            : value <= 100
+              ? fee2
+              : fee3;
+
+      }
+
+      totalHtg =
+        (value + fee) * rate;
+
+      details = {
+        service_name: serviceName,
+        amount_usd: value,
+        fee_usd: fee,
+        rate_htg: rate,
+        total_htg: totalHtg,
+        identifier: identifier.value.trim(),
+        network:
+          serviceName === "USDT" ||
+          serviceName === "USDC"
+            ? network.value
+            : null
+      };
+
+    }
+
+    if(currentService === "Binance"){
+
+      serviceName = "Binance";
+
+      value = Number(binanceAmount.value || 0);
+
+      if(value <= 0){
+
+        status.textContent =
+          "Veuillez entrer un montant valide.";
+
+        status.style.color = "#b42318";
+
+        return;
+
+      }
+
+      if(!binanceIdentifier.value.trim()){
+
+        status.textContent =
+          "Veuillez entrer votre Binance ID ou Email.";
+
+        status.style.color = "#b42318";
+
+        return;
+
+      }
+
+      const tariff = getTariff("Binance");
+
+      rate =
+        tariff && Number(tariff.rate_htg) > 0
+          ? Number(tariff.rate_htg)
+          : 143;
+
+      fee = 0;
+
+      totalHtg = value * rate;
+
+      details = {
+        service_name: "Binance",
+        identifier_type: binanceType.value,
+        identifier: binanceIdentifier.value.trim(),
+        amount_usdt: value,
+        fee_usd: 0,
+        rate_htg: rate,
+        total_htg: totalHtg
+      };
+
+    }
+
+    const confirmation =
+      confirm(
+        "Total à payer : " +
+        totalHtg.toLocaleString("fr-FR",{
+          minimumFractionDigits:2,
+          maximumFractionDigits:2
+        }) +
+        " HTG\n\nVoulez-vous confirmer ?"
+      );
+
+    if(!confirmation){
+
+      status.textContent = "";
+
+      return;
+
+    }
+
+    const result =
+      await window.monexaSupabase.rpc(
+        "create_service_order",
+        {
+          p_service_type: serviceType,
+          p_amount_htg: totalHtg,
+          p_details: details
         }
+      );
 
-        status.textContent =
-          "Commande créée. Traitement en cours.";
+    if(result.error){
 
-        status.style.color="#087f79";
+      console.error(
+        "Erreur commande:",
+        result.error
+      );
 
-        setTimeout(
-          closeModal,
-          1200
-        );
+      status.textContent =
+        result.error.message ||
+        "Impossible de créer la commande.";
 
-      }catch(error){
+      status.style.color = "#b42318";
 
-        console.error(
-          "Erreur recharge:",
-          error
-        );
+      return;
 
-        status.textContent =
-          error.message ||
-          "Impossible de créer la commande.";
+    }
 
-        status.style.color="#b42318";
+    status.textContent =
+      "Commande créée avec succès. Votre demande est en traitement.";
 
-      }finally{
+    status.style.color = "#087f79";
 
-        submit.disabled=false;
-        submit.textContent="Continuer";
+    if(typeof monexaLoadDashboard === "function"){
+
+      setTimeout(
+        monexaLoadDashboard,
+        300
+      );
+
+    }
+
+    if(typeof monexaLoadTransactions === "function"){
+
+      setTimeout(
+        monexaLoadTransactions,
+        300
+      );
+
+    }
+
+  }
+
+  document.addEventListener("click",function(event){
+
+    const button =
+      event.target.closest("button");
+
+    if(!button){
+      return;
+    }
+
+    const text =
+      button.textContent
+        .trim()
+        .replace(/\s+/g," ")
+        .toLowerCase();
+
+    if(text === "recharge"){
+
+      event.preventDefault();
+      openService("Recharge");
+
+    }
+
+    else if(text === "binance"){
+
+      event.preventDefault();
+      openService("Binance");
+
+    }
+
+  });
+
+  document
+    .getElementById("monexaCloseService")
+    .addEventListener(
+      "click",
+      closeService
+    );
+
+  modal.addEventListener(
+    "click",
+    function(event){
+
+      if(event.target === modal){
+
+        closeService();
 
       }
 
     }
   );
+
+  rechargeService.addEventListener(
+    "change",
+    updateRechargeFields
+  );
+
+  amount.addEventListener(
+    "input",
+    calculateRecharge
+  );
+
+  binanceAmount.addEventListener(
+    "input",
+    calculateBinance
+  );
+
+  document
+    .getElementById("monexaSubmitService")
+    .addEventListener(
+      "click",
+      submitService
+    );
+
+  loadTariffs();
 
 })();
 </script>
