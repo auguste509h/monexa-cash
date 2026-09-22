@@ -8969,6 +8969,131 @@ binanceConfirmButton.onclick = async function (event) {
   },30000);
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminLoadStats(){
+    if(!window.monexaSupabase)return;
+
+    const result=await window.monexaSupabase.rpc("admin_get_stats");
+
+    if(result.error){
+      console.error("Erreur statistiques admin:",result.error);
+      return;
+    }
+
+    const stats=result.data||{};
+
+    const values={
+      clients:stats.clients||0,
+      deposits_pending:stats.deposits_pending||0,
+      service_orders_pending:stats.service_orders_pending||0,
+      wallet_withdrawals_pending:stats.wallet_withdrawals_pending||0,
+      external_withdrawals_pending:stats.external_withdrawals_pending||0
+    };
+
+    const selectors={
+      clients:["#adminClientsCount","#monexaAdminClientsCount"],
+      deposits_pending:["#adminDepositsPending","#monexaAdminDepositsPending"],
+      service_orders_pending:["#adminServiceOrdersPending","#monexaAdminServiceOrdersPending"],
+      wallet_withdrawals_pending:["#adminWalletWithdrawalsPending","#monexaAdminWalletWithdrawalsPending"],
+      external_withdrawals_pending:["#adminExternalWithdrawalsPending","#monexaAdminExternalWithdrawalsPending"]
+    };
+
+    Object.keys(selectors).forEach(function(key){
+      selectors[key].forEach(function(selector){
+        document.querySelectorAll(selector).forEach(function(element){
+          element.textContent=values[key];
+        });
+      });
+    });
+  }
+
+  window.monexaAdminLoadStats=monexaAdminLoadStats;
+
+  if(window.monexaSupabase){
+    setTimeout(monexaAdminLoadStats,1000);
+  }
+})();
+        </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminLoadClients(){
+    if(!window.monexaSupabase)return;
+
+    const result=await window.monexaSupabase.rpc("admin_get_clients");
+
+    if(result.error){
+      console.error("Erreur clients admin:",result.error);
+      return;
+    }
+
+    const container=document.querySelector("#monexaAdminClients,#adminClients,#monexa-admin-clients");
+
+    if(!container)return;
+
+    if(!result.data||!result.data.length){
+      container.innerHTML="<p>Aucun client disponible.</p>";
+      return;
+    }
+
+    container.innerHTML=result.data.map(function(client){
+      const name=client.full_name||"Client";
+      const email=client.email||"Email non disponible";
+      const phone=client.phone||"Non renseigné";
+      const role=client.role||"customer";
+      const date=client.created_at?new Date(client.created_at).toLocaleDateString("fr-FR"):"—";
+
+      return `
+        <div style="padding:14px;margin-bottom:10px;border:1px solid rgba(128,128,128,.25);border-radius:12px;">
+          <div style="font-weight:700;">${name}</div>
+          <div style="font-size:13px;opacity:.8;margin-top:4px;">Email: ${email}</div>
+          <div style="font-size:13px;margin-top:4px;">Téléphone: ${phone}</div>
+          <div style="font-size:13px;margin-top:4px;">Rôle: ${role}</div>
+          <div style="font-size:13px;margin-top:4px;">Créé le: ${date}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  window.monexaAdminLoadClients=monexaAdminLoadClients;
+
+  if(window.monexaSupabase){
+    setTimeout(monexaAdminLoadClients,1200);
+  }
+})();
+  </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminAutoRefreshStats(){
+    if(typeof window.monexaAdminLoadStats!=="function")return;
+
+    try{
+      await window.monexaAdminLoadStats();
+    }catch(error){
+      console.error("Erreur actualisation statistiques:",error);
+    }
+  }
+
+  window.monexaAdminAutoRefreshStats=monexaAdminAutoRefreshStats;
+
+  setInterval(function(){
+    const panel=document.querySelector("#monexaAdminPanel,#monexa-admin-panel");
+
+    if(panel&&panel.style.display!=="none"){
+      monexaAdminAutoRefreshStats();
+    }
+  },30000);
+})();
+  </script>
   
 
 </body>
