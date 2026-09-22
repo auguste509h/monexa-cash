@@ -4500,6 +4500,10 @@ if (
 
       if (!button) return;
 
+    if (button.closest("#monexaWithdrawModal")) {
+  return;
+    }
+
       const text = (
         button.innerText ||
         button.textContent ||
