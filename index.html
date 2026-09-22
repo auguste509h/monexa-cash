@@ -3824,45 +3824,6 @@ if(window.monexaSupabase){
   );
 
   document.getElementById(
-    "mcBinanceFinalType"
-  ).addEventListener(
-    "change",
-    function () {
-
-      const label =
-        document.getElementById(
-          "mcBinanceFinalLabel"
-        );
-
-      const input =
-        document.getElementById(
-          "mcBinanceFinalIdentifier"
-        );
-
-      if (this.value === "Email") {
-
-        label.textContent = "Email Binance";
-
-        input.placeholder =
-          "Entrez votre email Binance";
-
-        input.type = "email";
-
-      } else {
-
-        label.textContent = "Binance ID";
-
-        input.placeholder =
-          "Entrez votre Binance ID";
-
-        input.type = "text";
-
-      }
-
-    }
-  );
-
-  document.getElementById(
     "mcBinanceFinalAmount"
   ).addEventListener(
     "input",
