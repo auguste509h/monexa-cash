@@ -8798,6 +8798,73 @@ binanceConfirmButton.onclick = async function (event) {
   window.monexaAdminUpdateWalletWithdrawal=monexaAdminUpdateWalletWithdrawal;
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminLoadTariffs(){
+    if(!window.monexaSupabase)return;
+
+    const result=await window.monexaSupabase
+      .from("service_tariffs")
+      .select("id,service_type,service_name,price_htg,rate_htg,fee_usd,is_active")
+      .order("service_type")
+      .order("service_name");
+
+    if(result.error){
+      console.error("Erreur tarifs admin:",result.error);
+      return;
+    }
+
+    const container=document.querySelector(
+      "#monexaAdminTariffs,#adminTariffs,#monexa-admin-tariffs"
+    );
+
+    if(!container)return;
+
+    if(!result.data||!result.data.length){
+      container.innerHTML="<p>Aucun tarif disponible.</p>";
+      return;
+    }
+
+    container.innerHTML=result.data.map(function(tariff){
+      const status=tariff.is_active?"Actif":"Désactivé";
+
+      return `
+        <div style="padding:14px;margin-bottom:10px;border:1px solid rgba(128,128,128,.25);border-radius:12px;">
+          <div style="font-weight:700;">${tariff.service_name}</div>
+          <div style="font-size:13px;opacity:.75;margin-top:4px;">${tariff.service_type}</div>
+          <div style="margin-top:8px;font-size:14px;">
+            Prix: ${tariff.price_htg??"—"} HTG
+            · Taux: ${tariff.rate_htg??"—"} HTG
+            · Frais: ${tariff.fee_usd??0} USD
+          </div>
+          <div style="margin-top:8px;font-size:13px;font-weight:600;">
+            ${status}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  window.monexaAdminLoadTariffs=monexaAdminLoadTariffs;
+
+  document.addEventListener("click",function(event){
+    const button=event.target.closest(
+      "#monexaAdminButton,[data-open-admin]"
+    );
+
+    if(button){
+      setTimeout(monexaAdminLoadTariffs,300);
+    }
+  });
+
+  if(window.monexaSupabase){
+    setTimeout(monexaAdminLoadTariffs,1000);
+  }
+})();
+  </script>
   
 
 </body>
