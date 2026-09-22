@@ -4863,228 +4863,301 @@ if (
 (function () {
   "use strict";
 
-  const button = document.getElementById(
-    "mcRechargeFinalConfirm"
-  );
+  document.addEventListener("click", async function (event) {
 
-  if (!button) {
-    console.error(
-      "MONEXA CASH : bouton Recharge introuvable."
+    const button = event.target.closest(
+      "#mcRechargeFinalConfirm"
     );
-    return;
-  }
 
-  button.addEventListener(
-    "click",
-    async function () {
+    if (!button) {
+      return;
+    }
 
-      const type =
-        document.getElementById(
-          "mcRechargeFinalType"
-        ).value;
+    event.preventDefault();
+    event.stopPropagation();
 
-      const amount =
-        Number(
-          document.getElementById(
-            "mcRechargeFinalAmount"
-          ).value || 0
-        );
+    const typeElement =
+      document.getElementById(
+        "mcRechargeFinalType"
+      );
 
-      const account =
-        (
-          document.getElementById(
-            "mcRechargeFinalAccountInput"
-          ).value || ""
-        ).trim();
+    const amountElement =
+      document.getElementById(
+        "mcRechargeFinalAmount"
+      );
 
-      const wallet =
-        (
-          document.getElementById(
-            "mcRechargeFinalWallet"
-          ).value || ""
-        ).trim();
+    const accountElement =
+      document.getElementById(
+        "mcRechargeFinalAccountInput"
+      );
 
-      const network =
-        document.getElementById(
-          "mcRechargeFinalNetwork"
-        ).value;
+    const walletElement =
+      document.getElementById(
+        "mcRechargeFinalWallet"
+      );
 
-      if (!window.monexaSupabase) {
-        alert(
-          "Connexion au serveur indisponible."
-        );
-        return;
+    const networkElement =
+      document.getElementById(
+        "mcRechargeFinalNetwork"
+      );
+
+    const messageElement =
+      document.getElementById(
+        "mcRechargeFinalMessage"
+      );
+
+    if (
+      !typeElement ||
+      !amountElement ||
+      !accountElement ||
+      !walletElement ||
+      !networkElement
+    ) {
+      console.error(
+        "MONEXA CASH : champs Recharge introuvables."
+      );
+      return;
+    }
+
+    const type =
+      typeElement.value;
+
+    const amount =
+      Number(
+        amountElement.value || 0
+      );
+
+    const account =
+      (
+        accountElement.value || ""
+      ).trim();
+
+    const wallet =
+      (
+        walletElement.value || ""
+      ).trim();
+
+    const network =
+      networkElement.value;
+
+    if (!window.monexaSupabase) {
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Connexion au serveur indisponible.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#ef4444";
       }
 
-      if (
-        !Number.isFinite(amount) ||
-        amount <= 0
-      ) {
-        alert(
-          "Veuillez entrer un montant valide."
-        );
-        return;
+      return;
+    }
+
+    if (
+      !Number.isFinite(amount) ||
+      amount <= 0
+    ) {
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Veuillez entrer un montant valide.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#ef4444";
       }
 
-      if (
-        (
-          type === "Wise" ||
-          type === "Meru" ||
-          type === "Morse"
-        ) &&
-        !account
-      ) {
-        alert(
-          "Veuillez entrer les informations du compte."
-        );
-        return;
-      }
+      return;
+    }
 
-      if (
-        (
-          type === "USDT" ||
-          type === "USDC"
-        ) &&
-        !wallet
-      ) {
-        alert(
-          "Veuillez entrer l'adresse du wallet."
-        );
-        return;
-      }
-
-      let rate = 143;
-      let feeUsd = 0;
-
-      if (
+    if (
+      (
         type === "Wise" ||
         type === "Meru" ||
         type === "Morse"
-      ) {
-        rate = 145;
+      ) &&
+      !account
+    ) {
 
-        if (amount > 100) {
-          feeUsd = 3;
-        } else if (amount > 10) {
-          feeUsd = 2;
-        } else {
-          feeUsd = 1;
-        }
+      if (messageElement) {
+        messageElement.textContent =
+          "Veuillez entrer les informations du compte.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#ef4444";
       }
 
-      const baseHtg =
-        amount * rate;
+      return;
+    }
 
-      const feeHtg =
-        feeUsd * rate;
+    if (
+      (
+        type === "USDT" ||
+        type === "USDC"
+      ) &&
+      !wallet
+    ) {
 
-      const totalHtg =
-        baseHtg + feeHtg;
+      if (messageElement) {
+        messageElement.textContent =
+          "Veuillez entrer l'adresse du wallet.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#ef4444";
+      }
 
-      button.disabled = true;
+      return;
+    }
+
+    let rate = 143;
+    let feeUsd = 0;
+
+    if (
+      type === "Wise" ||
+      type === "Meru" ||
+      type === "Morse"
+    ) {
+
+      rate = 145;
+
+      if (amount > 100) {
+        feeUsd = 3;
+      } else if (amount > 10) {
+        feeUsd = 2;
+      } else {
+        feeUsd = 1;
+      }
+    }
+
+    const baseHtg =
+      amount * rate;
+
+    const feeHtg =
+      feeUsd * rate;
+
+    const totalHtg =
+      baseHtg + feeHtg;
+
+    button.disabled = true;
+
+    button.textContent =
+      "Traitement en cours...";
+
+    if (messageElement) {
+      messageElement.style.display =
+        "none";
+      messageElement.textContent =
+        "";
+    }
+
+    try {
+
+      const details = {
+        service_name: type,
+        amount_usd: amount,
+        rate_htg: rate,
+        fee_usd: feeUsd,
+        fee_htg: feeHtg,
+        total_htg: totalHtg,
+        account: account,
+        wallet_address: wallet,
+        network: network
+      };
+
+      const result =
+        await window.monexaSupabase.rpc(
+          "create_service_order",
+          {
+            p_service_type: "Recharge",
+            p_amount_htg: totalHtg,
+            p_details: details
+          }
+        );
+
+      if (result.error) {
+        throw result.error;
+      }
+
       button.textContent =
-        "Traitement en cours...";
+        "Recharge envoyée";
 
-      try {
+      if (messageElement) {
+        messageElement.textContent =
+          "Recharge envoyée avec succès.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#22c55e";
+      }
 
-        const details = {
-          service_name: type,
-          amount_usd: amount,
-          rate_htg: rate,
-          fee_usd: feeUsd,
-          fee_htg: feeHtg,
-          total_htg: totalHtg,
-          account: account,
-          wallet_address: wallet,
-          network: network
-        };
+      setTimeout(function () {
 
-        const result =
-          await window.monexaSupabase.rpc(
-            "create_service_order",
-            {
-              p_service_type: "Recharge",
-              p_amount_htg: totalHtg,
-              p_details: details
-            }
+        const modal =
+          document.getElementById(
+            "monexaRechargeFinalModal"
           );
 
-        if (result.error) {
-          throw result.error;
+        if (modal) {
+          modal.style.display =
+            "none";
         }
 
+        document.body.style.overflow =
+          "";
+
+        button.disabled =
+          false;
+
         button.textContent =
-          "Recharge envoyée";
+          "Confirmer la recharge";
 
-        alert(
-          "Recharge envoyée avec succès. MONEXA CASH va la traiter manuellement."
-        );
+      }, 1800);
 
-        setTimeout(
-          function () {
+    } catch (error) {
 
-            const modal =
-              document.getElementById(
-                "monexaRechargeFinalModal"
-              );
+      console.error(
+        "Erreur Recharge:",
+        error
+      );
 
-            if (modal) {
-              modal.style.display =
-                "none";
-            }
+      if (messageElement) {
 
-            document.body.style.overflow =
-              "";
+        if (
+          error.message &&
+          error.message
+            .toLowerCase()
+            .includes(
+              "solde insuffisant"
+            )
+        ) {
+          messageElement.textContent =
+            "Solde insuffisant pour cette recharge.";
+        } else {
+          messageElement.textContent =
+            "Impossible d'envoyer la recharge. Veuillez réessayer.";
+        }
 
-            button.disabled =
-              false;
+        messageElement.style.display =
+          "block";
 
-            button.textContent =
-              "Confirmer la recharge";
+        messageElement.style.color =
+          "#ef4444";
+      }
 
-          },
-          1200
-        );
+      button.disabled =
+        false;
 
-      } catch (error) {
+      button.textContent =
+        "Confirmer la recharge";
+    }
 
-        console.error(
-          "Erreur Recharge:",
-          error
-        );
+  }, true);
 
-        const messageElement =
-  document.getElementById(
-    "mcRechargeFinalMessage"
-  );
-
-if (
-  error.message &&
-  error.message
-    .toLowerCase()
-    .includes(
-      "solde insuffisant"
-    )
-) {
-  if (messageElement) {
-    messageElement.textContent =
-      "Solde insuffisant pour cette recharge.";
-    messageElement.style.display =
-      "block";
-    messageElement.style.color =
-      "#ef4444";
-  }
-} else {
-  if (messageElement) {
-    messageElement.textContent =
-      "Impossible d'envoyer la recharge. Veuillez réessayer.";
-    messageElement.style.display =
-      "block";
-    messageElement.style.color =
-      "#ef4444";
-  }
-}
-              </script>
+})();
+      </script>
 
   <script>
 document.addEventListener("click", function (event) {
