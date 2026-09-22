@@ -3552,7 +3552,62 @@ if(window.monexaSupabase){
   }, true);
 
 })();
-          </script>
+  </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  document.addEventListener("click", function (event) {
+    const target = event.target.closest(
+      "button, a, [role='button'], .service-card, .action-card"
+    );
+
+    if (!target) return;
+
+    const text = (target.innerText || target.textContent || "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+
+    if (!text.includes("binance")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    const binanceSection = document.querySelector("#mcBinance");
+
+    if (binanceSection) {
+      const modal = document.querySelector("#monexaServiceModal");
+
+      if (modal) {
+        modal.style.display = "flex";
+        modal.classList.add("active");
+      }
+
+      document.querySelectorAll(
+        "#monexaServiceModal > div > section, #monexaServiceModal section"
+      ).forEach(function (section) {
+        section.style.display = "none";
+      });
+
+      binanceSection.style.display = "block";
+      return;
+    }
+
+    const binanceModal = document.querySelector(
+      "#monexaBinanceModal, .monexa-binance-modal"
+    );
+
+    if (binanceModal) {
+      binanceModal.style.display = "flex";
+      binanceModal.classList.add("active");
+    }
+  }, true);
+
+})();
+        </script>
   
 
 </body>
