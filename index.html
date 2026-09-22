@@ -9256,6 +9256,77 @@ binanceConfirmButton.onclick = async function (event) {
   }
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaLoadOrderStatuses(){
+    if(!window.monexaSupabase)return;
+
+    const result=await window.monexaSupabase
+      .from("service_orders")
+      .select("id,service_type,amount_htg,status,created_at,updated_at")
+      .order("created_at",{ascending:false})
+      .limit(20);
+
+    if(result.error){
+      console.error("Erreur statuts commandes:",result.error);
+      return;
+    }
+
+    const container=document.querySelector(
+      "#orderStatusList,#monexaOrderStatusList,#transactionStatusList"
+    );
+
+    if(!container)return;
+
+    const orders=result.data||[];
+
+    if(!orders.length){
+      container.innerHTML="<p style='opacity:.7;'>Aucune commande récente.</p>";
+      return;
+    }
+
+    const labels={
+      pending:"En attente",
+      processing:"En traitement",
+      completed:"Terminée",
+      cancelled:"Annulée"
+    };
+
+    container.innerHTML=orders.map(function(order){
+      const status=labels[order.status]||order.status;
+      const date=order.created_at
+        ?new Date(order.created_at).toLocaleString("fr-FR")
+        :"";
+
+      return `
+        <div style="padding:13px;margin-bottom:9px;border:1px solid rgba(128,128,128,.2);border-radius:12px;">
+          <div style="display:flex;justify-content:space-between;gap:10px;">
+            <strong>${order.service_type}</strong>
+            <strong>${Number(order.amount_htg||0).toLocaleString("fr-FR")} HTG</strong>
+          </div>
+          <div style="font-size:13px;margin-top:6px;">Statut : ${status}</div>
+          <div style="font-size:11px;opacity:.6;margin-top:5px;">${date}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  window.monexaLoadOrderStatuses=monexaLoadOrderStatuses;
+
+  if(window.monexaSupabase){
+    window.monexaSupabase.auth.onAuthStateChange(function(event,session){
+      if(session){
+        setTimeout(monexaLoadOrderStatuses,400);
+      }
+    });
+
+    setTimeout(monexaLoadOrderStatuses,1200);
+  }
+})();
+  </script>
   
 
 </body>
