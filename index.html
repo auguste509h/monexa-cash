@@ -2941,6 +2941,150 @@ if(window.monexaSupabase){
 
 })();
   </script>
+
+  <script>
+(function () {
+
+  function setupRechargeFields() {
+
+    const type = document.getElementById("mcRechargeType");
+
+    const accountField =
+      document.getElementById("mcAccountField");
+
+    const cryptoField =
+      document.getElementById("mcCryptoAddressField");
+
+    const networkField =
+      document.getElementById("mcNetworkField");
+
+    const accountLabel =
+      document.getElementById("mcAccountLabel");
+
+    const accountInput =
+      document.getElementById("mcAccount");
+
+    const accountHelp =
+      document.getElementById("mcAccountHelp");
+
+    if (!type) {
+      console.error("MONEXA CASH: champ Recharge introuvable.");
+      return;
+    }
+
+    function update() {
+
+      const service = type.value;
+
+      /* Kache tout anvan */
+      if (accountField) accountField.style.display = "none";
+      if (cryptoField) cryptoField.style.display = "none";
+      if (networkField) networkField.style.display = "none";
+
+      /* WISE */
+      if (service === "Wise") {
+
+        accountField.style.display = "block";
+
+        accountLabel.textContent =
+          "Email du compte Wise";
+
+        accountInput.type = "email";
+
+        accountInput.placeholder =
+          "Entrez l'email de votre compte Wise";
+
+        accountHelp.textContent =
+          "Utilisez l'email utilisé pour créer votre compte Wise.";
+      }
+
+      /* MERU */
+      else if (service === "Meru") {
+
+        accountField.style.display = "block";
+
+        accountLabel.textContent =
+          "Email du compte Meru";
+
+        accountInput.type = "email";
+
+        accountInput.placeholder =
+          "Entrez l'email de votre compte Meru";
+
+        accountHelp.textContent =
+          "Utilisez l'email utilisé pour créer votre compte Meru.";
+      }
+
+      /* MORSE */
+      else if (service === "Morse") {
+
+        accountField.style.display = "block";
+
+        accountLabel.textContent =
+          "Username Morse";
+
+        accountInput.type = "text";
+
+        accountInput.placeholder =
+          "Entrez votre username Morse";
+
+        accountHelp.textContent =
+          "Entrez exactement votre nom d'utilisateur Morse.";
+      }
+
+      /* USDT / USDC */
+      else if (
+        service === "USDT" ||
+        service === "USDC"
+      ) {
+
+        cryptoField.style.display = "block";
+
+        networkField.style.display = "block";
+
+        accountInput.value = "";
+
+        document.getElementById("mcCryptoAddress").value = "";
+      }
+
+    }
+
+    type.addEventListener("change", update);
+
+    update();
+
+  }
+
+  /*
+   * Si le modal existe déjà au chargement,
+   * on initialise les champs.
+   */
+  if (document.getElementById("monexaServiceModal")) {
+    setupRechargeFields();
+  }
+
+  /*
+   * Si le modal est créé après ce script,
+   * on attend qu'il apparaisse.
+   */
+  const observer = new MutationObserver(function () {
+
+    if (document.getElementById("monexaServiceModal")) {
+
+      setupRechargeFields();
+
+      observer.disconnect();
+    }
+
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+})();
+  </script>
   
 
 </body>
