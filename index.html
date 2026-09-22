@@ -6245,6 +6245,632 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const oldModal = document.getElementById(
+    "monexaFreeFireModal"
+  );
+
+  if (oldModal) {
+    oldModal.remove();
+  }
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #monexaFreeFireModal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000003;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.7);
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    #monexaFreeFireModal .box {
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #fff;
+      color: #071d38;
+      border-radius: 24px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #monexaFreeFireModal .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    #monexaFreeFireModal h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    #monexaFreeFireModal .close {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: #edf2f6;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    #monexaFreeFireModal label {
+      display: block;
+      margin: 13px 0 7px;
+      font-weight: 700;
+    }
+
+    #monexaFreeFireModal input,
+    #monexaFreeFireModal select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #d6dfe8;
+      border-radius: 12px;
+      font-size: 16px;
+      background: #fff;
+    }
+
+    #monexaFreeFireModal .summary {
+      margin-top: 18px;
+      padding: 15px;
+      background: #f1f7fa;
+      border-radius: 15px;
+    }
+
+    #monexaFreeFireModal .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    #monexaFreeFireModal .total {
+      border-top: 1px solid #d6dfe8;
+      padding-top: 12px;
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    #monexaFreeFireModal .confirm {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: 0;
+      border-radius: 14px;
+      background: #19d3c5;
+      color: #071d38;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #monexaFreeFireModal .message {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    #monexaFreeFireModal .loading {
+      padding: 12px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const modal = document.createElement("div");
+
+  modal.id = "monexaFreeFireModal";
+
+  modal.innerHTML = `
+    <div class="box">
+
+      <div class="top">
+        <h2>Free Fire</h2>
+
+        <button
+          type="button"
+          class="close"
+          id="mcFreeFireClose">
+          ×
+        </button>
+      </div>
+
+      <label>
+        Pack de diamants
+      </label>
+
+      <select id="mcFreeFirePack">
+        <option value="">
+          Chargement des packs...
+        </option>
+      </select>
+
+      <label>
+        UID Free Fire
+      </label>
+
+      <input
+        id="mcFreeFireUid"
+        type="text"
+        inputmode="numeric"
+        placeholder="Entrez votre UID">
+
+      <div class="summary">
+
+        <div class="row">
+          <span>Diamants</span>
+          <strong id="mcFreeFireDiamonds">
+            -
+          </strong>
+        </div>
+
+        <div class="row total">
+          <span>Total</span>
+          <strong id="mcFreeFireTotal">
+            0,00 HTG
+          </strong>
+        </div>
+
+      </div>
+
+      <div
+        id="mcFreeFireMessage"
+        class="message">
+      </div>
+
+      <button
+        type="button"
+        class="confirm"
+        id="mcFreeFireConfirm">
+        Confirmer Free Fire
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const packSelect =
+    document.getElementById(
+      "mcFreeFirePack"
+    );
+
+  const uidInput =
+    document.getElementById(
+      "mcFreeFireUid"
+    );
+
+  const diamondsElement =
+    document.getElementById(
+      "mcFreeFireDiamonds"
+    );
+
+  const totalElement =
+    document.getElementById(
+      "mcFreeFireTotal"
+    );
+
+  const messageElement =
+    document.getElementById(
+      "mcFreeFireMessage"
+    );
+
+  const confirmButton =
+    document.getElementById(
+      "mcFreeFireConfirm"
+    );
+
+  let packs = [];
+
+  function money(value) {
+
+    return Number(
+      value || 0
+    ).toLocaleString(
+      "fr-FR",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    ) + " HTG";
+  }
+
+  function showMessage(
+    text,
+    success
+  ) {
+
+    messageElement.textContent =
+      text;
+
+    messageElement.style.display =
+      "block";
+
+    messageElement.style.color =
+      success
+        ? "#16a34a"
+        : "#ef4444";
+
+    messageElement.style.background =
+      success
+        ? "#ecfdf5"
+        : "#fef2f2";
+  }
+
+  function updateSummary() {
+
+    const selectedId =
+      packSelect.value;
+
+    const pack =
+      packs.find(
+        function (item) {
+          return item.id === selectedId;
+        }
+      );
+
+    if (!pack) {
+
+      diamondsElement.textContent =
+        "-";
+
+      totalElement.textContent =
+        "0,00 HTG";
+
+      return;
+    }
+
+    diamondsElement.textContent =
+      Number(
+        pack.diamonds
+      ).toLocaleString(
+        "fr-FR"
+      );
+
+    totalElement.textContent =
+      money(
+        pack.price_htg
+      );
+  }
+
+  async function loadPacks() {
+
+    if (!window.monexaSupabase) {
+      return;
+    }
+
+    const result =
+      await window.monexaSupabase
+        .from("free_fire_packs")
+        .select(
+          "id,diamonds,price_htg"
+        )
+        .eq(
+          "is_active",
+          true
+        )
+        .order(
+          "diamonds",
+          {
+            ascending: true
+          }
+        );
+
+    if (result.error) {
+
+      console.error(
+        "Erreur packs Free Fire:",
+        result.error
+      );
+
+      packSelect.innerHTML = `
+        <option value="">
+          Impossible de charger les packs
+        </option>
+      `;
+
+      return;
+    }
+
+    packs =
+      result.data || [];
+
+    packSelect.innerHTML = "";
+
+    if (!packs.length) {
+
+      packSelect.innerHTML = `
+        <option value="">
+          Aucun pack disponible
+        </option>
+      `;
+
+      return;
+    }
+
+    packs.forEach(
+      function (pack) {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          pack.id;
+
+        option.textContent =
+          Number(
+            pack.diamonds
+          ).toLocaleString(
+            "fr-FR"
+          ) +
+          " diamants — " +
+          money(
+            pack.price_htg
+          );
+
+        packSelect.appendChild(
+          option
+        );
+      }
+    );
+
+    updateSummary();
+  }
+
+  function openFreeFire() {
+
+    messageElement.style.display =
+      "none";
+
+    modal.style.display =
+      "flex";
+
+    document.body.style.overflow =
+      "hidden";
+
+    loadPacks();
+  }
+
+  function closeFreeFire() {
+
+    modal.style.display =
+      "none";
+
+    document.body.style.overflow =
+      "";
+  }
+
+  packSelect.addEventListener(
+    "change",
+    updateSummary
+  );
+
+  document.getElementById(
+    "mcFreeFireClose"
+  ).onclick =
+    function () {
+      closeFreeFire();
+    };
+
+  modal.onclick =
+    function (event) {
+
+      if (
+        event.target === modal
+      ) {
+        closeFreeFire();
+      }
+
+    };
+
+  /*
+   * OUVERTURE FREE FIRE
+   */
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const clicked =
+        event.target.closest(
+          "button, a, [role='button'], .service-card, .action-card"
+        );
+
+      if (!clicked) {
+        return;
+      }
+
+      if (
+        clicked.closest(
+          "#monexaFreeFireModal"
+        )
+      ) {
+        return;
+      }
+
+      const text = (
+        clicked.innerText ||
+        clicked.textContent ||
+        ""
+      )
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+      if (
+        !text.includes("free fire")
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      openFreeFire();
+
+    },
+    true
+  );
+
+  /*
+   * CONFIRMATION FREE FIRE
+   */
+  confirmButton.onclick =
+    async function (event) {
+
+      event.preventDefault();
+
+      const packId =
+        packSelect.value;
+
+      const uid =
+        uidInput.value.trim();
+
+      if (!packId) {
+
+        showMessage(
+          "Veuillez sélectionner un pack Free Fire.",
+          false
+        );
+
+        return;
+      }
+
+      if (!uid) {
+
+        showMessage(
+          "Veuillez entrer votre UID Free Fire.",
+          false
+        );
+
+        return;
+      }
+
+      if (!window.monexaSupabase) {
+
+        showMessage(
+          "Connexion MONEXA CASH indisponible.",
+          false
+        );
+
+        return;
+      }
+
+      confirmButton.disabled =
+        true;
+
+      confirmButton.textContent =
+        "Traitement en cours...";
+
+      messageElement.style.display =
+        "none";
+
+      try {
+
+        const result =
+          await window.monexaSupabase.rpc(
+            "create_free_fire_order",
+            {
+              p_pack_id: packId,
+              p_uid: uid
+            }
+          );
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        showMessage(
+          "Commande Free Fire envoyée avec succès.",
+          true
+        );
+
+        uidInput.value = "";
+
+        if (
+          typeof window.monexaLoadDashboard ===
+          "function"
+        ) {
+          setTimeout(
+            window.monexaLoadDashboard,
+            400
+          );
+        }
+
+        setTimeout(
+          closeFreeFire,
+          1800
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Erreur Free Fire:",
+          error
+        );
+
+        const errorMessage =
+          (
+            error.message ||
+            ""
+          ).toLowerCase();
+
+        if (
+          errorMessage.includes(
+            "solde insuffisant"
+          )
+        ) {
+
+          showMessage(
+            "Solde insuffisant pour cet achat.",
+            false
+          );
+
+        } else {
+
+          showMessage(
+            "Impossible d'envoyer la commande Free Fire. Veuillez réessayer.",
+            false
+          );
+        }
+
+      } finally {
+
+        confirmButton.disabled =
+          false;
+
+        confirmButton.textContent =
+          "Confirmer Free Fire";
+      }
+
+    };
+
+})();
+  </script>
   
 
 </body>
