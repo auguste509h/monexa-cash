@@ -5791,6 +5791,460 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const oldModal = document.getElementById(
+    "monexaSendMoneyModal"
+  );
+
+  if (oldModal) {
+    oldModal.remove();
+  }
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #monexaSendMoneyModal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000002;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.7);
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    #monexaSendMoneyModal .box {
+      width: 100%;
+      max-width: 520px;
+      background: #fff;
+      color: #071d38;
+      border-radius: 24px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #monexaSendMoneyModal .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    #monexaSendMoneyModal h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    #monexaSendMoneyModal .close {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: #edf2f6;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    #monexaSendMoneyModal label {
+      display: block;
+      margin: 13px 0 7px;
+      font-weight: 700;
+    }
+
+    #monexaSendMoneyModal input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #d6dfe8;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+
+    #monexaSendMoneyModal .info {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #f1f7fa;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #monexaSendMoneyModal .confirm {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: 0;
+      border-radius: 14px;
+      background: #19d3c5;
+      color: #071d38;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #monexaSendMoneyModal .message {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const modal = document.createElement("div");
+
+  modal.id = "monexaSendMoneyModal";
+
+  modal.innerHTML = `
+    <div class="box">
+
+      <div class="top">
+        <h2>Envoyer</h2>
+
+        <button
+          type="button"
+          class="close"
+          id="mcSendMoneyClose">
+          ×
+        </button>
+      </div>
+
+      <label>
+        Email du destinataire
+      </label>
+
+      <input
+        id="mcSendMoneyEmail"
+        type="email"
+        placeholder="email@example.com"
+        autocomplete="email">
+
+      <label>
+        Montant à envoyer
+      </label>
+
+      <input
+        id="mcSendMoneyAmount"
+        type="number"
+        min="1"
+        step="0.01"
+        placeholder="Exemple : 500">
+
+      <div class="info">
+        <strong>Information</strong><br>
+        Le montant sera déduit de votre solde
+        et ajouté au portefeuille du destinataire.
+      </div>
+
+      <div
+        id="mcSendMoneyMessage"
+        class="message">
+      </div>
+
+      <button
+        type="button"
+        class="confirm"
+        id="mcSendMoneyConfirm">
+        Confirmer l'envoi
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const emailInput =
+    document.getElementById(
+      "mcSendMoneyEmail"
+    );
+
+  const amountInput =
+    document.getElementById(
+      "mcSendMoneyAmount"
+    );
+
+  const messageElement =
+    document.getElementById(
+      "mcSendMoneyMessage"
+    );
+
+  const confirmButton =
+    document.getElementById(
+      "mcSendMoneyConfirm"
+    );
+
+  function showMessage(
+    text,
+    success
+  ) {
+    messageElement.textContent = text;
+
+    messageElement.style.display =
+      "block";
+
+    messageElement.style.color =
+      success
+        ? "#16a34a"
+        : "#ef4444";
+
+    messageElement.style.background =
+      success
+        ? "#ecfdf5"
+        : "#fef2f2";
+  }
+
+  function openSendMoney() {
+    messageElement.style.display =
+      "none";
+
+    modal.style.display =
+      "flex";
+
+    document.body.style.overflow =
+      "hidden";
+  }
+
+  function closeSendMoney() {
+    modal.style.display =
+      "none";
+
+    document.body.style.overflow =
+      "";
+  }
+
+  document.getElementById(
+    "mcSendMoneyClose"
+  ).onclick =
+    function () {
+      closeSendMoney();
+    };
+
+  modal.onclick =
+    function (event) {
+      if (event.target === modal) {
+        closeSendMoney();
+      }
+    };
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const clicked =
+        event.target.closest(
+          "button, a, [role='button'], .action-card"
+        );
+
+      if (!clicked) {
+        return;
+      }
+
+      if (
+        clicked.closest(
+          "#monexaSendMoneyModal"
+        )
+      ) {
+        return;
+      }
+
+      const text = (
+        clicked.innerText ||
+        clicked.textContent ||
+        ""
+      )
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+      if (!text.includes("envoyer")) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      openSendMoney();
+
+    },
+    true
+  );
+
+  confirmButton.onclick =
+    async function (event) {
+
+      event.preventDefault();
+
+      const email =
+        emailInput.value.trim();
+
+      const amount =
+        Number(
+          amountInput.value || 0
+        );
+
+      if (!email) {
+        showMessage(
+          "Veuillez entrer l'email du destinataire.",
+          false
+        );
+        return;
+      }
+
+      if (
+        !email.includes("@") ||
+        !email.includes(".")
+      ) {
+        showMessage(
+          "Veuillez entrer un email valide.",
+          false
+        );
+        return;
+      }
+
+      if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+      ) {
+        showMessage(
+          "Veuillez entrer un montant valide.",
+          false
+        );
+        return;
+      }
+
+      if (!window.monexaSupabase) {
+        showMessage(
+          "Connexion MONEXA CASH indisponible.",
+          false
+        );
+        return;
+      }
+
+      confirmButton.disabled =
+        true;
+
+      confirmButton.textContent =
+        "Traitement en cours...";
+
+      messageElement.style.display =
+        "none";
+
+      try {
+
+        const result =
+          await window.monexaSupabase.rpc(
+            "send_wallet_money",
+            {
+              p_recipient_email: email,
+              p_amount_htg: amount
+            }
+          );
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        showMessage(
+          "Envoi effectué avec succès.",
+          true
+        );
+
+        emailInput.value = "";
+        amountInput.value = "";
+
+        if (
+          typeof window.monexaLoadDashboard ===
+          "function"
+        ) {
+          setTimeout(
+            window.monexaLoadDashboard,
+            400
+          );
+        }
+
+        setTimeout(
+          closeSendMoney,
+          1800
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Erreur Envoyer:",
+          error
+        );
+
+        const errorMessage =
+          (
+            error.message ||
+            ""
+          ).toLowerCase();
+
+        if (
+          errorMessage.includes(
+            "solde insuffisant"
+          )
+        ) {
+
+          showMessage(
+            "Solde insuffisant pour cet envoi.",
+            false
+          );
+
+        } else if (
+          errorMessage.includes(
+            "destinataire introuvable"
+          )
+        ) {
+
+          showMessage(
+            "Destinataire introuvable.",
+            false
+          );
+
+        } else if (
+          errorMessage.includes(
+            "vous ne pouvez pas"
+          )
+        ) {
+
+          showMessage(
+            "Vous ne pouvez pas vous envoyer de l'argent à vous-même.",
+            false
+          );
+
+        } else {
+
+          showMessage(
+            "Impossible d'effectuer l'envoi. Veuillez réessayer.",
+            false
+          );
+        }
+
+      } finally {
+
+        confirmButton.disabled =
+          false;
+
+        confirmButton.textContent =
+          "Confirmer l'envoi";
+      }
+
+    };
+
+})();
+  </script>
   
 
 </body>
