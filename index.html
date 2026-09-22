@@ -8627,6 +8627,61 @@ binanceConfirmButton.onclick = async function (event) {
   window.monexaAdminProcessDeposit = monexaAdminProcessDeposit;
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminUpdateOrder(orderId,status){
+    if(!window.monexaSupabase||!orderId||!status)return;
+
+    let note="";
+    if(status==="cancelled"){
+      note=prompt("Note d'annulation (optionnel) :")||"";
+    }
+
+    const result=await window.monexaSupabase.rpc("admin_update_service_order_status",{
+      p_order_id:orderId,
+      p_status:status,
+      p_admin_note:note
+    });
+
+    if(result.error){
+      alert(result.error.message||"Impossible de modifier la commande.");
+      return;
+    }
+
+    alert(
+      status==="processing"
+        ?"Commande mise en traitement."
+        :status==="completed"
+        ?"Commande terminée avec succès."
+        :"Commande annulée. Le montant a été remboursé au client."
+    );
+
+    if(typeof window.monexaAdminLoad==="function"){
+      await window.monexaAdminLoad();
+    }else{
+      window.location.reload();
+    }
+  }
+
+  document.addEventListener("click",function(event){
+    const button=event.target.closest("[data-admin-order-status]");
+    if(!button)return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const orderId=button.getAttribute("data-order-id");
+    const status=button.getAttribute("data-admin-order-status");
+
+    monexaAdminUpdateOrder(orderId,status);
+  },true);
+
+  window.monexaAdminUpdateOrder=monexaAdminUpdateOrder;
+})();
+  </script>
   
 
 </body>
