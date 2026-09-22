@@ -3608,6 +3608,341 @@ if(window.monexaSupabase){
 
 })();
         </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const old = document.getElementById("monexaBinanceFinalModal");
+  if (old) old.remove();
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #monexaBinanceFinalModal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.7);
+      padding: 12px;
+    }
+
+    #monexaBinanceFinalModal .box {
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #fff;
+      color: #071d38;
+      border-radius: 24px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #monexaBinanceFinalModal .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    #monexaBinanceFinalModal h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    #monexaBinanceFinalModal .close {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: #edf2f6;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    #monexaBinanceFinalModal label {
+      display: block;
+      margin: 13px 0 7px;
+      font-weight: 700;
+    }
+
+    #monexaBinanceFinalModal input,
+    #monexaBinanceFinalModal select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #d6dfe8;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+
+    #monexaBinanceFinalModal .summary {
+      margin-top: 18px;
+      padding: 15px;
+      background: #f1f7fa;
+      border-radius: 15px;
+    }
+
+    #monexaBinanceFinalModal .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    #monexaBinanceFinalModal .total {
+      border-top: 1px solid #d6dfe8;
+      padding-top: 12px;
+      margin-top: 12px;
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    #monexaBinanceFinalModal .confirm {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: 0;
+      border-radius: 14px;
+      background: #19d3c5;
+      color: #071d38;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #monexaBinanceFinalModal .message {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const modal = document.createElement("div");
+  modal.id = "monexaBinanceFinalModal";
+
+  modal.innerHTML = `
+    <div class="box">
+
+      <div class="top">
+        <h2>Binance</h2>
+
+        <button
+          type="button"
+          class="close"
+          id="mcBinanceFinalClose">
+          ×
+        </button>
+      </div>
+
+      <label>Type d'identifiant</label>
+
+      <select id="mcBinanceFinalType">
+        <option value="Binance ID">Binance ID</option>
+        <option value="Email">Email</option>
+      </select>
+
+      <label id="mcBinanceFinalLabel">
+        Binance ID
+      </label>
+
+      <input
+        id="mcBinanceFinalIdentifier"
+        type="text"
+        placeholder="Entrez votre Binance ID">
+
+      <label>Montant en USDT</label>
+
+      <input
+        id="mcBinanceFinalAmount"
+        type="number"
+        min="1"
+        step="0.01"
+        placeholder="Exemple : 10">
+
+      <div class="summary">
+
+        <div class="row">
+          <span>Montant</span>
+          <strong id="mcBinanceFinalBase">
+            0 HTG
+          </strong>
+        </div>
+
+        <div class="row">
+          <span>Frais</span>
+          <strong>
+            0 HTG
+          </strong>
+        </div>
+
+        <div class="row total">
+          <span>Total</span>
+          <strong id="mcBinanceFinalTotal">
+            0 HTG
+          </strong>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="confirm"
+        id="mcBinanceFinalConfirm">
+        Confirmer Binance
+      </button>
+
+      <div
+        id="mcBinanceFinalMessage"
+        class="message">
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  function money(value) {
+    return Number(value || 0).toLocaleString("fr-FR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + " HTG";
+  }
+
+  function updateCalculation() {
+    const amount = Number(
+      document.getElementById(
+        "mcBinanceFinalAmount"
+      ).value || 0
+    );
+
+    const total = amount * 143;
+
+    document.getElementById(
+      "mcBinanceFinalBase"
+    ).textContent = money(total);
+
+    document.getElementById(
+      "mcBinanceFinalTotal"
+    ).textContent = money(total);
+  }
+
+  function openBinance() {
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    updateCalculation();
+  }
+
+  function closeBinance() {
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const clicked = event.target.closest(
+        "button, a, [role='button'], .service-card, .action-card"
+      );
+
+      if (!clicked) return;
+
+      const text = (
+        clicked.innerText ||
+        clicked.textContent ||
+        ""
+      )
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+      if (!text.includes("binance")) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      openBinance();
+
+    },
+    true
+  );
+
+  document.getElementById(
+    "mcBinanceFinalClose"
+  ).addEventListener(
+    "click",
+    closeBinance
+  );
+
+  modal.addEventListener(
+    "click",
+    function (event) {
+      if (event.target === modal) {
+        closeBinance();
+      }
+    }
+  );
+
+  document.getElementById(
+    "mcBinanceFinalType"
+  ).addEventListener(
+    "change",
+    function () {
+
+      const label =
+        document.getElementById(
+          "mcBinanceFinalLabel"
+        );
+
+      const input =
+        document.getElementById(
+          "mcBinanceFinalIdentifier"
+        );
+
+      if (this.value === "Email") {
+
+        label.textContent = "Email Binance";
+
+        input.placeholder =
+          "Entrez votre email Binance";
+
+        input.type = "email";
+
+      } else {
+
+        label.textContent = "Binance ID";
+
+        input.placeholder =
+          "Entrez votre Binance ID";
+
+        input.type = "text";
+
+      }
+
+    }
+  );
+
+  document.getElementById(
+    "mcBinanceFinalAmount"
+  ).addEventListener(
+    "input",
+    updateCalculation
+  );
+
+  console.log(
+    "MONEXA CASH : Binance final chargé."
+  );
+
+})();
+  </script>
   
 
 </body>
