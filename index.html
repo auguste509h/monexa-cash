@@ -3408,6 +3408,10 @@ if (
 
     if (!clicked) return;
 
+    if (clicked.closest("#monexaRechargeFinalModal")) {
+  return;
+    }
+
     const text = (
       clicked.innerText ||
       clicked.textContent ||
