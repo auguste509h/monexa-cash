@@ -4613,6 +4613,230 @@ if(window.monexaSupabase){
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const button = document.getElementById(
+    "mcRechargeFinalConfirm"
+  );
+
+  if (!button) {
+    console.error(
+      "MONEXA CASH : bouton Recharge introuvable."
+    );
+    return;
+  }
+
+  button.addEventListener(
+    "click",
+    async function () {
+
+      const type =
+        document.getElementById(
+          "mcRechargeFinalType"
+        ).value;
+
+      const amount =
+        Number(
+          document.getElementById(
+            "mcRechargeFinalAmount"
+          ).value || 0
+        );
+
+      const account =
+        (
+          document.getElementById(
+            "mcRechargeFinalAccountInput"
+          ).value || ""
+        ).trim();
+
+      const wallet =
+        (
+          document.getElementById(
+            "mcRechargeFinalWallet"
+          ).value || ""
+        ).trim();
+
+      const network =
+        document.getElementById(
+          "mcRechargeFinalNetwork"
+        ).value;
+
+      if (!window.monexaSupabase) {
+        alert(
+          "Connexion au serveur indisponible."
+        );
+        return;
+      }
+
+      if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+      ) {
+        alert(
+          "Veuillez entrer un montant valide."
+        );
+        return;
+      }
+
+      if (
+        (
+          type === "Wise" ||
+          type === "Meru" ||
+          type === "Morse"
+        ) &&
+        !account
+      ) {
+        alert(
+          "Veuillez entrer les informations du compte."
+        );
+        return;
+      }
+
+      if (
+        (
+          type === "USDT" ||
+          type === "USDC"
+        ) &&
+        !wallet
+      ) {
+        alert(
+          "Veuillez entrer l'adresse du wallet."
+        );
+        return;
+      }
+
+      let rate = 143;
+      let feeUsd = 0;
+
+      if (
+        type === "Wise" ||
+        type === "Meru" ||
+        type === "Morse"
+      ) {
+        rate = 145;
+
+        if (amount > 100) {
+          feeUsd = 3;
+        } else if (amount > 10) {
+          feeUsd = 2;
+        } else {
+          feeUsd = 1;
+        }
+      }
+
+      const baseHtg =
+        amount * rate;
+
+      const feeHtg =
+        feeUsd * rate;
+
+      const totalHtg =
+        baseHtg + feeHtg;
+
+      button.disabled = true;
+      button.textContent =
+        "Traitement en cours...";
+
+      try {
+
+        const details = {
+          service_name: type,
+          amount_usd: amount,
+          rate_htg: rate,
+          fee_usd: feeUsd,
+          fee_htg: feeHtg,
+          total_htg: totalHtg,
+          account: account,
+          wallet_address: wallet,
+          network: network
+        };
+
+        const result =
+          await window.monexaSupabase.rpc(
+            "create_service_order",
+            {
+              p_service_type: "Recharge",
+              p_amount_htg: totalHtg,
+              p_details: details
+            }
+          );
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        button.textContent =
+          "Recharge envoyée";
+
+        alert(
+          "Recharge envoyée avec succès. MONEXA CASH va la traiter manuellement."
+        );
+
+        setTimeout(
+          function () {
+
+            const modal =
+              document.getElementById(
+                "monexaRechargeFinalModal"
+              );
+
+            if (modal) {
+              modal.style.display =
+                "none";
+            }
+
+            document.body.style.overflow =
+              "";
+
+            button.disabled =
+              false;
+
+            button.textContent =
+              "Confirmer la recharge";
+
+          },
+          1200
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Erreur Recharge:",
+          error
+        );
+
+        if (
+          error.message &&
+          error.message
+            .toLowerCase()
+            .includes(
+              "solde insuffisant"
+            )
+        ) {
+          alert(
+            "Solde insuffisant pour cette recharge."
+          );
+        } else {
+          alert(
+            "Impossible d'envoyer la recharge. Veuillez réessayer."
+          );
+        }
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "Confirmer la recharge";
+      }
+
+    }
+  );
+
+})();
+              </script>
   
 
 </body>
