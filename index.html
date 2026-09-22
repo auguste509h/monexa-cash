@@ -2322,40 +2322,50 @@ if(window.monexaSupabase){
 (function () {
 
   function getServiceFromButton(button) {
-  if (!button) {
+    if (!button) {
+      return null;
+    }
+
+    if (
+      button.closest("#monexaRechargeFinalModal") ||
+      button.closest("#monexaBinanceFinalModal") ||
+      button.closest("#monexaWithdrawModal") ||
+      button.closest("#monexaServiceModal") ||
+      button.closest(".modal")
+    ) {
+      return null;
+    }
+
+    const text = (
+      button.innerText ||
+      button.textContent ||
+      ""
+    )
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+
+    if (text.includes("confirmer")) {
+      return null;
+    }
+
+    if (text.includes("recharge")) {
+      return "Recharge";
+    }
+
+    if (text.includes("retrait")) {
+      return "Retrait";
+    }
+
+    if (text.includes("free fire")) {
+      return "Free Fire";
+    }
+
+    if (text.includes("binance")) {
+      return "Binance";
+    }
+
     return null;
-  }
-
-  const text = (
-    button.innerText ||
-    button.textContent ||
-    ""
-  )
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-
-  if (text.includes("confirmer")) {
-    return null;
-  }
-
-  if (text.includes("recharge")) {
-    return "Recharge";
-  }
-
-  if (text.includes("retrait")) {
-    return "Retrait";
-  }
-
-  if (text.includes("free fire")) {
-    return "Free Fire";
-  }
-
-  if (text.includes("binance")) {
-    return "Binance";
-  }
-
-  return null;
   }
 
   function openMonexaService(service) {
@@ -2363,15 +2373,15 @@ if(window.monexaSupabase){
     const modal = document.getElementById("monexaServiceModal");
 
     if (!modal) {
-      alert("Erreur MONEXA CASH : la fenêtre du service est introuvable.");
-      console.error("monexaServiceModal introuvable.");
+      console.log(
+        "MONEXA CASH : ancien modal central non utilisé pour",
+        service
+      );
       return;
     }
 
-    /* Kenbe sèvis aktyèl la */
     modal.dataset.service = service;
 
-    /* Louvri modal la */
     modal.style.display = "flex";
     modal.style.visibility = "visible";
     modal.style.opacity = "1";
@@ -2379,7 +2389,6 @@ if(window.monexaSupabase){
 
     document.body.style.overflow = "hidden";
 
-    /* Chèche yon select sèvis si li egziste */
     const selects = modal.querySelectorAll("select");
 
     selects.forEach(function (select) {
@@ -2387,7 +2396,10 @@ if(window.monexaSupabase){
       const options = Array.from(select.options);
 
       const option = options.find(function (opt) {
-        return (opt.textContent || "")
+        return (
+          opt.textContent ||
+          ""
+        )
           .toLowerCase()
           .includes(service.toLowerCase());
       });
@@ -2403,7 +2415,6 @@ if(window.monexaSupabase){
       }
     });
 
-    /* Notify sistèm sèvis ki deja la, si li egziste */
     modal.dispatchEvent(
       new CustomEvent("monexa-service-selected", {
         detail: {
@@ -2413,68 +2424,37 @@ if(window.monexaSupabase){
       })
     );
 
-    console.log("MONEXA CASH service:", service);
   }
 
-  /* Fè yon bouton fèmen modal la */
-  document.addEventListener("click", function (event) {
+  document.addEventListener(
+    "click",
+    function (event) {
 
-    const closeButton = event.target.closest(
-      "#monexaServiceModal [data-close], #monexaServiceModal .close, #monexaServiceModal .modal-close"
-    );
+      const button = event.target.closest(
+        "button, a, [role='button']"
+      );
 
-    if (closeButton) {
-      const modal = document.getElementById("monexaServiceModal");
-
-      if (modal) {
-        modal.style.display = "none";
-        modal.style.visibility = "hidden";
-        modal.style.opacity = "0";
-        modal.style.pointerEvents = "none";
+      if (!button) {
+        return;
       }
 
-      document.body.style.overflow = "";
-      return;
-    }
+      const service = getServiceFromButton(button);
 
-    /* Bouton sèvis */
-    const button = event.target.closest(
-      "button, a, [role='button']"
-    );
+      if (!service) {
+        return;
+      }
 
-    if (!button) return;
+      event.preventDefault();
+      event.stopPropagation();
 
-    const service = getServiceFromButton(button);
+      openMonexaService(service);
 
-    if (!service) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    openMonexaService(service);
-
-  }, true);
-
-  /* Fermeture si moun klike deyò modal la */
-  document.addEventListener("click", function (event) {
-
-    const modal = document.getElementById("monexaServiceModal");
-
-    if (!modal) return;
-
-    if (event.target === modal) {
-      modal.style.display = "none";
-      modal.style.visibility = "hidden";
-      modal.style.opacity = "0";
-      modal.style.pointerEvents = "none";
-
-      document.body.style.overflow = "";
-    }
-
-  });
+    },
+    true
+  );
 
 })();
-  </script>
+        </script>
 
   <script>
 (function () {
