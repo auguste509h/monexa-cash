@@ -9327,6 +9327,233 @@ binanceConfirmButton.onclick = async function (event) {
   }
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  function setupPinConfirmation() {
+
+    const screen = document.getElementById("monexaPinScreen");
+    const input = document.getElementById("mcPinInput");
+    const confirm = document.getElementById("mcPinConfirm");
+    const message = document.getElementById("mcPinMessage");
+    const title = document.getElementById("mcPinTitle");
+
+    if (!screen || !input || !confirm || !message || !title) {
+      return;
+    }
+
+    let confirmInput =
+      document.getElementById("mcPinConfirmInput");
+
+    if (!confirmInput) {
+
+      confirmInput = document.createElement("input");
+
+      confirmInput.id = "mcPinConfirmInput";
+      confirmInput.className = "pin-input";
+      confirmInput.type = "password";
+      confirmInput.inputMode = "numeric";
+      confirmInput.maxLength = 4;
+      confirmInput.autocomplete = "off";
+      confirmInput.placeholder = "••••";
+      confirmInput.style.display = "none";
+      confirmInput.style.marginTop = "10px";
+
+      input.parentNode.insertBefore(
+        confirmInput,
+        confirm.nextSibling
+      );
+    }
+
+    function showError(text) {
+      message.textContent = text;
+      message.style.display = "block";
+      message.style.color = "#ef4444";
+      message.style.background = "#fef2f2";
+    }
+
+    function clearMessage() {
+      message.textContent = "";
+      message.style.display = "none";
+    }
+
+    function cleanInput(element) {
+      element.value =
+        element.value
+          .replace(/\D/g, "")
+          .slice(0, 4);
+    }
+
+    input.addEventListener("input", function () {
+      cleanInput(input);
+      clearMessage();
+    });
+
+    confirmInput.addEventListener("input", function () {
+      cleanInput(confirmInput);
+      clearMessage();
+    });
+
+    confirm.onclick = async function () {
+
+      const pin = input.value.trim();
+
+      if (!/^[0-9]{4}$/.test(pin)) {
+        showError(
+          "Le PIN doit contenir exactement 4 chiffres."
+        );
+        return;
+      }
+
+      const creating =
+        title.textContent.trim() === "Créer votre PIN";
+
+      if (creating) {
+
+        const pinConfirmation =
+          confirmInput.value.trim();
+
+        if (!/^[0-9]{4}$/.test(pinConfirmation)) {
+          showError(
+            "Veuillez confirmer votre PIN à 4 chiffres."
+          );
+          return;
+        }
+
+        if (pin !== pinConfirmation) {
+          showError(
+            "Les deux PIN ne correspondent pas."
+          );
+          confirmInput.value = "";
+          confirmInput.focus();
+          return;
+        }
+      }
+
+      if (!window.monexaSupabase) {
+        showError(
+          "Connexion MONEXA CASH indisponible."
+        );
+        return;
+      }
+
+      confirm.disabled = true;
+      confirm.textContent =
+        creating ? "Création..." : "Vérification...";
+
+      try {
+
+        if (creating) {
+
+          const result =
+            await window.monexaSupabase.rpc(
+              "set_account_pin",
+              {
+                p_pin: pin
+              }
+            );
+
+          if (result.error) {
+            throw result.error;
+          }
+
+          confirmInput.value = "";
+
+          screen.style.display = "none";
+          document.body.style.overflow = "";
+
+        } else {
+
+          const result =
+            await window.monexaSupabase.rpc(
+              "verify_account_pin",
+              {
+                p_pin: pin
+              }
+            );
+
+          if (result.error) {
+            throw result.error;
+          }
+
+          if (result.data !== true) {
+            showError("PIN incorrect.");
+            input.value = "";
+            input.focus();
+            return;
+          }
+
+          screen.style.display = "none";
+          document.body.style.overflow = "";
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Erreur PIN:",
+          error
+        );
+
+        showError(
+          error.message ||
+          "Impossible de vérifier le PIN. Veuillez réessayer."
+        );
+
+      } finally {
+
+        confirm.disabled = false;
+
+        confirm.textContent =
+          creating
+            ? "Créer mon PIN"
+            : "Entrer";
+      }
+    };
+
+    const observer =
+      new MutationObserver(function () {
+
+        const creating =
+          title.textContent.trim() === "Créer votre PIN";
+
+        if (creating) {
+
+          confirmInput.style.display = "block";
+
+          confirmInput.setAttribute(
+            "aria-label",
+            "Confirmer le PIN"
+          );
+
+        } else {
+
+          confirmInput.style.display = "none";
+          confirmInput.value = "";
+        }
+      });
+
+    observer.observe(title, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+
+    const creating =
+      title.textContent.trim() === "Créer votre PIN";
+
+    confirmInput.style.display =
+      creating ? "block" : "none";
+  }
+
+  setTimeout(
+    setupPinConfirmation,
+    800
+  );
+
+})();
+            </script>
   
 
 </body>
