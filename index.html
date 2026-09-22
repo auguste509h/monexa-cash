@@ -3402,6 +3402,10 @@ if (
       "button, a, [role='button'], .service-card, .action-card"
     );
 
+    if (clicked.closest("#monexaRechargeFinalModal")) {
+  return;
+    }
+
     if (!clicked) return;
 
     const text = (
