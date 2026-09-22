@@ -9094,6 +9094,103 @@ binanceConfirmButton.onclick = async function (event) {
   },30000);
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaLoadNotifications(){
+    if(!window.monexaSupabase)return;
+
+    const result=await window.monexaSupabase
+      .from("notifications")
+      .select("id,title,message,is_read,created_at")
+      .order("created_at",{ascending:false})
+      .limit(30);
+
+    if(result.error){
+      console.error("Erreur notifications:",result.error);
+      return;
+    }
+
+    const notifications=result.data||[];
+    const unread=notifications.filter(function(item){
+      return !item.is_read;
+    }).length;
+
+    document.querySelectorAll(
+      "#notificationCount,#monexaNotificationCount"
+    ).forEach(function(element){
+      element.textContent=unread;
+      element.style.display=unread>0?"inline-flex":"none";
+    });
+
+    const container=document.querySelector(
+      "#notificationsList,#monexaNotificationsList"
+    );
+
+    if(!container)return;
+
+    if(!notifications.length){
+      container.innerHTML="<p style='opacity:.7;'>Aucune notification.</p>";
+      return;
+    }
+
+    container.innerHTML=notifications.map(function(item){
+      const date=item.created_at
+        ?new Date(item.created_at).toLocaleString("fr-FR")
+        :"";
+
+      return `
+        <button type="button"
+          data-notification-id="${item.id}"
+          style="display:block;width:100%;text-align:left;padding:12px;margin-bottom:8px;border:1px solid rgba(128,128,128,.2);border-radius:12px;background:${item.is_read?"transparent":"rgba(0,180,200,.08)"};color:inherit;">
+          <div style="font-weight:700;">${item.title}</div>
+          <div style="font-size:13px;margin-top:4px;">${item.message}</div>
+          <div style="font-size:11px;opacity:.6;margin-top:6px;">${date}</div>
+        </button>
+      `;
+    }).join("");
+  }
+
+  async function monexaMarkNotificationRead(id){
+    if(!window.monexaSupabase||!id)return;
+
+    const result=await window.monexaSupabase
+      .from("notifications")
+      .update({is_read:true})
+      .eq("id",id);
+
+    if(result.error){
+      console.error("Erreur notification:",result.error);
+      return;
+    }
+
+    monexaLoadNotifications();
+  }
+
+  document.addEventListener("click",function(event){
+    const button=event.target.closest("[data-notification-id]");
+    if(!button)return;
+
+    monexaMarkNotificationRead(
+      button.getAttribute("data-notification-id")
+    );
+  });
+
+  window.monexaLoadNotifications=monexaLoadNotifications;
+
+  if(window.monexaSupabase){
+    window.monexaSupabase.auth.onAuthStateChange(function(event,session){
+      if(session){
+        setTimeout(monexaLoadNotifications,300);
+      }
+    });
+
+    setTimeout(monexaLoadNotifications,1000);
+  }
+})();
+  </script>
   
 
 </body>
