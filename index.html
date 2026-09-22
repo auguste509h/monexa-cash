@@ -3887,6 +3887,33 @@ if(window.monexaSupabase){
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const oldType = document.getElementById(
+    "mcBinanceFinalType"
+  );
+
+  if (oldType) {
+    const parent = oldType.parentElement;
+
+    if (parent) {
+      oldType.remove();
+    }
+  }
+
+  const oldLabel = document.getElementById(
+    "mcBinanceFinalLabel"
+  );
+
+  if (oldLabel) {
+    oldLabel.textContent = "Identifiant Binance";
+  }
+
+})();
+  </script>
   
 
 </body>
