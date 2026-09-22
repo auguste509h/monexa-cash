@@ -2319,48 +2319,136 @@ if(window.monexaSupabase){
   </script>
 
   <script>
-(function(){
+(function () {
 
-  document.addEventListener("click", function(event){
+  function getServiceFromButton(button) {
+    if (!button) return null;
 
-    const button = event.target.closest("button");
-
-    if(!button) return;
-
-    const text = button.textContent
-      .trim()
+    const text = (button.innerText || button.textContent || "")
       .replace(/\s+/g, " ")
+      .trim()
       .toLowerCase();
 
-    let service = null;
+    if (text.includes("recharge")) return "Recharge";
+    if (text.includes("retrait")) return "Retrait";
+    if (text.includes("free fire")) return "Free Fire";
+    if (text.includes("binance")) return "Binance";
 
-    if(text === "recharge"){
-      service = "Recharge";
+    return null;
+  }
+
+  function openMonexaService(service) {
+
+    const modal = document.getElementById("monexaServiceModal");
+
+    if (!modal) {
+      alert("Erreur MONEXA CASH : la fenêtre du service est introuvable.");
+      console.error("monexaServiceModal introuvable.");
+      return;
     }
 
-    if(text === "retrait"){
-      service = "Retrait";
-    }
+    /* Kenbe sèvis aktyèl la */
+    modal.dataset.service = service;
 
-    if(text === "free fire"){
-      service = "Free Fire";
-    }
+    /* Louvri modal la */
+    modal.style.display = "flex";
+    modal.style.visibility = "visible";
+    modal.style.opacity = "1";
+    modal.style.pointerEvents = "auto";
 
-    if(text === "binance"){
-      service = "Binance";
-    }
+    document.body.style.overflow = "hidden";
 
-    if(!service) return;
+    /* Chèche yon select sèvis si li egziste */
+    const selects = modal.querySelectorAll("select");
 
-    event.preventDefault();
+    selects.forEach(function (select) {
 
-    document.dispatchEvent(
-      new CustomEvent("monexa:open-service", {
+      const options = Array.from(select.options);
+
+      const option = options.find(function (opt) {
+        return (opt.textContent || "")
+          .toLowerCase()
+          .includes(service.toLowerCase());
+      });
+
+      if (option) {
+        select.value = option.value;
+
+        select.dispatchEvent(
+          new Event("change", {
+            bubbles: true
+          })
+        );
+      }
+    });
+
+    /* Notify sistèm sèvis ki deja la, si li egziste */
+    modal.dispatchEvent(
+      new CustomEvent("monexa-service-selected", {
         detail: {
           service: service
-        }
+        },
+        bubbles: true
       })
     );
+
+    console.log("MONEXA CASH service:", service);
+  }
+
+  /* Fè yon bouton fèmen modal la */
+  document.addEventListener("click", function (event) {
+
+    const closeButton = event.target.closest(
+      "#monexaServiceModal [data-close], #monexaServiceModal .close, #monexaServiceModal .modal-close"
+    );
+
+    if (closeButton) {
+      const modal = document.getElementById("monexaServiceModal");
+
+      if (modal) {
+        modal.style.display = "none";
+        modal.style.visibility = "hidden";
+        modal.style.opacity = "0";
+        modal.style.pointerEvents = "none";
+      }
+
+      document.body.style.overflow = "";
+      return;
+    }
+
+    /* Bouton sèvis */
+    const button = event.target.closest(
+      "button, a, [role='button']"
+    );
+
+    if (!button) return;
+
+    const service = getServiceFromButton(button);
+
+    if (!service) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    openMonexaService(service);
+
+  }, true);
+
+  /* Fermeture si moun klike deyò modal la */
+  document.addEventListener("click", function (event) {
+
+    const modal = document.getElementById("monexaServiceModal");
+
+    if (!modal) return;
+
+    if (event.target === modal) {
+      modal.style.display = "none";
+      modal.style.visibility = "hidden";
+      modal.style.opacity = "0";
+      modal.style.pointerEvents = "none";
+
+      document.body.style.overflow = "";
+    }
 
   });
 
