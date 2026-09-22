@@ -5201,6 +5201,596 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
       </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const oldModal = document.getElementById(
+    "monexaWalletWithdrawModal"
+  );
+
+  if (oldModal) {
+    oldModal.remove();
+  }
+
+  const modal = document.createElement("div");
+
+  modal.id = "monexaWalletWithdrawModal";
+
+  modal.innerHTML = `
+    <div class="mc-wallet-withdraw-box">
+
+      <div class="mc-wallet-withdraw-header">
+        <h2>Retirer</h2>
+
+        <button
+          type="button"
+          id="mcWalletWithdrawClose">
+          ×
+        </button>
+      </div>
+
+      <label>Montant à recevoir</label>
+
+      <input
+        id="mcWalletWithdrawAmount"
+        type="number"
+        min="20"
+        max="99999"
+        step="1"
+        placeholder="Exemple : 500">
+
+      <div class="mc-wallet-withdraw-summary">
+
+        <div>
+          <span>Montant</span>
+          <strong id="mcWalletWithdrawBase">
+            0,00 HTG
+          </strong>
+        </div>
+
+        <div>
+          <span>Frais Natcash</span>
+          <strong id="mcWalletWithdrawFee">
+            0,00 HTG
+          </strong>
+        </div>
+
+        <div class="mc-wallet-withdraw-total">
+          <span>Total débité</span>
+          <strong id="mcWalletWithdrawTotal">
+            0,00 HTG
+          </strong>
+        </div>
+
+      </div>
+
+      <label>Numéro Natcash</label>
+
+      <input
+        id="mcWalletWithdrawNumber"
+        type="tel"
+        placeholder="509XXXXXXXX">
+
+      <label>Nom sur Natcash</label>
+
+      <input
+        id="mcWalletWithdrawName"
+        type="text"
+        placeholder="Nom complet">
+
+      <div
+        id="mcWalletWithdrawMessage">
+      </div>
+
+      <button
+        type="button"
+        id="mcWalletWithdrawConfirm">
+        Confirmer le retrait
+      </button>
+
+    </div>
+  `;
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #monexaWalletWithdrawModal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000001;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.7);
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    #monexaWalletWithdrawModal
+    .mc-wallet-withdraw-box {
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #fff;
+      color: #071d38;
+      border-radius: 24px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #monexaWalletWithdrawModal
+    .mc-wallet-withdraw-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    #monexaWalletWithdrawModal h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    #monexaWalletWithdrawModal
+    .mc-wallet-withdraw-header button {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: #edf2f6;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    #monexaWalletWithdrawModal label {
+      display: block;
+      margin: 13px 0 7px;
+      font-weight: 700;
+    }
+
+    #monexaWalletWithdrawModal input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #d6dfe8;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+
+    #monexaWalletWithdrawModal
+    .mc-wallet-withdraw-summary {
+      margin-top: 18px;
+      padding: 15px;
+      background: #f1f7fa;
+      border-radius: 15px;
+    }
+
+    #monexaWalletWithdrawModal
+    .mc-wallet-withdraw-summary > div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    #monexaWalletWithdrawModal
+    .mc-wallet-withdraw-total {
+      border-top: 1px solid #d6dfe8;
+      padding-top: 12px;
+      margin-top: 12px !important;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    #monexaWalletWithdrawModal
+    #mcWalletWithdrawMessage {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    #monexaWalletWithdrawModal
+    #mcWalletWithdrawConfirm {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: 0;
+      border-radius: 14px;
+      background: #19d3c5;
+      color: #071d38;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #monexaWalletWithdrawModal
+    #mcWalletWithdrawConfirm:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+  `;
+
+  document.head.appendChild(style);
+  document.body.appendChild(modal);
+
+  const amountInput =
+    document.getElementById(
+      "mcWalletWithdrawAmount"
+    );
+
+  const numberInput =
+    document.getElementById(
+      "mcWalletWithdrawNumber"
+    );
+
+  const nameInput =
+    document.getElementById(
+      "mcWalletWithdrawName"
+    );
+
+  const baseElement =
+    document.getElementById(
+      "mcWalletWithdrawBase"
+    );
+
+  const feeElement =
+    document.getElementById(
+      "mcWalletWithdrawFee"
+    );
+
+  const totalElement =
+    document.getElementById(
+      "mcWalletWithdrawTotal"
+    );
+
+  const messageElement =
+    document.getElementById(
+      "mcWalletWithdrawMessage"
+    );
+
+  const confirmButton =
+    document.getElementById(
+      "mcWalletWithdrawConfirm"
+    );
+
+  function money(value) {
+
+    return Number(
+      value || 0
+    ).toLocaleString(
+      "fr-FR",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    ) + " HTG";
+  }
+
+  function getFee(amount) {
+
+    if (amount >= 20 && amount <= 99) return 6;
+    if (amount >= 100 && amount <= 249) return 12;
+    if (amount >= 250 && amount <= 499) return 15;
+    if (amount >= 500 && amount <= 999) return 28;
+    if (amount >= 1000 && amount <= 1999) return 46;
+    if (amount >= 2000 && amount <= 3999) return 81;
+    if (amount >= 4000 && amount <= 7999) return 130;
+    if (amount >= 8000 && amount <= 11999) return 248;
+    if (amount >= 12000 && amount <= 19999) return 342;
+    if (amount >= 20000 && amount <= 40000) return 576;
+    if (amount >= 40001 && amount <= 59999) return 945;
+    if (amount >= 60000 && amount <= 74999) return 1260;
+    if (amount >= 75000 && amount <= 99999) return 1440;
+
+    return 0;
+  }
+
+  function updateSummary() {
+
+    const amount =
+      Number(
+        amountInput.value || 0
+      );
+
+    const fee =
+      getFee(amount);
+
+    const total =
+      amount + fee;
+
+    baseElement.textContent =
+      money(amount);
+
+    feeElement.textContent =
+      money(fee);
+
+    totalElement.textContent =
+      money(total);
+  }
+
+  function showMessage(
+    text,
+    success
+  ) {
+
+    messageElement.textContent =
+      text;
+
+    messageElement.style.display =
+      "block";
+
+    messageElement.style.color =
+      success
+        ? "#16a34a"
+        : "#ef4444";
+
+    messageElement.style.background =
+      success
+        ? "#ecfdf5"
+        : "#fef2f2";
+  }
+
+  function openWithdraw() {
+
+    messageElement.style.display =
+      "none";
+
+    modal.style.display =
+      "flex";
+
+    document.body.style.overflow =
+      "hidden";
+
+    updateSummary();
+  }
+
+  function closeWithdraw() {
+
+    modal.style.display =
+      "none";
+
+    document.body.style.overflow =
+      "";
+  }
+
+  amountInput.addEventListener(
+    "input",
+    updateSummary
+  );
+
+  document.getElementById(
+    "mcWalletWithdrawClose"
+  ).onclick =
+    function () {
+      closeWithdraw();
+    };
+
+  modal.onclick =
+    function (event) {
+
+      if (
+        event.target === modal
+      ) {
+        closeWithdraw();
+      }
+
+    };
+
+  /*
+   * OUVÈTI FENÈT RETIRER
+   * Nou itilize listener sa a sèlman pou bouton
+   * "Retirer" ki nan dashboard la.
+   */
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const clicked =
+        event.target.closest(
+          "button, a, [role='button'], .action-card"
+        );
+
+      if (!clicked) {
+        return;
+      }
+
+      if (
+        clicked.closest(
+          "#monexaWalletWithdrawModal"
+        )
+      ) {
+        return;
+      }
+
+      const text = (
+        clicked.innerText ||
+        clicked.textContent ||
+        ""
+      )
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+      if (
+        !text.includes("retirer")
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      openWithdraw();
+
+    },
+    true
+  );
+
+  /*
+   * BOUTON CONFIRMER
+   * Branche directement sou bouton an.
+   */
+  confirmButton.onclick =
+    async function (event) {
+
+      event.preventDefault();
+
+      const amount =
+        Number(
+          amountInput.value || 0
+        );
+
+      const number =
+        numberInput.value.trim();
+
+      const name =
+        nameInput.value.trim();
+
+      if (
+        !Number.isFinite(amount) ||
+        amount < 20 ||
+        amount > 99999
+      ) {
+
+        showMessage(
+          "Le montant doit être compris entre 20 et 99 999 HTG.",
+          false
+        );
+
+        return;
+      }
+
+      if (!number) {
+
+        showMessage(
+          "Veuillez entrer votre numéro Natcash.",
+          false
+        );
+
+        return;
+      }
+
+      if (!name) {
+
+        showMessage(
+          "Veuillez entrer le nom sur Natcash.",
+          false
+        );
+
+        return;
+      }
+
+      if (!window.monexaSupabase) {
+
+        showMessage(
+          "Connexion MONEXA CASH indisponible.",
+          false
+        );
+
+        return;
+      }
+
+      confirmButton.disabled =
+        true;
+
+      confirmButton.textContent =
+        "Traitement en cours...";
+
+      messageElement.style.display =
+        "none";
+
+      try {
+
+        const result =
+          await window.monexaSupabase.rpc(
+            "create_wallet_withdrawal",
+            {
+              p_amount_htg: amount,
+              p_natcash_number: number,
+              p_natcash_name: name
+            }
+          );
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        showMessage(
+          "Demande de retrait envoyée avec succès.",
+          true
+        );
+
+        amountInput.value = "";
+        numberInput.value = "";
+        nameInput.value = "";
+
+        updateSummary();
+
+        if (
+          typeof window.monexaLoadDashboard ===
+          "function"
+        ) {
+          setTimeout(
+            window.monexaLoadDashboard,
+            400
+          );
+        }
+
+        setTimeout(
+          closeWithdraw,
+          1800
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Erreur Retirer:",
+          error
+        );
+
+        if (
+          error.message &&
+          error.message
+            .toLowerCase()
+            .includes(
+              "solde insuffisant"
+            )
+        ) {
+
+          showMessage(
+            "Solde insuffisant pour ce retrait.",
+            false
+          );
+
+        } else {
+
+          showMessage(
+            "Impossible d'envoyer la demande. Veuillez réessayer.",
+            false
+          );
+        }
+
+      } finally {
+
+        confirmButton.disabled =
+          false;
+
+        confirmButton.textContent =
+          "Confirmer le retrait";
+      }
+
+    };
+
+})();
+  </script>
   
 
 </body>
