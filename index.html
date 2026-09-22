@@ -8682,6 +8682,64 @@ binanceConfirmButton.onclick = async function (event) {
   window.monexaAdminUpdateOrder=monexaAdminUpdateOrder;
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminUpdateWithdrawal(id,status){
+    if(!window.monexaSupabase||!id||!status)return;
+
+    let note="";
+    if(status==="cancelled"){
+      note=prompt("Note d'annulation (optionnel) :")||"";
+    }
+
+    const result=await window.monexaSupabase.rpc(
+      "admin_update_withdrawal_status",
+      {
+        p_withdrawal_id:id,
+        p_status:status,
+        p_admin_note:note
+      }
+    );
+
+    if(result.error){
+      alert(result.error.message||"Impossible de modifier le retrait.");
+      return;
+    }
+
+    alert(
+      status==="processing"
+        ?"Retrait mis en traitement."
+        :status==="completed"
+        ?"Retrait marqué comme terminé."
+        :"Retrait annulé avec succès."
+    );
+
+    if(typeof window.monexaAdminLoad==="function"){
+      await window.monexaAdminLoad();
+    }else{
+      window.location.reload();
+    }
+  }
+
+  document.addEventListener("click",function(event){
+    const button=event.target.closest("[data-admin-withdrawal-status]");
+    if(!button)return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const id=button.getAttribute("data-withdrawal-id");
+    const status=button.getAttribute("data-admin-withdrawal-status");
+
+    monexaAdminUpdateWithdrawal(id,status);
+  },true);
+
+  window.monexaAdminUpdateWithdrawal=monexaAdminUpdateWithdrawal;
+})();
+  </script>
   
 
 </body>
