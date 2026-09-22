@@ -2893,37 +2893,52 @@ if (
 
   document.addEventListener("click", function (event) {
 
-    const button = event.target.closest(
-      "button, a, [role='button']"
-    );
+  const button = event.target.closest(
+    "button, a, [role='button']"
+  );
 
-    if (!button) return;
+  if (!button) return;
 
-    const text = (button.innerText || button.textContent || "")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
+  if (
+    button.id === "mcRechargeFinalConfirm" ||
+    button.id === "mcBinanceFinalConfirm" ||
+    button.id === "mcWithdrawConfirm" ||
+    button.closest("#monexaRechargeFinalModal") ||
+    button.closest("#monexaBinanceFinalModal") ||
+    button.closest("#monexaWithdrawModal")
+  ) {
+    return;
+  }
 
-    let service = null;
+  const text = (
+    button.innerText ||
+    button.textContent ||
+    ""
+  )
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
 
-    if (text.includes("recharge")) {
-      service = "Recharge";
-    } else if (text.includes("retrait")) {
-      service = "Retrait";
-    } else if (text.includes("free fire")) {
-      service = "Free Fire";
-    } else if (text.includes("binance")) {
-      service = "Binance";
-    }
+  let service = null;
 
-    if (!service) return;
+  if (text.includes("recharge")) {
+    service = "Recharge";
+  } else if (text.includes("retrait")) {
+    service = "Retrait";
+  } else if (text.includes("free fire")) {
+    service = "Free Fire";
+  } else if (text.includes("binance")) {
+    service = "Binance";
+  }
 
-    event.preventDefault();
-    event.stopPropagation();
+  if (!service) return;
 
-    openService(service);
+  event.preventDefault();
+  event.stopPropagation();
 
-  }, true);
+  openService(service);
+
+}, true);
 
   modal.addEventListener("click", function (event) {
 
