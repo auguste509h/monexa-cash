@@ -3921,155 +3921,198 @@ if (
     updateCalculation
   );
 
+  const binanceConfirmButton =
   document.getElementById(
     "mcBinanceFinalConfirm"
-  ).addEventListener(
-    "click",
-    async function (event) {
+  );
 
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
+binanceConfirmButton.onclick = async function (event) {
 
-      const button = this;
+  event.preventDefault();
 
-      const identifierInput =
-        document.getElementById(
-          "mcBinanceFinalIdentifier"
-        );
+  const button = this;
 
-      const amountInput =
-        document.getElementById(
-          "mcBinanceFinalAmount"
-        );
+  const identifierInput =
+    document.getElementById(
+      "mcBinanceFinalIdentifier"
+    );
 
-      const message =
-        document.getElementById(
-          "mcBinanceFinalMessage"
-        );
+  const amountInput =
+    document.getElementById(
+      "mcBinanceFinalAmount"
+    );
 
-      const identifier =
-        identifierInput.value.trim();
+  const message =
+    document.getElementById(
+      "mcBinanceFinalMessage"
+    );
 
-      const amount =
-        Number(amountInput.value || 0);
+  const identifier =
+    (
+      identifierInput.value || ""
+    ).trim();
 
-      if (!identifier) {
-        message.textContent =
-          "Veuillez entrer votre Binance ID ou votre email.";
-        return;
-      }
+  const amount =
+    Number(
+      amountInput.value || 0
+    );
 
-      if (!amount || amount <= 0) {
-        message.textContent =
-          "Veuillez entrer un montant USDT valide.";
-        return;
-      }
+  message.style.display = "block";
 
-      if (!window.monexaSupabase) {
-        message.textContent =
-          "Connexion MONEXA CASH indisponible.";
-        return;
-      }
+  if (!identifier) {
+    message.textContent =
+      "Veuillez entrer votre Binance ID ou votre email.";
 
-      button.disabled = true;
+    message.style.color = "#ef4444";
+
+    return;
+  }
+
+  if (
+    !Number.isFinite(amount) ||
+    amount <= 0
+  ) {
+    message.textContent =
+      "Veuillez entrer un montant USDT valide.";
+
+    message.style.color = "#ef4444";
+
+    return;
+  }
+
+  if (!window.monexaSupabase) {
+    message.textContent =
+      "Connexion MONEXA CASH indisponible.";
+
+    message.style.color = "#ef4444";
+
+    return;
+  }
+
+  button.disabled = true;
+
+  button.textContent =
+    "Traitement en cours...";
+
+  message.textContent = "";
+
+  try {
+
+    const {
+      data: {
+        user
+      },
+      error: userError
+    } =
+      await window.monexaSupabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error(
+        "Votre session a expiré. Veuillez vous reconnecter."
+      );
+    }
+
+    const totalHTG =
+      Number(
+        (amount * 143).toFixed(2)
+      );
+
+    const details = {
+      service_name: "Binance",
+      identifier: identifier,
+      amount_usdt: amount,
+      rate_htg: 143,
+      fee_htg: 0,
+      total_htg: totalHTG
+    };
+
+    const result =
+      await window.monexaSupabase.rpc(
+        "create_service_order",
+        {
+          p_service_type: "Binance",
+          p_amount_htg: totalHTG,
+          p_details: details
+        }
+      );
+
+    if (result.error) {
+      throw result.error;
+    }
+
+    message.textContent =
+      "Commande Binance envoyée avec succès.";
+
+    message.style.color =
+      "#16a34a";
+
+    button.textContent =
+      "Binance envoyé";
+
+    amountInput.value = "";
+
+    identifierInput.value = "";
+
+    updateCalculation();
+
+    setTimeout(function () {
+
+      closeBinance();
+
+      button.disabled = false;
 
       button.textContent =
-        "Traitement en cours...";
+        "Confirmer Binance";
 
-      message.textContent = "";
+    }, 1800);
 
-      try {
+    if (
+      typeof window.monexaLoadDashboard ===
+      "function"
+    ) {
+      setTimeout(
+        window.monexaLoadDashboard,
+        500
+      );
+    }
 
-        const {
-          data: {
-            user
-          },
-          error: userError
-        } =
-          await window.monexaSupabase.auth.getUser();
+  } catch (error) {
 
-        if (userError || !user) {
-          throw new Error(
-            "Votre session a expiré. Veuillez vous reconnecter."
-          );
-        }
+    console.error(
+      "Erreur Binance:",
+      error
+    );
 
-        const totalHTG =
-          Number(
-            (amount * 143).toFixed(2)
-          );
+    if (
+      error.message &&
+      error.message
+        .toLowerCase()
+        .includes("solde insuffisant")
+    ) {
 
-        const details = {
-          service_name: "Binance",
-          identifier: identifier,
-          amount_usdt: amount,
-          rate_htg: 143,
-          fee_htg: 0,
-          total_htg: totalHTG
-        };
+      message.textContent =
+        "Solde insuffisant pour cette opération.";
 
-        const result =
-          await window.monexaSupabase.rpc(
-            "create_service_order",
-            {
-              p_service_type: "Binance",
-              p_amount_htg: totalHTG,
-              p_details: details
-            }
-          );
+    } else {
 
-        if (result.error) {
-          throw result.error;
-        }
-
-        message.textContent =
-          "Commande Binance envoyée avec succès. Traitement en cours.";
-
-        amountInput.value = "";
-
-        identifierInput.value = "";
-
-        updateCalculation();
-
-        setTimeout(
-          function () {
-            closeBinance();
-          },
-          1800
-        );
-
-        if (
-          typeof window.monexaLoadDashboard ===
-          "function"
-        ) {
-          setTimeout(
-            window.monexaLoadDashboard,
-            500
-          );
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Erreur Binance:",
-          error
-        );
-
-        message.textContent =
-          error.message ||
-          "Impossible de créer la commande Binance.";
-
-      } finally {
-
-        button.disabled = false;
-
-        button.textContent =
-          "Confirmer Binance";
-      }
+      message.textContent =
+        "Impossible d'envoyer la demande Binance. Veuillez réessayer.";
 
     }
-  );
+
+    message.style.color =
+      "#ef4444";
+
+    message.style.display =
+      "block";
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Confirmer Binance";
+  }
+};
 
   console.log(
     "MONEXA CASH : Binance final chargé."
