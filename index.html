@@ -8740,6 +8740,64 @@ binanceConfirmButton.onclick = async function (event) {
   window.monexaAdminUpdateWithdrawal=monexaAdminUpdateWithdrawal;
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminUpdateWalletWithdrawal(id,status){
+    if(!window.monexaSupabase||!id||!status)return;
+
+    let note="";
+    if(status==="cancelled"){
+      note=prompt("Note d'annulation (optionnel) :")||"";
+    }
+
+    const result=await window.monexaSupabase.rpc(
+      "admin_update_wallet_withdrawal_status",
+      {
+        p_withdrawal_id:id,
+        p_status:status,
+        p_admin_note:note
+      }
+    );
+
+    if(result.error){
+      alert(result.error.message||"Impossible de modifier le retrait Natcash.");
+      return;
+    }
+
+    alert(
+      status==="processing"
+        ?"Retrait Natcash mis en traitement."
+        :status==="completed"
+        ?"Retrait Natcash marqué comme terminé."
+        :"Retrait Natcash annulé. Le montant a été remboursé au client."
+    );
+
+    if(typeof window.monexaAdminLoad==="function"){
+      await window.monexaAdminLoad();
+    }else{
+      window.location.reload();
+    }
+  }
+
+  document.addEventListener("click",function(event){
+    const button=event.target.closest("[data-admin-wallet-withdrawal-status]");
+    if(!button)return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const id=button.getAttribute("data-wallet-withdrawal-id");
+    const status=button.getAttribute("data-admin-wallet-withdrawal-status");
+
+    monexaAdminUpdateWalletWithdrawal(id,status);
+  },true);
+
+  window.monexaAdminUpdateWalletWithdrawal=monexaAdminUpdateWalletWithdrawal;
+})();
+  </script>
   
 
 </body>
