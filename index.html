@@ -3371,44 +3371,40 @@ if(window.monexaSupabase){
 
 
   document.addEventListener(
-    "click",
-    function (event) {
+  "click",
+  function (event) {
 
-      const button =
-        event.target.closest(
-          "button, a, [role='button']"
-        );
+    const clicked = event.target.closest(
+      "button, a, [role='button'], .service-card, .action-card"
+    );
 
-      if (!button) return;
+    if (!clicked) return;
 
+    const text = (
+      clicked.innerText ||
+      clicked.textContent ||
+      ""
+    )
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
 
-      const text =
-        (
-          button.innerText ||
-          button.textContent ||
-          ""
-        )
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
+    if (text.includes("binance")) {
+      return;
+    }
 
+    if (!text.includes("recharge")) {
+      return;
+    }
 
-      if (
-        !text.includes("recharge") ||
-        text.includes("binance")
-      ) {
-        return;
-      }
+    event.preventDefault();
+    event.stopPropagation();
 
+    openRecharge();
 
-      event.preventDefault();
-      event.stopPropagation();
-
-      openRecharge();
-
-    },
-    true
-  );
+  },
+  true
+);
 
 
   document.getElementById(
