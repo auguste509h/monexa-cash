@@ -3914,6 +3914,465 @@ if(window.monexaSupabase){
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const old = document.getElementById(
+    "monexaWithdrawModal"
+  );
+
+  if (old) old.remove();
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #monexaWithdrawModal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000001;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.7);
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    #monexaWithdrawModal .box {
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #fff;
+      color: #071d38;
+      border-radius: 24px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #monexaWithdrawModal .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    #monexaWithdrawModal h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    #monexaWithdrawModal .close {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: #edf2f6;
+      font-size: 22px;
+    }
+
+    #monexaWithdrawModal label {
+      display: block;
+      margin: 13px 0 7px;
+      font-weight: 700;
+    }
+
+    #monexaWithdrawModal input,
+    #monexaWithdrawModal select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #d6dfe8;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+
+    #monexaWithdrawModal .account {
+      margin-top: 14px;
+      padding: 14px;
+      background: #f1f7fa;
+      border-radius: 15px;
+    }
+
+    #monexaWithdrawModal .email-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    #monexaWithdrawModal .email {
+      flex: 1;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    #monexaWithdrawModal .copy {
+      flex-shrink: 0;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #071d38;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    #monexaWithdrawModal .summary {
+      margin-top: 18px;
+      padding: 15px;
+      background: #f1f7fa;
+      border-radius: 15px;
+    }
+
+    #monexaWithdrawModal .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    #monexaWithdrawModal .total {
+      border-top: 1px solid #d6dfe8;
+      padding-top: 12px;
+      margin-top: 12px;
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    #monexaWithdrawModal .confirm {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: 0;
+      border-radius: 14px;
+      background: #19d3c5;
+      color: #071d38;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    #monexaWithdrawModal .message {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const modal = document.createElement("div");
+
+  modal.id = "monexaWithdrawModal";
+
+  modal.innerHTML = `
+    <div class="box">
+
+      <div class="top">
+        <h2>Retrait</h2>
+
+        <button
+          type="button"
+          class="close"
+          id="mcWithdrawClose">
+          ×
+        </button>
+      </div>
+
+      <label>Service</label>
+
+      <select id="mcWithdrawService">
+
+        <option value="Wise">
+          Wise
+        </option>
+
+        <option value="Meru">
+          Meru
+        </option>
+
+        <option value="Morse">
+          Morse
+        </option>
+
+      </select>
+
+      <div class="account">
+
+        <strong>
+          Envoyez le paiement à cette adresse
+        </strong>
+
+        <div class="email-row">
+
+          <span
+            id="mcWithdrawEmail"
+            class="email">
+          </span>
+
+          <button
+            type="button"
+            class="copy"
+            id="mcWithdrawCopy">
+            Copier
+          </button>
+
+        </div>
+
+      </div>
+
+      <label>Montant en USD</label>
+
+      <input
+        id="mcWithdrawAmount"
+        type="number"
+        min="1"
+        step="0.01"
+        placeholder="Exemple : 10">
+
+      <label>Numéro Natcash</label>
+
+      <input
+        id="mcWithdrawNatcash"
+        type="tel"
+        placeholder="Entrez votre numéro Natcash">
+
+      <label>Nom sur Natcash</label>
+
+      <input
+        id="mcWithdrawNatcashName"
+        type="text"
+        placeholder="Entrez le nom sur Natcash">
+
+      <label>Preuve de paiement</label>
+
+      <input
+        id="mcWithdrawProof"
+        type="file"
+        accept="image/*,.pdf">
+
+      <div class="summary">
+
+        <div class="row">
+          <span>Montant</span>
+
+          <strong id="mcWithdrawBase">
+            0,00 HTG
+          </strong>
+        </div>
+
+        <div class="row">
+          <span>Frais</span>
+
+          <strong>
+            0,00 HTG
+          </strong>
+        </div>
+
+        <div class="row total">
+          <span>Total</span>
+
+          <strong id="mcWithdrawTotal">
+            0,00 HTG
+          </strong>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="confirm"
+        id="mcWithdrawConfirm">
+        Confirmer le retrait
+      </button>
+
+      <div
+        id="mcWithdrawMessage"
+        class="message">
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const emails = {
+    Wise: "juniorauguste506@gmail.com",
+    Meru: "augustejunior1819@gmail.com",
+    Morse: "augustejunior1819@gmail.com"
+  };
+
+  function money(value) {
+    return Number(value || 0).toLocaleString(
+      "fr-FR",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    ) + " HTG";
+  }
+
+  function updateWithdraw() {
+
+    const service =
+      document.getElementById(
+        "mcWithdrawService"
+      ).value;
+
+    const amount =
+      Number(
+        document.getElementById(
+          "mcWithdrawAmount"
+        ).value || 0
+      );
+
+    document.getElementById(
+      "mcWithdrawEmail"
+    ).textContent = emails[service];
+
+    const total =
+      amount * 135;
+
+    document.getElementById(
+      "mcWithdrawBase"
+    ).textContent = money(total);
+
+    document.getElementById(
+      "mcWithdrawTotal"
+    ).textContent = money(total);
+  }
+
+  function openWithdraw() {
+
+    modal.style.display = "flex";
+
+    document.body.style.overflow = "";
+
+    updateWithdraw();
+  }
+
+  function closeWithdraw() {
+
+    modal.style.display = "none";
+
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const button =
+        event.target.closest(
+          "button, a, [role='button'], .service-card, .action-card"
+        );
+
+      if (!button) return;
+
+      const text = (
+        button.innerText ||
+        button.textContent ||
+        ""
+      )
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+      if (
+        !text.includes("retrait") ||
+        text.includes("wise") ||
+        text.includes("meru") ||
+        text.includes("morse")
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      openWithdraw();
+
+    },
+    true
+  );
+
+  document.getElementById(
+    "mcWithdrawClose"
+  ).addEventListener(
+    "click",
+    closeWithdraw
+  );
+
+  modal.addEventListener(
+    "click",
+    function (event) {
+
+      if (event.target === modal) {
+        closeWithdraw();
+      }
+
+    }
+  );
+
+  document.getElementById(
+    "mcWithdrawService"
+  ).addEventListener(
+    "change",
+    updateWithdraw
+  );
+
+  document.getElementById(
+    "mcWithdrawAmount"
+  ).addEventListener(
+    "input",
+    updateWithdraw
+  );
+
+  document.getElementById(
+    "mcWithdrawCopy"
+  ).addEventListener(
+    "click",
+    async function () {
+
+      const email =
+        document.getElementById(
+          "mcWithdrawEmail"
+        ).textContent;
+
+      try {
+
+        await navigator.clipboard.writeText(
+          email
+        );
+
+        this.textContent = "Copié";
+
+        setTimeout(
+          () => {
+            this.textContent = "Copier";
+          },
+          1500
+        );
+
+      } catch (error) {
+
+        this.textContent =
+          "Sélectionnez l'email";
+
+      }
+
+    }
+  );
+
+  console.log(
+    "MONEXA CASH : Retrait Wise/Meru/Morse chargé."
+  );
+
+})();
+    </script>
   
 
 </body>
