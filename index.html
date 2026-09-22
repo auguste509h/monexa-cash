@@ -8562,6 +8562,71 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+  <script>
+(function(){
+  "use strict";
+
+  async function monexaAdminProcessDeposit(depositId, action){
+    if(!window.monexaSupabase || !depositId) return;
+
+    const note = action === "reject"
+      ? (prompt("Note de rejet (optionnel) :") || "")
+      : "";
+
+    const rpcName = action === "approve"
+      ? "admin_approve_deposit"
+      : "admin_reject_deposit";
+
+    const params = action === "approve"
+      ? { p_deposit_id: depositId }
+      : { p_deposit_id: depositId, p_admin_note: note };
+
+    const result = await window.monexaSupabase.rpc(rpcName, params);
+
+    if(result.error){
+      alert(result.error.message || "Une erreur est survenue.");
+      return;
+    }
+
+    alert(
+      action === "approve"
+        ? "Dépôt approuvé avec succès."
+        : "Dépôt rejeté avec succès."
+    );
+
+    if(typeof window.monexaAdminLoad === "function"){
+      await window.monexaAdminLoad();
+    }else{
+      window.location.reload();
+    }
+  }
+
+  document.addEventListener("click", function(event){
+    const approveButton = event.target.closest("[data-admin-approve-deposit]");
+    const rejectButton = event.target.closest("[data-admin-reject-deposit]");
+
+    if(approveButton){
+      event.preventDefault();
+      event.stopPropagation();
+
+      const id = approveButton.getAttribute("data-admin-approve-deposit");
+      monexaAdminProcessDeposit(id, "approve");
+      return;
+    }
+
+    if(rejectButton){
+      event.preventDefault();
+      event.stopPropagation();
+
+      const id = rejectButton.getAttribute("data-admin-reject-deposit");
+      monexaAdminProcessDeposit(id, "reject");
+    }
+  }, true);
+
+  window.monexaAdminProcessDeposit = monexaAdminProcessDeposit;
+})();
+  </script>
   
 
 </body>
