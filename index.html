@@ -2431,12 +2431,20 @@ if(window.monexaSupabase){
     function (event) {
 
       const button = event.target.closest(
-        "button, a, [role='button']"
-      );
+  "button, a, [role='button']"
+);
 
-      if (!button) {
-        return;
-      }
+if (!button) {
+  return;
+}
+
+if (
+  button.id === "mcBinanceFinalConfirm" ||
+  button.id === "mcRechargeFinalConfirm" ||
+  button.id === "mcWithdrawConfirm"
+) {
+  return;
+}
 
       const service = getServiceFromButton(button);
 
