@@ -5170,6 +5170,240 @@ document.addEventListener("click", function (event) {
   alert("BOUTON BINANCE RESEVWA KLIK LA");
 });
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  document.addEventListener("click", async function (event) {
+
+    const button = event.target.closest(
+      "#mcBinanceFinalConfirm"
+    );
+
+    if (!button) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const identifierElement =
+      document.getElementById(
+        "mcBinanceFinalIdentifier"
+      );
+
+    const amountElement =
+      document.getElementById(
+        "mcBinanceFinalAmount"
+      );
+
+    const messageElement =
+      document.getElementById(
+        "mcBinanceFinalMessage"
+      );
+
+    if (
+      !identifierElement ||
+      !amountElement
+    ) {
+      console.error(
+        "MONEXA CASH : champs Binance introuvables."
+      );
+      return;
+    }
+
+    const identifier =
+      (
+        identifierElement.value || ""
+      ).trim();
+
+    const amount =
+      Number(
+        amountElement.value || 0
+      );
+
+    if (!identifier) {
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Veuillez entrer votre identifiant Binance ou votre email.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#ef4444";
+      }
+
+      return;
+    }
+
+    if (
+      !Number.isFinite(amount) ||
+      amount <= 0
+    ) {
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Veuillez entrer un montant valide.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#ef4444";
+      }
+
+      return;
+    }
+
+    if (!window.monexaSupabase) {
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Connexion au serveur indisponible.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#ef4444";
+      }
+
+      return;
+    }
+
+    const rate = 143;
+    const feeHtg = 0;
+    const totalHtg = amount * rate;
+
+    button.disabled = true;
+
+    button.textContent =
+      "Traitement en cours...";
+
+    if (messageElement) {
+      messageElement.style.display =
+        "none";
+      messageElement.textContent =
+        "";
+    }
+
+    try {
+
+      const {
+        data: {
+          user
+        },
+        error: userError
+      } =
+        await window.monexaSupabase.auth.getUser();
+
+      if (userError || !user) {
+        throw new Error(
+          "Session utilisateur introuvable."
+        );
+      }
+
+      const details = {
+        service_name: "Binance",
+        identifier: identifier,
+        amount_usdt: amount,
+        rate_htg: rate,
+        fee_htg: feeHtg,
+        total_htg: totalHtg
+      };
+
+      const result =
+        await window.monexaSupabase.rpc(
+          "create_service_order",
+          {
+            p_service_type: "Binance",
+            p_amount_htg: totalHtg,
+            p_details: details
+          }
+        );
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      button.textContent =
+        "Binance envoyé";
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Demande Binance envoyée avec succès.";
+        messageElement.style.display =
+          "block";
+        messageElement.style.color =
+          "#22c55e";
+      }
+
+      setTimeout(function () {
+
+        const modal =
+          document.getElementById(
+            "monexaBinanceFinalModal"
+          );
+
+        if (modal) {
+          modal.style.display =
+            "none";
+        }
+
+        document.body.style.overflow =
+          "";
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "Confirmer Binance";
+
+        if (typeof monexaLoadDashboard === "function") {
+          monexaLoadDashboard();
+        }
+
+      }, 1800);
+
+    } catch (error) {
+
+      console.error(
+        "Erreur Binance:",
+        error
+      );
+
+      if (messageElement) {
+
+        if (
+          error.message &&
+          error.message
+            .toLowerCase()
+            .includes(
+              "solde insuffisant"
+            )
+        ) {
+          messageElement.textContent =
+            "Solde insuffisant pour cette opération.";
+        } else {
+          messageElement.textContent =
+            "Impossible d'envoyer la demande Binance. Veuillez réessayer.";
+        }
+
+        messageElement.style.display =
+          "block";
+
+        messageElement.style.color =
+          "#ef4444";
+      }
+
+      button.disabled =
+        false;
+
+      button.textContent =
+        "Confirmer Binance";
+    }
+
+  }, true);
+
+})();
+        </script>
   
 
 </body>
