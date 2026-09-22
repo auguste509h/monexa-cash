@@ -3453,6 +3453,106 @@ if(window.monexaSupabase){
 
 })();
   </script>
+
+  <script>
+(function () {
+
+  document.addEventListener("click", function (event) {
+
+    const button = event.target.closest(
+      "button, a, [role='button']"
+    );
+
+    if (!button) return;
+
+    const text = (
+      button.innerText ||
+      button.textContent ||
+      ""
+    )
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+
+    /*
+     * IMPORTANT:
+     * Binance dwe toujou gen priyorite.
+     */
+    if (text.includes("binance")) {
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      /*
+       * Chèche modal Binance ki deja egziste.
+       */
+      const binanceSection =
+        document.getElementById("mcBinance");
+
+      const mainModal =
+        document.getElementById("monexaServiceModal");
+
+      if (binanceSection && mainModal) {
+
+        const sections =
+          mainModal.querySelectorAll(".mc-section");
+
+        sections.forEach(function (section) {
+          section.style.display = "none";
+        });
+
+        binanceSection.style.display = "block";
+
+        const title =
+          document.getElementById("mcTitle");
+
+        if (title) {
+          title.textContent = "Binance";
+        }
+
+        mainModal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+
+        console.log(
+          "MONEXA CASH: Binance ouvert."
+        );
+
+        return;
+      }
+
+      /*
+       * Si modal Binance pa egziste,
+       * chèche nenpòt fenèt Binance ki deja sou paj la.
+       */
+      const possibleBinance =
+        document.querySelector(
+          "#monexaBinanceModal, .monexa-binance-modal"
+        );
+
+      if (possibleBinance) {
+
+        possibleBinance.style.display = "flex";
+
+        document.body.style.overflow = "hidden";
+
+        console.log(
+          "MONEXA CASH: Binance modal ouvert."
+        );
+
+        return;
+      }
+
+      console.error(
+        "MONEXA CASH: fenêtre Binance introuvable."
+      );
+
+      return;
+    }
+
+  }, true);
+
+})();
+          </script>
   
 
 </body>
