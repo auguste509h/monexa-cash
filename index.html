@@ -4373,6 +4373,246 @@ if(window.monexaSupabase){
 
 })();
     </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const button = document.getElementById(
+    "mcWithdrawConfirm"
+  );
+
+  if (!button) {
+    console.error(
+      "MONEXA CASH : bouton Retrait introuvable."
+    );
+    return;
+  }
+
+  button.addEventListener(
+    "click",
+    async function () {
+
+      const service =
+        document.getElementById(
+          "mcWithdrawService"
+        ).value;
+
+      const amount =
+        Number(
+          document.getElementById(
+            "mcWithdrawAmount"
+          ).value || 0
+        );
+
+      const natcashNumber =
+        (
+          document.getElementById(
+            "mcWithdrawNatcash"
+          ).value || ""
+        ).trim();
+
+      const natcashName =
+        (
+          document.getElementById(
+            "mcWithdrawNatcashName"
+          ).value || ""
+        ).trim();
+
+      const proofInput =
+        document.getElementById(
+          "mcWithdrawProof"
+        );
+
+      const message =
+        document.getElementById(
+          "mcWithdrawMessage"
+        );
+
+      if (!window.monexaSupabase) {
+        message.textContent =
+          "Connexion au serveur indisponible.";
+        return;
+      }
+
+      if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+      ) {
+        message.textContent =
+          "Veuillez entrer un montant USD valide.";
+        return;
+      }
+
+      if (!natcashNumber) {
+        message.textContent =
+          "Veuillez entrer votre numéro Natcash.";
+        return;
+      }
+
+      if (!natcashName) {
+        message.textContent =
+          "Veuillez entrer le nom sur Natcash.";
+        return;
+      }
+
+      if (
+        !proofInput.files ||
+        !proofInput.files[0]
+      ) {
+        message.textContent =
+          "La preuve de paiement est obligatoire.";
+        return;
+      }
+
+      const proofFile =
+        proofInput.files[0];
+
+      button.disabled = true;
+      button.textContent =
+        "Traitement en cours...";
+
+      message.textContent =
+        "Envoi de votre demande...";
+
+      try {
+
+        const {
+          data: { user },
+          error: userError
+        } =
+          await window.monexaSupabase.auth.getUser();
+
+        if (userError || !user) {
+          throw new Error(
+            "Utilisateur non connecté."
+          );
+        }
+
+        const safeName =
+          proofFile.name.replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+          );
+
+        const filePath =
+          user.id +
+          "/withdrawals/" +
+          Date.now() +
+          "_" +
+          safeName;
+
+        const upload =
+          await window.monexaSupabase.storage
+            .from("deposit-proofs")
+            .upload(
+              filePath,
+              proofFile,
+              {
+                upsert: false
+              }
+            );
+
+        if (upload.error) {
+          throw upload.error;
+        }
+
+        const paymentEmails = {
+          Wise:
+            "juniorauguste506@gmail.com",
+
+          Meru:
+            "augustejunior1819@gmail.com",
+
+          Morse:
+            "augustejunior1819@gmail.com"
+        };
+
+        const paymentEmail =
+          paymentEmails[service];
+
+        const amountHtg =
+          amount * 135;
+
+        const result =
+          await window.monexaSupabase
+            .from("withdrawal_requests")
+            .insert({
+              user_id: user.id,
+              service_type: service,
+              payment_email: paymentEmail,
+              amount_usd: amount,
+              rate_htg: 135,
+              amount_htg: amountHtg,
+              fee_htg: 0,
+              natcash_number:
+                natcashNumber,
+              natcash_name:
+                natcashName,
+              proof_url:
+                filePath,
+              status:
+                "pending"
+            });
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        message.textContent =
+          "Demande de retrait envoyée avec succès. MONEXA CASH va la traiter manuellement.";
+
+        button.textContent =
+          "Demande envoyée";
+
+        setTimeout(
+          function () {
+
+            const modal =
+              document.getElementById(
+                "monexaWithdrawModal"
+              );
+
+            if (modal) {
+              modal.style.display =
+                "none";
+            }
+
+            document.body.style.overflow =
+              "";
+
+            button.disabled =
+              false;
+
+            button.textContent =
+              "Confirmer le retrait";
+
+          },
+          1800
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Erreur Retrait:",
+          error
+        );
+
+        message.textContent =
+          "Impossible d'envoyer la demande. Veuillez réessayer.";
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "Confirmer le retrait";
+      }
+
+    }
+  );
+
+})();
+  </script>
   
 
 </body>
