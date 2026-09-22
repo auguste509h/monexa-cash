@@ -3493,6 +3493,10 @@ if (
 
     if (!button) return;
 
+    if (button.closest("#monexaBinanceFinalModal")) {
+  return;
+    }
+
     const text = (
       button.innerText ||
       button.textContent ||
