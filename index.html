@@ -13572,6 +13572,90 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
  </script>
+
+ <script>
+(function(){
+  "use strict";
+
+  async function monexaCheckPendingDeposits(){
+
+    if(!window.monexaSupabase)return;
+
+    const {
+      data:{user}
+    } =
+      await window.monexaSupabase.auth.getUser();
+
+    if(!user)return;
+
+    const {data:profile,error:profileError} =
+      await window.monexaSupabase
+        .from("profiles")
+        .select("role")
+        .eq("id",user.id)
+        .maybeSingle();
+
+    if(profileError || !profile || profile.role!=="admin"){
+      return;
+    }
+
+    const {count,error} =
+      await window.monexaSupabase
+        .from("deposits")
+        .select("id",{count:"exact",head:true})
+        .eq("status","pending");
+
+    if(error){
+      console.error(
+        "Erreur dépôts en attente:",
+        error
+      );
+      return;
+    }
+
+    const button =
+      document.getElementById(
+        "monexaAdminAccessButton"
+      );
+
+    if(!button)return;
+
+    const total =
+      Number(count || 0);
+
+    button.textContent =
+      total > 0
+        ? "Administration • " + total + " dépôt(s) en attente"
+        : "Administration";
+
+  }
+
+  window.monexaCheckPendingDeposits =
+    monexaCheckPendingDeposits;
+
+  if(window.monexaSupabase){
+
+    window.monexaSupabase.auth.onAuthStateChange(
+      function(event,session){
+
+        if(session){
+          setTimeout(
+            monexaCheckPendingDeposits,
+            700
+          );
+        }
+
+      }
+    );
+
+    setTimeout(
+      monexaCheckPendingDeposits,
+      1500
+    );
+  }
+
+})();
+ </script>
   
 
 </body>
