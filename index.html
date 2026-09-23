@@ -11266,6 +11266,195 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
         </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const item =
+        event.target.closest(
+          '[data-profile-section="verification"]'
+        );
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      let modal =
+        document.getElementById(
+          "monexaVerificationModal"
+        );
+
+      if (!modal) {
+
+        modal =
+          document.createElement("div");
+
+        modal.id =
+          "monexaVerificationModal";
+
+        modal.style.cssText = `
+          position:fixed;
+          inset:0;
+          z-index:100000001;
+          background:#f5f8fc;
+          overflow-y:auto;
+          font-family:Arial,sans-serif;
+        `;
+
+        modal.innerHTML = `
+          <div
+            style="
+              max-width:520px;
+              min-height:100%;
+              margin:auto;
+              background:#ffffff;
+            "
+          >
+
+            <div
+              style="
+                background:#071a33;
+                color:white;
+                padding:18px;
+              "
+            >
+
+              <button
+                id="monexaVerificationBack"
+                type="button"
+                style="
+                  border:0;
+                  background:transparent;
+                  color:white;
+                  font-size:27px;
+                  cursor:pointer;
+                "
+              >
+                ←
+              </button>
+
+              <h2
+                style="
+                  margin:18px 0 4px;
+                  font-size:22px;
+                "
+              >
+                Vérification du compte
+              </h2>
+
+              <div
+                style="
+                  color:#b8c8d9;
+                  font-size:13px;
+                "
+              >
+                Sécurité et vérification d’identité
+              </div>
+
+            </div>
+
+            <div style="padding:20px;">
+
+              <div
+                style="
+                  padding:22px;
+                  border:1px solid #e7edf3;
+                  border-radius:18px;
+                  text-align:center;
+                "
+              >
+
+                <div
+                  style="
+                    width:64px;
+                    height:64px;
+                    margin:0 auto 16px;
+                    border-radius:50%;
+                    background:#eefcff;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:28px;
+                  "
+                >
+                  🛡️
+                </div>
+
+                <h3
+                  style="
+                    margin:0;
+                    color:#071a33;
+                    font-size:18px;
+                  "
+                >
+                  Compte non vérifié
+                </h3>
+
+                <p
+                  style="
+                    margin:10px 0 0;
+                    color:#718096;
+                    font-size:14px;
+                    line-height:1.6;
+                  "
+                >
+                  La vérification d’identité sera disponible
+                  prochainement pour renforcer la sécurité
+                  de votre compte MONEXA CASH.
+                </p>
+
+                <div
+                  style="
+                    margin-top:18px;
+                    padding:11px;
+                    border-radius:12px;
+                    background:#f5f8fc;
+                    color:#607080;
+                    font-size:13px;
+                    font-weight:600;
+                  "
+                >
+                  Vérification bientôt disponible
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        document
+          .getElementById(
+            "monexaVerificationBack"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              modal.remove();
+              document.body.style.overflow = "";
+
+            }
+          );
+      }
+
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+    },
+    true
+  );
+
+})();
+  </script>
   
 
 </body>
