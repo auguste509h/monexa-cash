@@ -12336,6 +12336,216 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
          </script>
+
+ <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const item =
+        event.target.closest(
+          '[data-profile-section="terms"]'
+        );
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      let modal =
+        document.getElementById(
+          "monexaTermsModal"
+        );
+
+      if (!modal) {
+
+        modal =
+          document.createElement("div");
+
+        modal.id =
+          "monexaTermsModal";
+
+        modal.style.cssText = `
+          position:fixed;
+          inset:0;
+          z-index:100000006;
+          background:#f5f8fc;
+          overflow-y:auto;
+          font-family:Arial,sans-serif;
+        `;
+
+        modal.innerHTML = `
+          <div
+            style="
+              max-width:520px;
+              min-height:100%;
+              margin:auto;
+              background:#ffffff;
+            "
+          >
+
+            <div
+              style="
+                background:#071a33;
+                color:white;
+                padding:18px;
+              "
+            >
+
+              <button
+                id="monexaTermsBack"
+                type="button"
+                style="
+                  border:0;
+                  background:transparent;
+                  color:white;
+                  font-size:27px;
+                  cursor:pointer;
+                "
+              >
+                ←
+              </button>
+
+              <h2
+                style="
+                  margin:18px 0 4px;
+                  font-size:22px;
+                "
+              >
+                Conditions & confidentialité
+              </h2>
+
+              <div
+                style="
+                  color:#b8c8d9;
+                  font-size:13px;
+                "
+              >
+                Informations légales de MONEXA CASH
+              </div>
+
+            </div>
+
+            <div
+              style="
+                padding:22px;
+                color:#243447;
+                font-size:14px;
+                line-height:1.7;
+              "
+            >
+
+              <h3
+                style="
+                  color:#071a33;
+                  font-size:17px;
+                "
+              >
+                Conditions d'utilisation
+              </h3>
+
+              <p>
+                MONEXA CASH est une plateforme de services
+                financiers numériques permettant aux utilisateurs
+                d'utiliser différents services disponibles sur
+                leur compte.
+              </p>
+
+              <p>
+                L'utilisateur est responsable des informations
+                fournies lors de la création et de l'utilisation
+                de son compte.
+              </p>
+
+              <h3
+                style="
+                  margin-top:26px;
+                  color:#071a33;
+                  font-size:17px;
+                "
+              >
+                Confidentialité
+              </h3>
+
+              <p>
+                MONEXA CASH protège les informations liées au
+                compte de chaque utilisateur et les utilise
+                uniquement dans le cadre du fonctionnement
+                de la plateforme et de ses services.
+              </p>
+
+              <p>
+                Les informations personnelles ne doivent pas être
+                partagées avec des tiers sauf lorsque cela est
+                nécessaire au fonctionnement du service ou
+                lorsque la loi l'exige.
+              </p>
+
+              <h3
+                style="
+                  margin-top:26px;
+                  color:#071a33;
+                  font-size:17px;
+                "
+              >
+                Sécurité du compte
+              </h3>
+
+              <p>
+                L'utilisateur doit conserver son mot de passe
+                et son PIN confidentiels et ne jamais les
+                communiquer à une autre personne.
+              </p>
+
+              <div
+                style="
+                  margin-top:22px;
+                  padding:14px;
+                  border-radius:13px;
+                  background:#f5f8fc;
+                  color:#718096;
+                  font-size:12px;
+                "
+              >
+                Cette section pourra être complétée avec les
+                conditions et informations légales définitives
+                de MONEXA CASH.
+              </div>
+
+            </div>
+
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        document
+          .getElementById(
+            "monexaTermsBack"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              modal.remove();
+              document.body.style.overflow = "";
+
+            }
+          );
+      }
+
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+    },
+    true
+  );
+
+})();
+ </script>
   
 
 </body>
