@@ -12546,6 +12546,251 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
  </script>
+
+ <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const item =
+        event.target.closest(
+          '[data-profile-section="about"]'
+        );
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      let modal =
+        document.getElementById(
+          "monexaAboutModal"
+        );
+
+      if (!modal) {
+
+        modal =
+          document.createElement("div");
+
+        modal.id =
+          "monexaAboutModal";
+
+        modal.style.cssText = `
+          position:fixed;
+          inset:0;
+          z-index:100000007;
+          background:#f5f8fc;
+          overflow-y:auto;
+          font-family:Arial,sans-serif;
+        `;
+
+        modal.innerHTML = `
+          <div
+            style="
+              max-width:520px;
+              min-height:100%;
+              margin:auto;
+              background:#ffffff;
+            "
+          >
+
+            <div
+              style="
+                background:#071a33;
+                color:white;
+                padding:18px;
+              "
+            >
+
+              <button
+                id="monexaAboutBack"
+                type="button"
+                style="
+                  border:0;
+                  background:transparent;
+                  color:white;
+                  font-size:27px;
+                  cursor:pointer;
+                "
+              >
+                ←
+              </button>
+
+              <h2
+                style="
+                  margin:18px 0 4px;
+                  font-size:22px;
+                "
+              >
+                À propos de MONEXA CASH
+              </h2>
+
+              <div
+                style="
+                  color:#b8c8d9;
+                  font-size:13px;
+                "
+              >
+                Informations sur la plateforme
+              </div>
+
+            </div>
+
+            <div style="padding:22px;">
+
+              <div
+                style="
+                  text-align:center;
+                  padding:24px 18px;
+                "
+              >
+
+                <div
+                  style="
+                    width:72px;
+                    height:72px;
+                    margin:auto;
+                    border-radius:20px;
+                    background:#071a33;
+                    color:#10c7d9;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:27px;
+                    font-weight:900;
+                  "
+                >
+                  MC
+                </div>
+
+                <h3
+                  style="
+                    margin:16px 0 5px;
+                    color:#071a33;
+                    font-size:21px;
+                  "
+                >
+                  MONEXA CASH
+                </h3>
+
+                <div
+                  style="
+                    color:#718096;
+                    font-size:13px;
+                  "
+                >
+                  Plateforme de services financiers numériques
+                </div>
+
+              </div>
+
+              <div
+                style="
+                  padding:18px;
+                  border-radius:16px;
+                  background:#f5f8fc;
+                  color:#243447;
+                  font-size:14px;
+                  line-height:1.6;
+                "
+              >
+
+                <strong
+                  style="
+                    color:#071a33;
+                    display:block;
+                    margin-bottom:8px;
+                  "
+                >
+                  MONEXA CASH
+                </strong>
+
+                MONEXA CASH permet aux utilisateurs de gérer
+                leur solde et d'accéder aux différents services
+                disponibles sur la plateforme.
+
+              </div>
+
+              <div
+                style="
+                  margin-top:14px;
+                  padding:18px;
+                  border:1px solid #edf1f5;
+                  border-radius:16px;
+                "
+              >
+
+                <div
+                  style="
+                    color:#071a33;
+                    font-weight:800;
+                    font-size:14px;
+                  "
+                >
+                  Services disponibles
+                </div>
+
+                <div
+                  style="
+                    margin-top:10px;
+                    color:#718096;
+                    font-size:13px;
+                    line-height:1.8;
+                  "
+                >
+                  Recharge · Retrait · Free Fire · Binance
+                  · Dépôt · Envoyer · Retirer
+                </div>
+
+              </div>
+
+              <div
+                style="
+                  margin-top:14px;
+                  text-align:center;
+                  color:#9aa6b2;
+                  font-size:12px;
+                "
+              >
+                MONEXA CASH
+                <br>
+                Version 1.0
+              </div>
+
+            </div>
+
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        document
+          .getElementById(
+            "monexaAboutBack"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              modal.remove();
+              document.body.style.overflow = "";
+
+            }
+          );
+      }
+
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+    },
+    true
+  );
+
+})();
+ </script>
   
 
 </body>
