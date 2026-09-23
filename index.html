@@ -11455,6 +11455,331 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const item =
+        event.target.closest(
+          '[data-profile-section="notifications"]'
+        );
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      let panel =
+        document.getElementById(
+          "monexaProfileNotifications"
+        );
+
+      if (!panel) {
+
+        panel =
+          document.createElement("div");
+
+        panel.id =
+          "monexaProfileNotifications";
+
+        panel.style.cssText = `
+          position:fixed;
+          inset:0;
+          z-index:100000002;
+          background:#f5f8fc;
+          overflow-y:auto;
+          font-family:Arial,sans-serif;
+        `;
+
+        panel.innerHTML = `
+          <div
+            style="
+              max-width:520px;
+              min-height:100%;
+              margin:auto;
+              background:#ffffff;
+            "
+          >
+
+            <div
+              style="
+                background:#071a33;
+                color:white;
+                padding:18px;
+              "
+            >
+
+              <button
+                id="monexaProfileNotificationsBack"
+                type="button"
+                style="
+                  border:0;
+                  background:transparent;
+                  color:white;
+                  font-size:27px;
+                  cursor:pointer;
+                "
+              >
+                ←
+              </button>
+
+              <h2
+                style="
+                  margin:18px 0 4px;
+                  font-size:22px;
+                "
+              >
+                Notifications
+              </h2>
+
+              <div
+                style="
+                  color:#b8c8d9;
+                  font-size:13px;
+                "
+              >
+                Vos dernières notifications
+              </div>
+
+            </div>
+
+            <div
+              id="monexaProfileNotificationsList"
+              style="padding:18px;"
+            >
+              <div
+                style="
+                  padding:20px;
+                  text-align:center;
+                  color:#718096;
+                "
+              >
+                Chargement...
+              </div>
+            </div>
+
+          </div>
+        `;
+
+        document.body.appendChild(panel);
+
+        document
+          .getElementById(
+            "monexaProfileNotificationsBack"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              panel.remove();
+              document.body.style.overflow = "";
+
+            }
+          );
+      }
+
+      panel.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+      loadProfileNotifications();
+
+      async function loadProfileNotifications() {
+
+        const list =
+          document.getElementById(
+            "monexaProfileNotificationsList"
+          );
+
+        if (!list) return;
+
+        try {
+
+          const {
+            data: { user }
+          } =
+            await window.monexaSupabase.auth.getUser();
+
+          if (!user) {
+            list.innerHTML = `
+              <div
+                style="
+                  padding:20px;
+                  text-align:center;
+                  color:#718096;
+                "
+              >
+                Session utilisateur introuvable.
+              </div>
+            `;
+            return;
+          }
+
+          const { data, error } =
+            await window.monexaSupabase
+              .from("notifications")
+              .select(
+                "id,title,message,is_read,created_at"
+              )
+              .eq("user_id", user.id)
+              .order(
+                "created_at",
+                { ascending:false }
+              )
+              .limit(50);
+
+          if (error) {
+            throw error;
+          }
+
+          if (!data || data.length === 0) {
+
+            list.innerHTML = `
+              <div
+                style="
+                  padding:35px 20px;
+                  text-align:center;
+                  color:#718096;
+                "
+              >
+                <div style="font-size:32px;">
+                  🔔
+                </div>
+
+                <div
+                  style="
+                    margin-top:10px;
+                    font-weight:700;
+                    color:#071a33;
+                  "
+                >
+                  Aucune notification
+                </div>
+
+                <div
+                  style="
+                    margin-top:6px;
+                    font-size:13px;
+                  "
+                >
+                  Vous recevrez vos notifications ici.
+                </div>
+              </div>
+            `;
+
+            return;
+          }
+
+          list.innerHTML = "";
+
+          data.forEach(function (notification) {
+
+            const card =
+              document.createElement("div");
+
+            card.style.cssText = `
+              padding:16px;
+              margin-bottom:12px;
+              border:1px solid #e7edf3;
+              border-radius:16px;
+              background:${notification.is_read ? "#ffffff" : "#eefcff"};
+            `;
+
+            const date =
+              notification.created_at
+                ? new Date(
+                    notification.created_at
+                  ).toLocaleString(
+                    "fr-FR"
+                  )
+                : "";
+
+            card.innerHTML = `
+              <div
+                style="
+                  display:flex;
+                  align-items:center;
+                  gap:10px;
+                "
+              >
+
+                <div
+                  style="
+                    font-size:21px;
+                  "
+                >
+                  ${notification.is_read ? "🔔" : "🔵"}
+                </div>
+
+                <strong
+                  style="
+                    color:#071a33;
+                    font-size:15px;
+                  "
+                >
+                  ${notification.title || "Notification"}
+                </strong>
+
+              </div>
+
+              <div
+                style="
+                  margin-top:9px;
+                  color:#536273;
+                  font-size:13px;
+                  line-height:1.5;
+                "
+              >
+                ${notification.message || ""}
+              </div>
+
+              <div
+                style="
+                  margin-top:9px;
+                  color:#9aa6b2;
+                  font-size:11px;
+                "
+              >
+                ${date}
+              </div>
+            `;
+
+            list.appendChild(card);
+
+          });
+
+        } catch (error) {
+
+          console.error(
+            "MONEXA CASH Notifications:",
+            error
+          );
+
+          list.innerHTML = `
+            <div
+              style="
+                padding:20px;
+                text-align:center;
+                color:#d92d35;
+              "
+            >
+              Impossible de charger les notifications.
+            </div>
+          `;
+
+        }
+      }
+
+    },
+    true
+  );
+
+})();
+        </script>
   
 
 </body>
