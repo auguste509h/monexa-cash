@@ -1875,13 +1875,31 @@ async function monexaRegister(){
                 return;
               }
 
-              alert(
-                "Cette section sera configurée dans MONEXA CASH."
-              );
-            }
-          );
+              if (
+  section === "language"
+) {
 
-        });
+  const languageModal =
+    document.getElementById(
+      "monexaLanguageModal"
+    );
+
+  if (languageModal) {
+    languageModal.style.display =
+      "block";
+
+    document.body.style.overflow =
+      "hidden";
+
+    return;
+  }
+
+  alert(
+    "Le menu des langues est en cours de chargement."
+  );
+
+  return;
+ }
 
       document
         .getElementById(
