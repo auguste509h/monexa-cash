@@ -9864,6 +9864,685 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  function createPremiumProfile() {
+
+    if (document.getElementById("monexaPremiumProfile")) {
+      return;
+    }
+
+    const style = document.createElement("style");
+
+    style.textContent = `
+      #monexaPremiumProfile {
+        position: fixed;
+        inset: 0;
+        z-index: 10000080;
+        display: none;
+        background: #f6f9fc;
+        overflow-y: auto;
+      }
+
+      #monexaPremiumProfile .mc-profile-page {
+        width: 100%;
+        max-width: 520px;
+        min-height: 100%;
+        margin: 0 auto;
+        background: #f6f9fc;
+      }
+
+      #monexaPremiumProfile .mc-profile-header {
+        background: linear-gradient(145deg,#071d38,#0b3159);
+        color: #fff;
+        padding: 26px 20px 30px;
+        border-radius: 0 0 28px 28px;
+      }
+
+      #monexaPremiumProfile .mc-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      #monexaPremiumProfile .mc-back {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 13px;
+        background: rgba(255,255,255,.12);
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      #monexaPremiumProfile .mc-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: #19d3c5;
+        color: #071d38;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 20px;
+      }
+
+      #monexaPremiumProfile .mc-user-info {
+        min-width: 0;
+        flex: 1;
+      }
+
+      #monexaPremiumProfile .mc-user-name {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #monexaPremiumProfile .mc-user-email {
+        margin-top: 4px;
+        font-size: 13px;
+        color: #cbd8e7;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #monexaPremiumProfile .mc-body {
+        padding: 18px 16px 35px;
+      }
+
+      #monexaPremiumProfile .mc-section-title {
+        margin: 18px 4px 8px;
+        color: #718096;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+      }
+
+      #monexaPremiumProfile .mc-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #e7edf3;
+      }
+
+      #monexaPremiumProfile .mc-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 15px;
+        border: 0;
+        border-bottom: 1px solid #edf1f5;
+        background: #fff;
+        text-align: left;
+        cursor: pointer;
+        color: #071d38;
+      }
+
+      #monexaPremiumProfile .mc-row:last-child {
+        border-bottom: 0;
+      }
+
+      #monexaPremiumProfile .mc-icon {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        border-radius: 12px;
+        background: #eefaf9;
+        color: #0f766e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      #monexaPremiumProfile .mc-row-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      #monexaPremiumProfile .mc-row-title {
+        font-size: 15px;
+        font-weight: 750;
+      }
+
+      #monexaPremiumProfile .mc-row-sub {
+        margin-top: 3px;
+        color: #7b8794;
+        font-size: 12px;
+      }
+
+      #monexaPremiumProfile .mc-arrow {
+        color: #9aa7b5;
+        font-size: 20px;
+      }
+
+      #monexaPremiumProfile .mc-danger .mc-icon {
+        background: #fff1f2;
+        color: #dc2626;
+      }
+
+      #monexaPremiumProfile .mc-danger {
+        color: #dc2626;
+      }
+
+      #monexaPremiumProfile .mc-logout {
+        margin-top: 14px;
+        border-radius: 16px;
+        color: #dc2626;
+        font-weight: 800;
+      }
+
+      @media (min-width: 521px) {
+        #monexaPremiumProfile {
+          background: rgba(7,29,56,.55);
+          padding: 20px;
+          box-sizing: border-box;
+        }
+
+        #monexaPremiumProfile .mc-profile-page {
+          border-radius: 28px;
+          overflow: hidden;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+
+    const panel = document.createElement("div");
+
+    panel.id = "monexaPremiumProfile";
+
+    panel.innerHTML = `
+      <div class="mc-profile-page">
+
+        <div class="mc-profile-header">
+
+          <div class="mc-top">
+
+            <button
+              type="button"
+              class="mc-back"
+              id="mcPremiumProfileBack">
+              ‹
+            </button>
+
+            <div class="mc-avatar">
+              MC
+            </div>
+
+            <div class="mc-user-info">
+              <h2
+                class="mc-user-name"
+                id="mcPremiumProfileName">
+                Client
+              </h2>
+
+              <div
+                class="mc-user-email"
+                id="mcPremiumProfileEmail">
+                —
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="mc-body">
+
+          <div class="mc-section-title">
+            Mon compte
+          </div>
+
+          <div class="mc-card">
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="personal">
+
+              <div class="mc-icon">👤</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Informations personnelles
+                </div>
+
+                <div class="mc-row-sub">
+                  Nom et numéro de téléphone
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="verification">
+
+              <div class="mc-icon">✓</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Vérification du compte
+                </div>
+
+                <div class="mc-row-sub">
+                  Vérification d'identité
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+          </div>
+
+          <div class="mc-section-title">
+            Préférences et sécurité
+          </div>
+
+          <div class="mc-card">
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="security">
+
+              <div class="mc-icon">🔐</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Sécurité
+                </div>
+
+                <div class="mc-row-sub">
+                  PIN et protection du compte
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="notifications">
+
+              <div class="mc-icon">🔔</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Notifications
+                </div>
+
+                <div class="mc-row-sub">
+                  Gérer vos notifications
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="language">
+
+              <div class="mc-icon">🌐</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Langue
+                </div>
+
+                <div class="mc-row-sub">
+                  Français
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="appearance">
+
+              <div class="mc-icon">◐</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Apparence
+                </div>
+
+                <div class="mc-row-sub">
+                  Thème de l'application
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+          </div>
+
+          <div class="mc-section-title">
+            Aide et informations
+          </div>
+
+          <div class="mc-card">
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="support">
+
+              <div class="mc-icon">💬</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Assistance
+                </div>
+
+                <div class="mc-row-sub">
+                  Besoin d'aide ?
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="terms">
+
+              <div class="mc-icon">📄</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Conditions & confidentialité
+                </div>
+
+                <div class="mc-row-sub">
+                  Règles et protection des données
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+            <button
+              type="button"
+              class="mc-row"
+              data-profile-section="about">
+
+              <div class="mc-icon">ⓘ</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  À propos de MONEXA CASH
+                </div>
+
+                <div class="mc-row-sub">
+                  Informations sur la plateforme
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+          </div>
+
+          <div class="mc-card mc-logout">
+
+            <button
+              type="button"
+              class="mc-row mc-danger"
+              id="mcPremiumLogout">
+
+              <div class="mc-icon">↪</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Se déconnecter
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+          </div>
+
+          <div class="mc-card" style="margin-top:10px;">
+
+            <button
+              type="button"
+              class="mc-row mc-danger"
+              id="mcPremiumDelete">
+
+              <div class="mc-icon">🗑</div>
+
+              <div class="mc-row-text">
+                <div class="mc-row-title">
+                  Supprimer le compte
+                </div>
+
+                <div class="mc-row-sub">
+                  Action définitive
+                </div>
+              </div>
+
+              <div class="mc-arrow">›</div>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(panel);
+
+    async function loadUser() {
+
+      if (!window.monexaSupabase) {
+        return;
+      }
+
+      const result =
+        await window.monexaSupabase.auth.getUser();
+
+      const user = result.data?.user;
+
+      if (!user) {
+        return;
+      }
+
+      const name =
+        user.user_metadata?.full_name ||
+        user.email?.split("@")[0] ||
+        "Client";
+
+      const nameElement =
+        document.getElementById(
+          "mcPremiumProfileName"
+        );
+
+      const emailElement =
+        document.getElementById(
+          "mcPremiumProfileEmail"
+        );
+
+      if (nameElement) {
+        nameElement.textContent = name;
+      }
+
+      if (emailElement) {
+        emailElement.textContent =
+          user.email || "—";
+      }
+    }
+
+    function openProfile() {
+
+      loadUser();
+
+      panel.style.display = "block";
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeProfile() {
+
+      panel.style.display = "none";
+      document.body.style.overflow = "";
+    }
+
+    document
+      .getElementById("mcPremiumProfileBack")
+      .onclick = closeProfile;
+
+    document
+      .getElementById("mcPremiumLogout")
+      .onclick = async function () {
+
+        if (!window.monexaSupabase) {
+          return;
+        }
+
+        await window.monexaSupabase.auth.signOut();
+
+        closeProfile();
+      };
+
+    document
+      .getElementById("mcPremiumDelete")
+      .onclick = function () {
+
+        alert(
+          "La suppression du compte sera disponible après activation de la procédure sécurisée."
+        );
+      };
+
+    panel
+      .querySelectorAll("[data-profile-section]")
+      .forEach(function (item) {
+
+        item.addEventListener(
+          "click",
+          function () {
+
+            const section =
+              item.dataset.profileSection;
+
+            if (section === "security") {
+
+              const changePin =
+                document.getElementById(
+                  "monexaChangePinButton"
+                );
+
+              if (changePin) {
+                changePin.click();
+              } else {
+                alert(
+                  "La section Sécurité sera disponible prochainement."
+                );
+              }
+
+              return;
+            }
+
+            if (section === "support") {
+
+              window.open(
+                "https://wa.me/50940886629?text=Bonjour%20MONEXA%20CASH%2C%20j%27ai%20besoin%20d%27assistance.",
+                "_blank"
+              );
+
+              return;
+            }
+
+            if (section === "notifications") {
+
+              const notificationButton =
+                document.getElementById(
+                  "monexaNotificationButton"
+                );
+
+              if (notificationButton) {
+                notificationButton.click();
+              } else {
+                alert(
+                  "Les notifications seront disponibles prochainement."
+                );
+              }
+
+              return;
+            }
+
+            alert(
+              "Cette section sera configurée dans la prochaine étape."
+            );
+          }
+        );
+      });
+
+    document.addEventListener(
+      "click",
+      function (event) {
+
+        const button =
+          event.target.closest(
+            "#profileButton, #profileBtn, .profile-button, [data-profile]"
+          );
+
+        if (!button) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        openProfile();
+      },
+      true
+    );
+
+    window.monexaOpenPremiumProfile =
+      openProfile;
+  }
+
+  setTimeout(
+    createPremiumProfile,
+    1500
+  );
+
+})();
+  </script>
   
 
 </body>
