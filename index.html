@@ -1929,21 +1929,9 @@ async function monexaRegister(){
     "click",
     function () {
 
-      const deleteButton =
-        document.getElementById(
-          "monexaPremiumDelete"
-        );
-
-      if (deleteButton) {
-        deleteButton.dispatchEvent(
-          new CustomEvent(
-            "monexa-delete-account-request",
-            {
-              bubbles: true
-            }
-          )
-        );
-      }
+      alert(
+        "La suppression du compte sera configurée dans la prochaine étape."
+      );
 
     }
   );
