@@ -12791,6 +12791,183 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
  </script>
+
+ <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const button =
+        event.target.closest(
+          "#monexaPremiumDelete"
+        );
+
+      if (!button) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      let modal =
+        document.getElementById(
+          "monexaDeleteAccountModal"
+        );
+
+      if (!modal) {
+
+        modal =
+          document.createElement("div");
+
+        modal.id =
+          "monexaDeleteAccountModal";
+
+        modal.style.cssText = `
+          position:fixed;
+          inset:0;
+          z-index:100000008;
+          background:rgba(7,26,51,.55);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          padding:20px;
+          font-family:Arial,sans-serif;
+        `;
+
+        modal.innerHTML = `
+          <div
+            style="
+              width:100%;
+              max-width:420px;
+              background:#ffffff;
+              border-radius:20px;
+              padding:24px;
+              box-sizing:border-box;
+            "
+          >
+
+            <div
+              style="
+                width:52px;
+                height:52px;
+                border-radius:15px;
+                background:#fff1f1;
+                color:#d92d35;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:25px;
+                margin-bottom:16px;
+              "
+            >
+              ⚠️
+            </div>
+
+            <h3
+              style="
+                margin:0;
+                color:#071a33;
+                font-size:19px;
+              "
+            >
+              Supprimer le compte ?
+            </h3>
+
+            <p
+              style="
+                margin:10px 0 20px;
+                color:#718096;
+                font-size:13px;
+                line-height:1.6;
+              "
+            >
+              La suppression du compte est une action
+              définitive. Vérifiez vos informations avant
+              de continuer.
+            </p>
+
+            <button
+              id="monexaDeleteCancel"
+              type="button"
+              style="
+                width:100%;
+                padding:14px;
+                border:1px solid #dfe7ef;
+                border-radius:13px;
+                background:#ffffff;
+                color:#071a33;
+                font-size:14px;
+                font-weight:800;
+                cursor:pointer;
+              "
+            >
+              Annuler
+            </button>
+
+            <button
+              id="monexaDeleteContinue"
+              type="button"
+              style="
+                width:100%;
+                margin-top:10px;
+                padding:14px;
+                border:0;
+                border-radius:13px;
+                background:#d92d35;
+                color:#ffffff;
+                font-size:14px;
+                font-weight:800;
+                cursor:pointer;
+              "
+            >
+              Continuer
+            </button>
+
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        document
+          .getElementById(
+            "monexaDeleteCancel"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              modal.remove();
+              document.body.style.overflow = "";
+
+            }
+          );
+
+        document
+          .getElementById(
+            "monexaDeleteContinue"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              alert(
+                "La suppression définitive du compte sera configurée dans une prochaine étape."
+              );
+
+            }
+          );
+      }
+
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+
+    },
+    true
+  );
+
+})();
+ </script>
   
 
 </body>
