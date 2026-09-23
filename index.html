@@ -13003,6 +13003,296 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
  </script>
+
+ <script>
+(function(){
+  "use strict";
+
+  function openMonexaTransactions(){
+
+    let modal =
+      document.getElementById("monexaAllTransactions");
+
+    if(!modal){
+
+      modal = document.createElement("div");
+
+      modal.id = "monexaAllTransactions";
+
+      modal.style.cssText =
+        "position:fixed;inset:0;z-index:9999999;" +
+        "background:#f8fafc;display:flex;flex-direction:column;" +
+        "overflow:hidden;";
+
+      modal.innerHTML = `
+        <div style="
+          background:#071a33;
+          color:white;
+          padding:18px;
+          display:flex;
+          align-items:center;
+          gap:14px;
+        ">
+          <button
+            id="monexaTransactionsBack"
+            type="button"
+            style="
+              border:0;
+              background:rgba(255,255,255,.12);
+              color:white;
+              width:42px;
+              height:42px;
+              border-radius:12px;
+              font-size:22px;
+            "
+          >‹</button>
+
+          <div>
+            <div style="font-size:19px;font-weight:800;">
+              Transactions
+            </div>
+            <div style="font-size:12px;opacity:.7;">
+              Historique de votre portefeuille
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="monexaAllTransactionsList"
+          style="
+            flex:1;
+            overflow-y:auto;
+            padding:16px;
+          "
+        >
+          <div style="
+            text-align:center;
+            padding:40px 20px;
+            color:#64748b;
+          ">
+            Chargement...
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      document
+        .getElementById("monexaTransactionsBack")
+        .addEventListener("click",function(){
+          modal.style.display="none";
+          document.body.style.overflow="";
+        });
+    }
+
+    modal.style.display="flex";
+    document.body.style.overflow="hidden";
+
+    monexaLoadAllTransactions();
+  }
+
+  async function monexaLoadAllTransactions(){
+
+    const container =
+      document.getElementById(
+        "monexaAllTransactionsList"
+      );
+
+    if(!container || !window.monexaSupabase)return;
+
+    const {
+      data:{user},
+      error:userError
+    } =
+      await window.monexaSupabase.auth.getUser();
+
+    if(userError || !user){
+      container.innerHTML =
+        "<div style='text-align:center;padding:30px;'>Session expirée.</div>";
+      return;
+    }
+
+    const result =
+      await window.monexaSupabase
+        .from("transactions")
+        .select(
+          "id,type,amount_htg,balance_before,balance_after,reference,description,created_at"
+        )
+        .eq("user_id",user.id)
+        .order("created_at",{ascending:false});
+
+    if(result.error){
+
+      console.error(
+        "Erreur historique transactions:",
+        result.error
+      );
+
+      container.innerHTML =
+        "<div style='text-align:center;padding:30px;color:#dc2626;'>Impossible de charger les transactions.</div>";
+
+      return;
+    }
+
+    const transactions =
+      result.data || [];
+
+    if(!transactions.length){
+
+      container.innerHTML = `
+        <div style="
+          text-align:center;
+          padding:60px 20px;
+          color:#64748b;
+        ">
+          <div style="
+            font-size:42px;
+            margin-bottom:14px;
+          ">↕</div>
+
+          <strong style="
+            display:block;
+            font-size:17px;
+            color:#0f172a;
+            margin-bottom:7px;
+          ">
+            Aucune transaction
+          </strong>
+
+          <div style="font-size:13px;">
+            Vos transactions apparaîtront ici.
+          </div>
+        </div>
+      `;
+
+      return;
+    }
+
+    container.innerHTML =
+      transactions.map(function(tx){
+
+        const amount =
+          Number(tx.amount_htg || 0);
+
+        const positive =
+          amount >= 0;
+
+        const sign =
+          positive ? "+" : "";
+
+        const date =
+          tx.created_at
+            ? new Date(tx.created_at)
+                .toLocaleString("fr-FR",{
+                  day:"2-digit",
+                  month:"2-digit",
+                  year:"numeric",
+                  hour:"2-digit",
+                  minute:"2-digit"
+                })
+            : "";
+
+        const description =
+          tx.description ||
+          tx.type ||
+          "Transaction";
+
+        return `
+          <div style="
+            background:white;
+            border:1px solid #e2e8f0;
+            border-radius:16px;
+            padding:15px;
+            margin-bottom:10px;
+          ">
+
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              gap:12px;
+              align-items:flex-start;
+            ">
+
+              <div style="min-width:0;">
+
+                <div style="
+                  font-weight:800;
+                  color:#0f172a;
+                  font-size:14px;
+                ">
+                  ${description}
+                </div>
+
+                <div style="
+                  color:#64748b;
+                  font-size:11px;
+                  margin-top:5px;
+                ">
+                  ${date}
+                </div>
+
+              </div>
+
+              <div style="
+                font-weight:900;
+                font-size:15px;
+                white-space:nowrap;
+                color:${positive ? "#059669" : "#dc2626"};
+              ">
+                ${sign}${amount.toLocaleString("fr-FR",{
+                  minimumFractionDigits:2,
+                  maximumFractionDigits:2
+                })} HTG
+              </div>
+
+            </div>
+
+            <div style="
+              margin-top:12px;
+              padding-top:10px;
+              border-top:1px solid #f1f5f9;
+              font-size:12px;
+              color:#64748b;
+            ">
+              Solde après :
+              <strong style="color:#0f172a;">
+                ${Number(tx.balance_after || 0).toLocaleString("fr-FR",{
+                  minimumFractionDigits:2,
+                  maximumFractionDigits:2
+                })} HTG
+              </strong>
+            </div>
+
+          </div>
+        `;
+      }).join("");
+  }
+
+  document.addEventListener("click",function(event){
+
+    const button =
+      event.target.closest("button");
+
+    if(!button)return;
+
+    const text =
+      (button.innerText || "")
+        .replace(/\s+/g," ")
+        .trim()
+        .toLowerCase();
+
+    if(text === "voir tout"){
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      openMonexaTransactions();
+    }
+
+  },true);
+
+})();
+     </script>
   
 
 </body>
