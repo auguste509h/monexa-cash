@@ -11900,6 +11900,49 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+ <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const item =
+        event.target.closest(
+          '.monexa-profile-item[data-profile-section="language"]'
+        );
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      const modal =
+        document.getElementById(
+          "monexaLanguageModal"
+        );
+
+      if (!modal) {
+        alert(
+          "Le menu des langues est indisponible pour le moment."
+        );
+        return;
+      }
+
+      modal.style.display = "flex";
+      modal.style.visibility = "visible";
+      modal.style.opacity = "1";
+      modal.style.pointerEvents = "auto";
+
+      document.body.style.overflow = "hidden";
+    },
+    true
+  );
+
+})();
+ </script>
   
 
 </body>
