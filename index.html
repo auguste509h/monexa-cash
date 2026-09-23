@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -11780,6 +11780,108 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
         </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  const languages = [
+    {
+      code: "fr",
+      name: "Français",
+      flag: "🇫🇷"
+    },
+    {
+      code: "ht",
+      name: "Kreyòl ayisyen",
+      flag: "🇭🇹"
+    },
+    {
+      code: "en",
+      name: "English",
+      flag: "🇺🇸"
+    },
+    {
+      code: "es",
+      name: "Español",
+      flag: "🇪🇸"
+    }
+  ];
+
+  window.monexaLanguages =
+    languages;
+
+  window.monexaCurrentLanguage =
+    localStorage.getItem(
+      "monexa-language"
+    ) || "fr";
+
+  window.monexaSetLanguage =
+    function (code) {
+
+      const exists =
+        languages.some(
+          function (language) {
+            return language.code === code;
+          }
+        );
+
+      if (!exists) {
+        code = "fr";
+      }
+
+      window.monexaCurrentLanguage =
+        code;
+
+      localStorage.setItem(
+        "monexa-language",
+        code
+      );
+
+      document.documentElement
+        .setAttribute(
+          "lang",
+          code
+        );
+
+      document.dispatchEvent(
+        new CustomEvent(
+          "monexa-language-changed",
+          {
+            detail: {
+              language: code
+            }
+          }
+        )
+      );
+
+      if (
+        typeof window
+          .monexaApplyTranslations ===
+        "function"
+      ) {
+        window.monexaApplyTranslations(
+          code
+        );
+      }
+    };
+
+  window.monexaGetLanguage =
+    function () {
+      return (
+        window.monexaCurrentLanguage ||
+        "fr"
+      );
+    };
+
+  document.documentElement
+    .setAttribute(
+      "lang",
+      window.monexaCurrentLanguage
+    );
+
+})();
+  </script>
   
 
 </body>
