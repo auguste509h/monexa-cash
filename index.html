@@ -13293,6 +13293,74 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
      </script>
+
+ <script>
+(function(){
+  "use strict";
+
+  document.addEventListener("click",function(event){
+
+    const button =
+      event.target.closest(".bottom-nav .nav-btn");
+
+    if(!button)return;
+
+    const text =
+      (button.innerText || "")
+        .replace(/\s+/g," ")
+        .trim()
+        .toLowerCase();
+
+    if(text.includes("transactions")){
+      event.preventDefault();
+
+      if(typeof openMonexaTransactions === "function"){
+        openMonexaTransactions();
+      }else{
+        const modal =
+          document.getElementById(
+            "monexaAllTransactions"
+          );
+
+        if(modal){
+          modal.style.display="flex";
+          document.body.style.overflow="hidden";
+        }
+      }
+
+      return;
+    }
+
+    if(text.includes("accueil")){
+      event.preventDefault();
+
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
+
+      return;
+    }
+
+    if(text.includes("services")){
+      event.preventDefault();
+
+      const services =
+        document.querySelector(".services");
+
+      if(services){
+        services.scrollIntoView({
+          behavior:"smooth",
+          block:"start"
+        });
+      }
+
+    }
+
+  },true);
+
+})();
+ </script>
   
 
 </body>
