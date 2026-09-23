@@ -11007,6 +11007,265 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
   </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    async function (event) {
+
+      const item =
+        event.target.closest(
+          '[data-profile-section="personal"]'
+        );
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      let modal =
+        document.getElementById(
+          "monexaPersonalInfoModal"
+        );
+
+      if (!modal) {
+
+        modal =
+          document.createElement("div");
+
+        modal.id =
+          "monexaPersonalInfoModal";
+
+        modal.style.cssText = `
+          position:fixed;
+          inset:0;
+          z-index:100000000;
+          background:#f5f8fc;
+          overflow-y:auto;
+          font-family:Arial,sans-serif;
+        `;
+
+        modal.innerHTML = `
+          <div
+            style="
+              max-width:520px;
+              min-height:100%;
+              margin:auto;
+              background:#ffffff;
+            "
+          >
+
+            <div
+              style="
+                background:#071a33;
+                color:white;
+                padding:18px;
+              "
+            >
+
+              <button
+                id="monexaPersonalBack"
+                type="button"
+                style="
+                  border:0;
+                  background:transparent;
+                  color:white;
+                  font-size:27px;
+                  cursor:pointer;
+                "
+              >
+                ←
+              </button>
+
+              <h2
+                style="
+                  margin:18px 0 4px;
+                  font-size:22px;
+                "
+              >
+                Informations personnelles
+              </h2>
+
+              <div
+                style="
+                  color:#b8c8d9;
+                  font-size:13px;
+                "
+              >
+                Informations de votre compte
+              </div>
+
+            </div>
+
+            <div style="padding:20px;">
+
+              <div
+                style="
+                  padding:18px;
+                  border:1px solid #e7edf3;
+                  border-radius:16px;
+                  margin-bottom:14px;
+                "
+              >
+                <div
+                  style="
+                    color:#7a8796;
+                    font-size:12px;
+                    margin-bottom:7px;
+                  "
+                >
+                  Nom complet
+                </div>
+
+                <div
+                  id="monexaPersonalName"
+                  style="
+                    color:#071a33;
+                    font-size:16px;
+                    font-weight:700;
+                    word-break:break-word;
+                  "
+                >
+                  —
+                </div>
+              </div>
+
+              <div
+                style="
+                  padding:18px;
+                  border:1px solid #e7edf3;
+                  border-radius:16px;
+                  margin-bottom:14px;
+                "
+              >
+                <div
+                  style="
+                    color:#7a8796;
+                    font-size:12px;
+                    margin-bottom:7px;
+                  "
+                >
+                  Adresse e-mail
+                </div>
+
+                <div
+                  id="monexaPersonalEmail"
+                  style="
+                    color:#071a33;
+                    font-size:16px;
+                    font-weight:700;
+                    word-break:break-word;
+                  "
+                >
+                  —
+                </div>
+              </div>
+
+              <div
+                style="
+                  padding:18px;
+                  border:1px solid #e7edf3;
+                  border-radius:16px;
+                "
+              >
+                <div
+                  style="
+                    color:#7a8796;
+                    font-size:12px;
+                    margin-bottom:7px;
+                  "
+                >
+                  Numéro de téléphone
+                </div>
+
+                <div
+                  id="monexaPersonalPhone"
+                  style="
+                    color:#071a33;
+                    font-size:16px;
+                    font-weight:700;
+                    word-break:break-word;
+                  "
+                >
+                  —
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        document
+          .getElementById(
+            "monexaPersonalBack"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              modal.remove();
+              document.body.style.overflow = "";
+
+            }
+          );
+      }
+
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+      try {
+
+        const {
+          data: { user }
+        } =
+          await window.monexaSupabase.auth.getUser();
+
+        if (!user) return;
+
+        const name =
+          user.user_metadata?.full_name ||
+          "—";
+
+        const email =
+          user.email ||
+          "—";
+
+        const phone =
+          user.user_metadata?.phone ||
+          "—";
+
+        document.getElementById(
+          "monexaPersonalName"
+        ).textContent = name;
+
+        document.getElementById(
+          "monexaPersonalEmail"
+        ).textContent = email;
+
+        document.getElementById(
+          "monexaPersonalPhone"
+        ).textContent = phone;
+
+      } catch (error) {
+
+        console.error(
+          "MONEXA CASH Informations personnelles:",
+          error
+        );
+
+      }
+
+    },
+    true
+  );
+
+})();
+        </script>
   
 
 </body>
