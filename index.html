@@ -9554,6 +9554,42 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
             </script>
+
+  <script>
+(function () {
+  "use strict";
+
+  if (!window.monexaSupabase) {
+    return;
+  }
+
+  window.monexaSupabase.auth.onAuthStateChange(
+    function (event, session) {
+
+      const pinScreen =
+        document.getElementById("monexaPinScreen");
+
+      const authScreen =
+        document.getElementById("authScreen");
+
+      if (!session) {
+
+        if (pinScreen) {
+          pinScreen.style.display = "none";
+        }
+
+        if (authScreen) {
+          authScreen.style.display = "flex";
+        }
+
+        document.body.style.overflow = "";
+      }
+
+    }
+  );
+
+})();
+  </script>
   
 
 </body>
