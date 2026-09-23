@@ -1922,20 +1922,31 @@ async function monexaRegister(){
         );
 
       document
-        .getElementById(
+  .getElementById(
+    "monexaPremiumDelete"
+  )
+  .addEventListener(
+    "click",
+    function () {
+
+      const deleteButton =
+        document.getElementById(
           "monexaPremiumDelete"
-        )
-        .addEventListener(
-          "click",
-          function () {
-
-            alert(
-              "La suppression du compte sera configurée dans la prochaine étape."
-            );
-
-          }
         );
+
+      if (deleteButton) {
+        deleteButton.dispatchEvent(
+          new CustomEvent(
+            "monexa-delete-account-request",
+            {
+              bubbles: true
+            }
+          )
+        );
+      }
+
     }
+  );
 
     premium.style.display = "block";
     document.body.style.overflow = "hidden";
