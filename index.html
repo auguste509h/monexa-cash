@@ -13306,32 +13306,48 @@ binanceConfirmButton.onclick = async function (event) {
     if(!button)return;
 
     const text =
-      (button.innerText || "")
+      (button.innerText || button.textContent || "")
         .replace(/\s+/g," ")
         .trim()
         .toLowerCase();
 
     if(text.includes("transactions")){
+
       event.preventDefault();
+      event.stopImmediatePropagation();
 
-      if(typeof openMonexaTransactions === "function"){
-        openMonexaTransactions();
-      }else{
-        const modal =
-          document.getElementById(
-            "monexaAllTransactions"
-          );
+      const allButtons =
+        document.querySelectorAll("button");
 
-        if(modal){
-          modal.style.display="flex";
-          document.body.style.overflow="hidden";
+      let voirTout = null;
+
+      allButtons.forEach(function(btn){
+
+        const btnText =
+          (btn.innerText || btn.textContent || "")
+            .replace(/\s+/g," ")
+            .trim()
+            .toLowerCase();
+
+        if(btnText === "voir tout"){
+          voirTout = btn;
         }
+
+      });
+
+      if(voirTout){
+        voirTout.click();
+      }else{
+        console.error(
+          "MONEXA CASH : bouton Voir tout introuvable."
+        );
       }
 
       return;
     }
 
     if(text.includes("accueil")){
+
       event.preventDefault();
 
       window.scrollTo({
@@ -13343,16 +13359,19 @@ binanceConfirmButton.onclick = async function (event) {
     }
 
     if(text.includes("services")){
+
       event.preventDefault();
 
       const services =
         document.querySelector(".services");
 
       if(services){
+
         services.scrollIntoView({
           behavior:"smooth",
           block:"start"
         });
+
       }
 
     }
