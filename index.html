@@ -11984,6 +11984,358 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
  </script>
+
+ <script>
+(function () {
+  "use strict";
+
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      const item =
+        event.target.closest(
+          '[data-profile-section="appearance"]'
+        );
+
+      if (!item) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      let modal =
+        document.getElementById(
+          "monexaAppearanceModal"
+        );
+
+      if (!modal) {
+
+        modal =
+          document.createElement("div");
+
+        modal.id =
+          "monexaAppearanceModal";
+
+        modal.style.cssText = `
+          position:fixed;
+          inset:0;
+          z-index:100000004;
+          background:#f5f8fc;
+          overflow-y:auto;
+          font-family:Arial,sans-serif;
+        `;
+
+        modal.innerHTML = `
+          <div
+            style="
+              max-width:520px;
+              min-height:100%;
+              margin:auto;
+              background:#ffffff;
+            "
+          >
+
+            <div
+              style="
+                background:#071a33;
+                color:white;
+                padding:18px;
+              "
+            >
+
+              <button
+                id="monexaAppearanceBack"
+                type="button"
+                style="
+                  border:0;
+                  background:transparent;
+                  color:white;
+                  font-size:27px;
+                  cursor:pointer;
+                "
+              >
+                ←
+              </button>
+
+              <h2
+                style="
+                  margin:18px 0 4px;
+                  font-size:22px;
+                "
+              >
+                Apparence
+              </h2>
+
+              <div
+                style="
+                  color:#b8c8d9;
+                  font-size:13px;
+                "
+              >
+                Choisissez le thème de MONEXA CASH
+              </div>
+
+            </div>
+
+            <div style="padding:20px;">
+
+              <button
+                type="button"
+                data-theme-choice="light"
+                style="
+                  width:100%;
+                  padding:17px;
+                  margin-bottom:12px;
+                  border:1px solid #dfe7ef;
+                  border-radius:16px;
+                  background:#ffffff;
+                  display:flex;
+                  align-items:center;
+                  gap:14px;
+                  text-align:left;
+                  cursor:pointer;
+                "
+              >
+                <span style="font-size:24px;">☀️</span>
+
+                <span style="flex:1;">
+                  <strong
+                    style="
+                      display:block;
+                      color:#071a33;
+                      font-size:15px;
+                    "
+                  >
+                    Mode clair
+                  </strong>
+
+                  <small
+                    style="
+                      display:block;
+                      margin-top:4px;
+                      color:#718096;
+                    "
+                  >
+                    Interface claire
+                  </small>
+                </span>
+
+                <span
+                  data-theme-check="light"
+                  style="
+                    color:#10a6b5;
+                    font-size:20px;
+                  "
+                ></span>
+              </button>
+
+              <button
+                type="button"
+                data-theme-choice="dark"
+                style="
+                  width:100%;
+                  padding:17px;
+                  margin-bottom:12px;
+                  border:1px solid #dfe7ef;
+                  border-radius:16px;
+                  background:#ffffff;
+                  display:flex;
+                  align-items:center;
+                  gap:14px;
+                  text-align:left;
+                  cursor:pointer;
+                "
+              >
+                <span style="font-size:24px;">🌙</span>
+
+                <span style="flex:1;">
+                  <strong
+                    style="
+                      display:block;
+                      color:#071a33;
+                      font-size:15px;
+                    "
+                  >
+                    Mode sombre
+                  </strong>
+
+                  <small
+                    style="
+                      display:block;
+                      margin-top:4px;
+                      color:#718096;
+                    "
+                  >
+                    Interface sombre
+                  </small>
+                </span>
+
+                <span
+                  data-theme-check="dark"
+                  style="
+                    color:#10a6b5;
+                    font-size:20px;
+                  "
+                ></span>
+              </button>
+
+              <button
+                type="button"
+                data-theme-choice="system"
+                style="
+                  width:100%;
+                  padding:17px;
+                  border:1px solid #dfe7ef;
+                  border-radius:16px;
+                  background:#ffffff;
+                  display:flex;
+                  align-items:center;
+                  gap:14px;
+                  text-align:left;
+                  cursor:pointer;
+                "
+              >
+                <span style="font-size:24px;">⚙️</span>
+
+                <span style="flex:1;">
+                  <strong
+                    style="
+                      display:block;
+                      color:#071a33;
+                      font-size:15px;
+                    "
+                  >
+                    Selon le système
+                  </strong>
+
+                  <small
+                    style="
+                      display:block;
+                      margin-top:4px;
+                      color:#718096;
+                    "
+                  >
+                    Utiliser le thème du téléphone
+                  </small>
+                </span>
+
+                <span
+                  data-theme-check="system"
+                  style="
+                    color:#10a6b5;
+                    font-size:20px;
+                  "
+                ></span>
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        const currentTheme =
+          localStorage.getItem(
+            "monexa-theme"
+          ) || "system";
+
+        function updateChecks(theme) {
+
+          modal
+            .querySelectorAll(
+              "[data-theme-check]"
+            )
+            .forEach(function (check) {
+
+              check.textContent =
+                check.dataset.themeCheck === theme
+                  ? "✓"
+                  : "";
+
+            });
+        }
+
+        function applyTheme(theme) {
+
+          localStorage.setItem(
+            "monexa-theme",
+            theme
+          );
+
+          if (theme === "dark") {
+
+            document.documentElement
+              .setAttribute(
+                "data-theme",
+                "dark"
+              );
+
+          } else if (theme === "light") {
+
+            document.documentElement
+              .setAttribute(
+                "data-theme",
+                "light"
+              );
+
+          } else {
+
+            document.documentElement
+              .removeAttribute(
+                "data-theme"
+              );
+
+          }
+
+          updateChecks(theme);
+        }
+
+        modal
+          .querySelectorAll(
+            "[data-theme-choice]"
+          )
+          .forEach(function (button) {
+
+            button.addEventListener(
+              "click",
+              function () {
+
+                applyTheme(
+                  button.dataset.themeChoice
+                );
+
+              }
+            );
+
+          });
+
+        document
+          .getElementById(
+            "monexaAppearanceBack"
+          )
+          .addEventListener(
+            "click",
+            function () {
+
+              modal.remove();
+              document.body.style.overflow = "";
+
+            }
+          );
+
+        applyTheme(currentTheme);
+      }
+
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+    },
+    true
+  );
+
+})();
+         </script>
   
 
 </body>
