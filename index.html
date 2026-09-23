@@ -1469,6 +1469,9 @@ async function monexaRegister(){
 </div>
 
 <script>
+(function () {
+  "use strict";
+
   const profileButton =
     document.querySelector(".profile-btn");
 
@@ -1484,63 +1487,524 @@ async function monexaRegister(){
   const logoutButton =
     document.getElementById("logoutBtn");
 
-  profileButton.addEventListener(
-    "click",
-    async function(){
+  if (!profileButton) {
+    console.log("MONEXA CASH : bouton Profile introuvable.");
+    return;
+  }
 
-      profilePanel.style.display = "flex";
+  function openPremiumProfile() {
+
+    let premium =
+      document.getElementById(
+        "monexaPremiumProfile"
+      );
+
+    if (!premium) {
+
+      premium =
+        document.createElement("div");
+
+      premium.id =
+        "monexaPremiumProfile";
+
+      premium.style.cssText = `
+        position:fixed;
+        inset:0;
+        z-index:99999999;
+        background:#f5f8fc;
+        overflow-y:auto;
+        font-family:Arial,sans-serif;
+      `;
+
+      premium.innerHTML = `
+        <div
+          style="
+            max-width:520px;
+            min-height:100%;
+            margin:auto;
+            background:#ffffff;
+          "
+        >
+
+          <div
+            style="
+              background:#071a33;
+              color:white;
+              padding:22px 18px 28px;
+            "
+          >
+
+            <button
+              id="monexaPremiumProfileBack"
+              type="button"
+              style="
+                border:0;
+                background:transparent;
+                color:white;
+                font-size:26px;
+                cursor:pointer;
+              "
+            >
+              ←
+            </button>
+
+            <div
+              style="
+                display:flex;
+                align-items:center;
+                gap:14px;
+                margin-top:18px;
+              "
+            >
+
+              <div
+                style="
+                  width:58px;
+                  height:58px;
+                  border-radius:50%;
+                  background:#10c7d9;
+                  color:#071a33;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  font-size:20px;
+                  font-weight:800;
+                "
+              >
+                MC
+              </div>
+
+              <div>
+                <div
+                  id="monexaPremiumProfileName"
+                  style="
+                    font-size:18px;
+                    font-weight:800;
+                  "
+                >
+                  Client
+                </div>
+
+                <div
+                  id="monexaPremiumProfileEmail"
+                  style="
+                    margin-top:4px;
+                    color:#b8c8d9;
+                    font-size:13px;
+                    word-break:break-word;
+                  "
+                >
+                  —
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div style="padding:18px;">
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="personal"
+            >
+              <span>👤</span>
+              <div>
+                <strong>Informations personnelles</strong>
+                <small>Nom, téléphone et compte</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="verification"
+            >
+              <span>✓</span>
+              <div>
+                <strong>Vérification du compte</strong>
+                <small>Vérification d’identité</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="security"
+            >
+              <span>🔐</span>
+              <div>
+                <strong>Sécurité</strong>
+                <small>PIN et sécurité du compte</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="notifications"
+            >
+              <span>🔔</span>
+              <div>
+                <strong>Notifications</strong>
+                <small>Gérer vos notifications</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="language"
+            >
+              <span>🌐</span>
+              <div>
+                <strong>Langue</strong>
+                <small>Français</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="appearance"
+            >
+              <span>🎨</span>
+              <div>
+                <strong>Apparence</strong>
+                <small>Thème de l’application</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="support"
+            >
+              <span>💬</span>
+              <div>
+                <strong>Assistance</strong>
+                <small>Contacter MONEXA CASH</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="terms"
+            >
+              <span>📄</span>
+              <div>
+                <strong>Conditions & confidentialité</strong>
+                <small>Informations légales</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <div
+              class="monexa-profile-item"
+              data-profile-section="about"
+            >
+              <span>ℹ️</span>
+              <div>
+                <strong>À propos de MONEXA CASH</strong>
+                <small>Informations sur la plateforme</small>
+              </div>
+              <b>›</b>
+            </div>
+
+            <button
+              id="monexaPremiumLogout"
+              type="button"
+              style="
+                width:100%;
+                margin-top:22px;
+                padding:15px;
+                border:1px solid #e5484d;
+                border-radius:14px;
+                background:#fff5f5;
+                color:#d92d35;
+                font-size:15px;
+                font-weight:800;
+                cursor:pointer;
+              "
+            >
+              Se déconnecter
+            </button>
+
+            <button
+              id="monexaPremiumDelete"
+              type="button"
+              style="
+                width:100%;
+                margin-top:12px;
+                padding:12px;
+                border:0;
+                background:transparent;
+                color:#777;
+                font-size:13px;
+                cursor:pointer;
+              "
+            >
+              Supprimer le compte
+            </button>
+
+          </div>
+        </div>
+
+        <style>
+          .monexa-profile-item{
+            display:flex;
+            align-items:center;
+            gap:13px;
+            padding:16px 4px;
+            border-bottom:1px solid #edf1f5;
+            cursor:pointer;
+          }
+
+          .monexa-profile-item > span{
+            width:34px;
+            height:34px;
+            border-radius:10px;
+            background:#eefcff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex:none;
+          }
+
+          .monexa-profile-item > div{
+            flex:1;
+            min-width:0;
+          }
+
+          .monexa-profile-item strong{
+            display:block;
+            color:#071a33;
+            font-size:14px;
+          }
+
+          .monexa-profile-item small{
+            display:block;
+            margin-top:4px;
+            color:#7a8796;
+            font-size:12px;
+          }
+
+          .monexa-profile-item > b{
+            color:#9aa6b2;
+            font-size:22px;
+          }
+        </style>
+      `;
+
+      document.body.appendChild(premium);
+
+      document
+        .getElementById(
+          "monexaPremiumProfileBack"
+        )
+        .addEventListener(
+          "click",
+          function () {
+            premium.remove();
+            document.body.style.overflow = "";
+          }
+        );
+
+      document
+        .querySelectorAll(
+          ".monexa-profile-item"
+        )
+        .forEach(function (item) {
+
+          item.addEventListener(
+            "click",
+            function () {
+
+              const section =
+                item.dataset.profileSection;
+
+              if (
+                section === "security"
+              ) {
+
+                const changePin =
+                  document.getElementById(
+                    "monexaChangePinButton"
+                  );
+
+                if (changePin) {
+                  changePin.click();
+                } else {
+                  alert(
+                    "La gestion du PIN sera disponible ici."
+                  );
+                }
+
+                return;
+              }
+
+              if (
+                section === "notifications"
+              ) {
+
+                const notificationButton =
+                  document.getElementById(
+                    "monexaNotificationButton"
+                  );
+
+                if (notificationButton) {
+                  notificationButton.click();
+                } else {
+                  alert(
+                    "Les notifications seront disponibles ici."
+                  );
+                }
+
+                return;
+              }
+
+              if (
+                section === "support"
+              ) {
+
+                window.open(
+                  "https://wa.me/50940886629",
+                  "_blank"
+                );
+
+                return;
+              }
+
+              alert(
+                "Cette section sera configurée dans MONEXA CASH."
+              );
+            }
+          );
+
+        });
+
+      document
+        .getElementById(
+          "monexaPremiumLogout"
+        )
+        .addEventListener(
+          "click",
+          async function () {
+
+            const button =
+              this;
+
+            button.disabled = true;
+            button.textContent =
+              "Déconnexion...";
+
+            const { error } =
+              await window.monexaSupabase
+                .auth
+                .signOut();
+
+            if (error) {
+
+              button.disabled = false;
+              button.textContent =
+                "Se déconnecter";
+
+              alert(
+                "Impossible de se déconnecter."
+              );
+
+              return;
+            }
+
+            premium.remove();
+            document.body.style.overflow = "";
+          }
+        );
+
+      document
+        .getElementById(
+          "monexaPremiumDelete"
+        )
+        .addEventListener(
+          "click",
+          function () {
+
+            alert(
+              "La suppression du compte sera configurée dans la prochaine étape."
+            );
+
+          }
+        );
+    }
+
+    premium.style.display = "block";
+    document.body.style.overflow = "hidden";
+
+    loadPremiumProfileData();
+  }
+
+  async function loadPremiumProfileData() {
+
+    try {
 
       const {
         data: { user }
-      } = await window.monexaSupabase.auth.getUser();
+      } =
+        await window.monexaSupabase
+          .auth
+          .getUser();
 
-      if(user){
-        profileEmail.textContent =
+      if (!user) return;
+
+      const name =
+        user.user_metadata?.full_name ||
+        user.email?.split("@")[0] ||
+        "Client";
+
+      const nameElement =
+        document.getElementById(
+          "monexaPremiumProfileName"
+        );
+
+      const emailElement =
+        document.getElementById(
+          "monexaPremiumProfileEmail"
+        );
+
+      if (nameElement) {
+        nameElement.textContent =
+          name;
+      }
+
+      if (emailElement) {
+        emailElement.textContent =
           user.email || "—";
       }
-    }
-  );
 
-  profileClose.addEventListener(
+    } catch (error) {
+
+      console.error(
+        "MONEXA CASH Profile:",
+        error
+      );
+
+    }
+  }
+
+  profileButton.addEventListener(
     "click",
-    function(){
-      profilePanel.style.display = "none";
-    }
+    function (event) {
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      openPremiumProfile();
+
+    },
+    true
   );
 
-  profilePanel.addEventListener(
-    "click",
-    function(event){
-
-      if(event.target === profilePanel){
-        profilePanel.style.display = "none";
-      }
-    }
-  );
-
-  logoutButton.addEventListener(
-    "click",
-    async function(){
-
-      logoutButton.disabled = true;
-      logoutButton.textContent =
-        "Déconnexion...";
-
-      const { error } =
-        await window.monexaSupabase.auth.signOut();
-
-      if(error){
-
-        logoutButton.disabled = false;
-        logoutButton.textContent =
-          "Se déconnecter";
-
-        return;
-      }
-
-      profilePanel.style.display = "none";
-    }
-  );
+})();
 </script>
 
   <script>
