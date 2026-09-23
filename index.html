@@ -13380,6 +13380,198 @@ binanceConfirmButton.onclick = async function (event) {
 
 })();
  </script>
+
+ <script>
+(function(){
+  "use strict";
+
+  async function monexaRefreshBalance(){
+
+    if(
+      !window.monexaSupabase ||
+      typeof monexaLoadDashboard !== "function"
+    ){
+      return;
+    }
+
+    try{
+
+      await monexaLoadDashboard();
+
+    }catch(error){
+
+      console.error(
+        "Erreur actualisation solde:",
+        error
+      );
+
+    }
+
+  }
+
+  window.monexaRefreshBalance =
+    monexaRefreshBalance;
+
+})();
+ </script>
+
+ <script>
+(function(){
+  "use strict";
+
+  async function monexaShowAdminButton(){
+
+    if(!window.monexaSupabase)return;
+
+    const {
+      data:{user}
+    } =
+      await window.monexaSupabase.auth.getUser();
+
+    if(!user)return;
+
+    const {data:profile,error} =
+      await window.monexaSupabase
+        .from("profiles")
+        .select("role")
+        .eq("id",user.id)
+        .maybeSingle();
+
+    if(error){
+      console.error(
+        "Erreur rôle admin:",
+        error
+      );
+      return;
+    }
+
+    if(!profile || profile.role !== "admin"){
+      return;
+    }
+
+    let button =
+      document.getElementById(
+        "monexaAdminAccessButton"
+      );
+
+    if(button)return;
+
+    button =
+      document.createElement("button");
+
+    button.id =
+      "monexaAdminAccessButton";
+
+    button.type="button";
+
+    button.textContent =
+      "Administration";
+
+    button.style.cssText =
+      "width:100%;" +
+      "margin-top:10px;" +
+      "padding:14px;" +
+      "border:0;" +
+      "border-radius:14px;" +
+      "background:#071a33;" +
+      "color:white;" +
+      "font-weight:800;" +
+      "font-size:14px;";
+
+    document.body.appendChild(button);
+
+    button.addEventListener(
+      "click",
+      function(){
+
+        const adminPanel =
+          document.getElementById(
+            "monexaAdminPanel"
+          );
+
+        if(adminPanel){
+
+          adminPanel.style.display="flex";
+          document.body.style.overflow="hidden";
+
+        }else{
+
+          alert(
+            "Espace Administration introuvable."
+          );
+
+        }
+
+      }
+    );
+  }
+
+  window.monexaShowAdminButton =
+    monexaShowAdminButton;
+
+  if(window.monexaSupabase){
+
+    window.monexaSupabase.auth.onAuthStateChange(
+      function(event,session){
+
+        if(session){
+          setTimeout(
+            monexaShowAdminButton,
+            500
+          );
+        }
+
+      }
+    );
+
+    setTimeout(
+      monexaShowAdminButton,
+      1200
+    );
+  }
+
+})();
+ </script>
+
+ <script>
+(function(){
+  "use strict";
+
+  document.addEventListener("click",function(event){
+
+    const button =
+      event.target.closest(
+        "#monexaAdminAccessButton"
+      );
+
+    if(!button)return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const adminPanel =
+      document.getElementById(
+        "monexaAdminPanel"
+      );
+
+    if(!adminPanel){
+      alert(
+        "Espace Administration introuvable."
+      );
+      return;
+    }
+
+    adminPanel.style.display="flex";
+    adminPanel.style.visibility="visible";
+    adminPanel.style.opacity="1";
+    adminPanel.style.pointerEvents="auto";
+
+    document.body.style.overflow="hidden";
+
+  },true);
+
+})();
+ </script>
   
 
 </body>
